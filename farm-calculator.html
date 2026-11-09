@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriNova · Farm Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="farm-calculator.css" />
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-name"><i class="fas fa-seedling" style="margin-right: 8px; color: #A8C686;"></i>AgriNova</div>
+            <div class="brand-tagline">Growing Smarter. Farming Better.</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-label">Farmer Dashboard</div>
+            <a href="farmer-dashboard.html"><i class="fas fa-th-large"></i> Dashboard Home</a>
+            <a href="my-farm.html"><i class="fas fa-tractor"></i> My Farm</a>
+            <a href="my-crops.html"><i class="fas fa-seedling"></i> My Crops</a>
+            <a href="daily-farm.html"><i class="fas fa-calendar-day"></i> Daily Farm</a>
+            <a href="farm-tasks-calendar.html"><i class="fas fa-tasks"></i> Farm Tasks &amp; Calendar</a>
+            <a href="farm-records.html"><i class="fas fa-clipboard-list"></i> Farm Records</a>
+            <a href="farm-calculator.html" class="active"><i class="fas fa-calculator"></i> Farm Calculator</a>
+            <a href="#"><i class="fas fa-coins"></i> Farm Finance</a>
+            <a href="#"><i class="fas fa-robot"></i> AI Agricultural Assistant</a>
+            <a href="#"><i class="fas fa-chart-pie"></i> Farm Analysis &amp; ID</a>
+            <a href="#"><i class="fas fa-users"></i> Farmer Community</a>
+            <a href="#"><i class="fas fa-store"></i> Marketplace</a>
+            <div class="nav-label" style="margin-top: 1.8rem;">AgriNova Resources</div>
+            <a href="#"><i class="fas fa-newspaper"></i> Agriculture Articles</a>
+            <a href="#"><i class="fas fa-book-open"></i> Crop Information</a>
+            <a href="#"><i class="fas fa-map"></i> Ethiopian Crop Map</a>
+            <a href="#"><i class="fas fa-cloud-sun"></i> Weather</a>
+            <a href="#"><i class="fas fa-bug"></i> Pest &amp; Disease Library</a>
+            <a href="#"><i class="fas fa-flask"></i> Fertilizer Information</a>
+            <a href="#"><i class="fas fa-bullhorn"></i> Agriculture News</a>
+            <a href="#"><i class="fas fa-rss"></i> Crop News</a>
+            <a href="#"><i class="fas fa-lightbulb"></i> Agriculture Innovation</a>
+            <a href="#"><i class="fas fa-graduation-cap"></i> Educational Content</a>
+            <a href="#"><i class="fas fa-gamepad"></i> Farm Simulation</a>
+        </nav>
+        <div style="margin-top: auto; padding-top: 1.5rem; border-top: 1px solid rgba(168,198,134,0.15);">
+            <a href="#" style="display:flex; align-items:center; gap:0.8rem; color:#d2e0cd; padding:0.5rem 0.5rem; border-radius:8px; font-size:0.85rem; transition:0.15s;">
+                <i class="fas fa-user-circle" style="font-size:1.2rem;"></i> Farmer Profile
+            </a>
+            <a href="#" style="display:flex; align-items:center; gap:0.8rem; color:#d2e0cd; padding:0.5rem 0.5rem; border-radius:8px; font-size:0.85rem; transition:0.15s;">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+            <a href="index.html" style="display:flex; align-items:center; gap:0.8rem; color:#d2e0cd; padding:0.5rem 0.5rem; border-radius:8px; font-size:0.85rem; transition:0.15s;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+        <!-- TOP NAV -->
+        <header class="top-nav">
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search calculator..." id="globalSearch">
+            </div>
+            <div class="nav-right">
+                <div class="nav-icon-wrapper">
+                    <i class="fas fa-bell" id="notifIcon"></i>
+                    <span class="nav-badge" id="notifBadge">0</span>
+                </div>
+                <div class="nav-icon-wrapper">
+                    <i class="fas fa-comment-dots"></i>
+                    <span class="nav-badge">0</span>
+                </div>
+                <div class="nav-weather" id="navWeather">
+                    <i class="fas fa-cloud-sun"></i>
+                    <span id="navTemp">--°C</span>
+                </div>
+                <div class="profile-trigger" id="profileTrigger">
+                    <div class="avatar" id="navAvatar"><i class="fas fa-user"></i></div>
+                    <span class="pname" id="navName">Farmer</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem;"></i>
+                </div>
+            </div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="pd-header">
+                    <div class="pd-avatar" id="pdAvatar"><i class="fas fa-user"></i></div>
+                    <div class="pd-info">
+                        <p class="pd-name" id="pdName">Farmer Name</p>
+                        <p class="pd-email" id="pdEmail">email@example.com</p>
+                    </div>
+                </div>
+                <div><i class="fas fa-phone" style="width:1.4rem;"></i> <span id="pdPhone">—</span></div>
+                <div><i class="fas fa-map-pin"></i> <span id="pdLocation">—</span></div>
+                <div><i class="fas fa-ruler-combined"></i> <span id="pdFarmland">—</span></div>
+                <div style="margin-top:0.8rem; border-top:1px solid #edf0e9; padding-top:0.6rem; display:flex; gap:0.8rem;">
+                    <button id="uploadProfileBtn" style="background:#4F7A52; color:#fff; padding:0.2rem 1rem; border-radius:30px; font-size:0.8rem;"><i class="fas fa-camera"></i> Upload</button>
+                </div>
+                <input type="file" id="profileImageInput" accept="image/*" style="display:none;">
+            </div>
+        </header>
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="dashboard-content">
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+                <div>
+                    <h1>Farm Calculator</h1>
+                    <p class="subtitle">Plan your farm. Explore possibilities. Understand your numbers.</p>
+                </div>
+                <div class="header-right">
+                    <div class="current-date" id="currentDate">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <div class="date-day" id="dateDay">Saturday</div>
+                            <div class="date-full" id="dateFull">August 30, 2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CALCULATOR NAVIGATION -->
+            <div class="calculator-nav-wrapper">
+                <div class="calculator-nav" id="calculatorNav">
+                    <button class="nav-item active" data-calculator="planner" onclick="switchCalculator('planner')">
+                        <i class="fas fa-crop-alt"></i>
+                        <span>Farm Planner</span>
+                    </button>
+                    <button class="nav-item" data-calculator="seed" onclick="switchCalculator('seed')">
+                        <i class="fas fa-seedling"></i>
+                        <span>Seed Rate</span>
+                    </button>
+                    <button class="nav-item" data-calculator="fertilizer" onclick="switchCalculator('fertilizer')">
+                        <i class="fas fa-flask"></i>
+                        <span>Fertilizer</span>
+                    </button>
+                    <button class="nav-item" data-calculator="population" onclick="switchCalculator('population')">
+                        <i class="fas fa-plant"></i>
+                        <span>Population</span>
+                    </button>
+                    <button class="nav-item" data-calculator="land" onclick="switchCalculator('land')">
+                        <i class="fas fa-ruler-combined"></i>
+                        <span>Land Area</span>
+                    </button>
+                    <button class="nav-item" data-calculator="yield" onclick="switchCalculator('yield')">
+                        <i class="fas fa-sack"></i>
+                        <span>Yield</span>
+                    </button>
+                    <button class="nav-item" data-calculator="irrigation" onclick="switchCalculator('irrigation')">
+                        <i class="fas fa-tint"></i>
+                        <span>Irrigation</span>
+                    </button>
+                    <button class="nav-item" data-calculator="profit" onclick="switchCalculator('profit')">
+                        <i class="fas fa-coins"></i>
+                        <span>Profit</span>
+                    </button>
+                    <button class="nav-item" data-calculator="breakeven" onclick="switchCalculator('breakeven')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Break-even</span>
+                    </button>
+                    <button class="nav-item" data-calculator="converter" onclick="switchCalculator('converter')">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Converter</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CALCULATOR WORKSPACE -->
+            <div class="workspace" id="workspace">
+                <!-- Content rendered by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="farm-calculator.js"></script>
+</body>
+</html>

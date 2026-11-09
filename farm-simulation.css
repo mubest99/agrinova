@@ -1,0 +1,1444 @@
+/* ============================================
+   AGRINOVA FARM SIMULATION
+   farm-simulation.css
+   Visual layer for the agricultural simulation
+   ============================================ */
+
+/* ============================================
+   1. DESIGN TOKENS & BASE
+   ============================================ */
+:root {
+    /* Primary palette */
+    --color-primary: #1F5E3B;
+    --color-secondary: #2F7D4F;
+    --color-accent: #8BC34A;
+    --color-dark: #0B1712;
+    --color-dark-secondary: #12241B;
+    --color-background: #07110D;
+    --color-light: #F2F6F0;
+    --color-muted: #AAB9AF;
+    --color-warning: #D9A441;
+    --color-danger: #C95C4B;
+    --color-water: #4C91A8;
+
+    /* Functional variations */
+    --color-primary-hover: #2A7A4D;
+    --color-primary-active: #174A2F;
+    --color-glass-bg: rgba(18, 36, 27, 0.7);
+    --color-glass-bg-light: rgba(18, 36, 27, 0.5);
+    --color-glass-border: rgba(139, 195, 74, 0.25);
+    --color-glass-border-strong: rgba(139, 195, 74, 0.45);
+    --color-text-primary: #F2F6F0;
+    --color-text-muted: #AAB9AF;
+    --color-text-dark: #0B1712;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 0.75rem;
+    --space-lg: 1rem;
+    --space-xl: 1.5rem;
+    --space-2xl: 2rem;
+
+    /* Borders & radii */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+
+    /* Typography */
+    --font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    --text-xs: 0.7rem;
+    --text-sm: 0.8rem;
+    --text-md: 0.9rem;
+    --text-lg: 1.1rem;
+    --text-xl: 1.4rem;
+    --text-2xl: 1.8rem;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.45);
+    --shadow-button: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --transition-slow: 0.4s ease;
+
+    /* Z-index layers */
+    --z-world: 1;
+    --z-hud: 10;
+    --z-panel: 20;
+    --z-modal: 30;
+    --z-loading: 40;
+}
+
+/* ============================================
+   2. RESET & BASE STYLES
+   ============================================ */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+}
+
+/* Accessibility: visually hidden */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus visibility for all interactive elements */
+button:focus-visible,
+input:focus-visible,
+[role="radio"]:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   3. MAIN FARM SIMULATION CONTAINER
+   ============================================ */
+#farm-simulation {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+    background-color: var(--color-background);
+    z-index: 1;
+}
+
+/* ============================================
+   4. FARM WORLD (3D VIEWPORT)
+   ============================================ */
+#farm-world {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-world);
+    background-color: transparent;
+    /* Three.js canvas will be appended inside */
+}
+
+/* ============================================
+   5. FARM SETUP SCREEN
+   ============================================ */
+#farm-setup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 560px;
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--color-glass-border-strong);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-medium);
+    z-index: var(--z-modal);
+    color: var(--color-text-primary);
+}
+
+#farm-setup h2 {
+    font-size: var(--text-2xl);
+    font-weight: 600;
+    color: var(--color-light);
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.01em;
+}
+
+#farm-setup p {
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+    margin-bottom: var(--space-xl);
+}
+
+/* Setup fields */
+.setup-field {
+    margin-bottom: var(--space-lg);
+}
+
+.setup-field label {
+    display: block;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.setup-field input[type="text"] {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(11, 23, 18, 0.6);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-size: var(--text-md);
+    font-family: var(--font-family);
+    transition: border-color var(--transition-fast);
+}
+
+.setup-field input[type="text"]:focus {
+    border-color: var(--color-accent);
+    outline: none;
+}
+
+/* Setup groups (land, size, soil) */
+.setup-group {
+    border: none;
+    margin-bottom: var(--space-lg);
+}
+
+.setup-group legend {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-sm);
+    padding: 0;
+}
+
+.option-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+.option-group button {
+    flex: 1 1 auto;
+    min-width: 80px;
+    padding: var(--space-md) var(--space-lg);
+    background: rgba(11, 23, 18, 0.5);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: center;
+}
+
+.option-group button:hover {
+    background: rgba(47, 125, 79, 0.3);
+    border-color: var(--color-glass-border-strong);
+    color: var(--color-text-primary);
+}
+
+.option-group button[aria-checked="true"] {
+    background: var(--color-primary);
+    border-color: var(--color-accent);
+    color: var(--color-light);
+    font-weight: 500;
+}
+
+/* Starting budget */
+.starting-budget {
+    font-size: var(--text-md);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xl);
+    padding: var(--space-md) 0;
+}
+
+.budget-label {
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+#starting-budget {
+    font-weight: 600;
+    color: var(--color-accent);
+    font-size: var(--text-lg);
+}
+
+/* ============================================
+   6. START FARM BUTTON
+   ============================================ */
+#start-farm {
+    display: block;
+    width: 100%;
+    padding: var(--space-lg) var(--space-xl);
+    background: var(--color-primary);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-md);
+    color: var(--color-light);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    font-family: var(--font-family);
+    cursor: pointer;
+    box-shadow: var(--shadow-button);
+    transition: all var(--transition-normal);
+    letter-spacing: 0.03em;
+}
+
+#start-farm:hover {
+    background: var(--color-primary-hover);
+    box-shadow: var(--shadow-soft);
+}
+
+#start-farm:active {
+    background: var(--color-primary-active);
+    transform: scale(0.98);
+}
+
+/* ============================================
+   7. SIMULATION STAGE (hidden initially)
+   ============================================ */
+#simulation-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-hud);
+    pointer-events: none;
+}
+
+#simulation-stage > * {
+    pointer-events: auto;
+}
+
+#simulation-stage[hidden] {
+    display: none !important;
+}
+
+/* ============================================
+   8. GAME HUD
+   ============================================ */
+#game-hud {
+    position: absolute;
+    top: var(--space-lg);
+    left: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-md);
+    z-index: var(--z-hud);
+    pointer-events: none;
+}
+
+.hud-left,
+.hud-right {
+    pointer-events: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.hud-left p,
+.hud-right p {
+    margin: 0;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.hud-label {
+    font-weight: 500;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: var(--text-xs);
+}
+
+#current-day,
+#current-season,
+#player-money {
+    font-weight: 600;
+    color: var(--color-light);
+    font-size: var(--text-md);
+}
+
+#player-money {
+    color: var(--color-accent);
+}
+
+/* ============================================
+   9. FLOATING PANELS (Weather, Farm Info)
+   ============================================ */
+#weather-panel,
+#farm-info-panel {
+    position: absolute;
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md) var(--space-lg);
+    box-shadow: var(--shadow-soft);
+    z-index: var(--z-panel);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    min-width: 180px;
+}
+
+#weather-panel {
+    top: 80px;
+    left: var(--space-lg);
+}
+
+#farm-info-panel {
+    top: 80px;
+    left: var(--space-lg);
+    margin-top: 170px;
+}
+
+#weather-panel h3,
+#farm-info-panel h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-glass-border);
+    padding-bottom: var(--space-xs);
+}
+
+#weather-panel ul,
+#farm-info-panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#weather-panel li,
+#farm-info-panel li {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+    font-size: var(--text-xs);
+}
+
+#weather-panel span,
+#farm-info-panel span {
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+/* ============================================
+   10. FARMER CONTAINER
+   ============================================ */
+#farmer-container {
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: var(--z-world);
+    pointer-events: none;
+}
+
+#farmer-status {
+    display: block;
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background: var(--color-glass-bg);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    pointer-events: auto;
+}
+
+/* ============================================
+   11. ACTION BAR & PANELS (bottom-aligned)
+   ============================================ */
+#interaction-panel,
+#land-preparation-panel,
+#seed-shop,
+#negotiation-panel,
+#inventory-panel,
+#crop-status-panel,
+#post-harvest-panel,
+#market-panel,
+#financial-panel,
+#farm-progression,
+#learning-panel,
+#event-notification {
+    position: absolute;
+    background: var(--color-glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-soft);
+    z-index: var(--z-panel);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+/* Interaction panel (main action bar) */
+#interaction-panel {
+    bottom: var(--space-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm);
+    z-index: var(--z-hud);
+}
+
+#interaction-panel h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    margin-right: var(--space-sm);
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.action-buttons button,
+#land-preparation-panel button,
+#post-harvest-panel button,
+#market-panel button,
+#time-controls button,
+#save-load-controls button {
+    background: rgba(11, 23, 18, 0.6);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-xs);
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+    min-height: 36px;
+}
+
+.action-buttons button:hover,
+#land-preparation-panel button:hover,
+#post-harvest-panel button:hover,
+#market-panel button:hover,
+#time-controls button:hover,
+#save-load-controls button:hover {
+    background: rgba(47, 125, 79, 0.3);
+    border-color: var(--color-glass-border-strong);
+}
+
+.action-buttons button:active,
+#land-preparation-panel button:active,
+#post-harvest-panel button:active,
+#market-panel button:active,
+#time-controls button:active,
+#save-load-controls button:active {
+    background: var(--color-primary-active);
+    transform: scale(0.97);
+}
+
+/* ============================================
+   12. LAND PREPARATION PANEL
+   ============================================ */
+#land-preparation-panel {
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+}
+
+#land-preparation-panel h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-right: var(--space-sm);
+}
+
+#land-preparation-panel button {
+    padding: var(--space-sm) var(--space-md);
+}
+
+/* ============================================
+   13. SEED SHOP
+   ============================================ */
+#seed-shop {
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    left: auto;
+    width: 320px;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+#seed-shop h3 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-light);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-glass-border);
+    padding-bottom: var(--space-xs);
+}
+
+.seed-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.seed-list li {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto auto;
+    gap: var(--space-sm);
+    align-items: center;
+    padding: var(--space-sm);
+    background: rgba(11, 23, 18, 0.4);
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    transition: border-color var(--transition-fast);
+    font-size: var(--text-xs);
+}
+
+.seed-list li:hover {
+    border-color: var(--color-glass-border);
+}
+
+.crop-name {
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.crop-price,
+.crop-qty {
+    color: var(--color-text-muted);
+}
+
+.seed-list button {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-glass-border);
+    background: rgba(11, 23, 18, 0.6);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+}
+
+.seed-list button:hover {
+    background: rgba(47, 125, 79, 0.3);
+    border-color: var(--color-glass-border-strong);
+}
+
+/* ============================================
+   14. NEGOTIATION PANEL
+   ============================================ */
+#negotiation-panel {
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    left: auto;
+    width: 280px;
+    padding: var(--space-md);
+}
+
+#negotiation-panel h3 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+}
+
+#negotiation-panel p {
+    margin: var(--space-xs) 0;
+    font-size: var(--text-xs);
+    display: flex;
+    justify-content: space-between;
+}
+
+#negotiation-panel span {
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+.negotiation-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+}
+
+.negotiation-actions button {
+    flex: 1 1 45%;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-glass-border);
+    background: rgba(11, 23, 18, 0.6);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+    white-space: nowrap;
+}
+
+.negotiation-actions button:hover {
+    background: rgba(47, 125, 79, 0.3);
+    border-color: var(--color-glass-border-strong);
+}
+
+/* ============================================
+   15. INVENTORY PANEL
+   ============================================ */
+#inventory-panel {
+    top: 80px;
+    right: var(--space-lg);
+    width: 200px;
+    padding: var(--space-md);
+}
+
+#inventory-panel h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-glass-border);
+    padding-bottom: var(--space-xs);
+}
+
+#inventory-panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#inventory-panel li {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+    font-size: var(--text-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+#inventory-panel span {
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+/* ============================================
+   16. CROP STATUS PANEL
+   ============================================ */
+#crop-status-panel {
+    top: 80px;
+    right: var(--space-lg);
+    width: 220px;
+    margin-top: 200px;
+    padding: var(--space-md);
+}
+
+#crop-status-panel h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-glass-border);
+    padding-bottom: var(--space-xs);
+}
+
+#crop-status-panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#crop-status-panel li {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+    font-size: var(--text-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+#crop-status-panel span {
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+/* ============================================
+   17. POST-HARVEST PANEL
+   ============================================ */
+#post-harvest-panel {
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    align-items: center;
+    padding: var(--space-sm) var(--space-md);
+}
+
+#post-harvest-panel h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-right: var(--space-sm);
+}
+
+#post-harvest-panel button {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-xs);
+    background: rgba(11, 23, 18, 0.6);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+    white-space: nowrap;
+}
+
+/* ============================================
+   18. MARKET PANEL
+   ============================================ */
+#market-panel {
+    bottom: var(--space-lg);
+    right: var(--space-lg);
+    width: 260px;
+    padding: var(--space-md);
+}
+
+#market-panel h3 {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-glass-border);
+    padding-bottom: var(--space-xs);
+}
+
+#market-panel ul {
+    list-style: none;
+    margin: 0 0 var(--space-sm) 0;
+    padding: 0;
+}
+
+#market-panel li {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+    font-size: var(--text-xs);
+}
+
+#market-panel span {
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+.market-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+
+.market-actions button {
+    flex: 1 1 30%;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-glass-border);
+    background: rgba(11, 23, 18, 0.6);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+    white-space: nowrap;
+}
+
+/* ============================================
+   19. FINANCIAL PANEL
+   ============================================ */
+#financial-panel {
+    top: 80px;
+    right: var(--space-lg);
+    width: 220px;
+    margin-top: 430px;
+    padding: var(--space-md);
+}
+
+#financial-panel h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-glass-border);
+    padding-bottom: var(--space-xs);
+}
+
+#financial-panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#financial-panel li {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+    font-size: var(--text-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+#financial-panel span {
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+/* ============================================
+   20. TIME CONTROLS
+   ============================================ */
+#time-controls {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: var(--space-lg);
+    display: flex;
+    gap: var(--space-xs);
+    align-items: center;
+    z-index: var(--z-hud);
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+}
+
+#time-controls button {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-xs);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+    white-space: nowrap;
+    min-height: 36px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#time-controls button:hover {
+    background: rgba(47, 125, 79, 0.3);
+    border-color: var(--color-glass-border-strong);
+}
+
+/* ============================================
+   21. FARM PROGRESSION
+   ============================================ */
+#farm-progression {
+    bottom: 110px;
+    right: var(--space-lg);
+    width: 220px;
+    padding: var(--space-md);
+}
+
+#farm-progression h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-glass-border);
+    padding-bottom: var(--space-xs);
+}
+
+#farm-progression ul {
+    list-style: none;
+    margin: 0 0 var(--space-sm) 0;
+    padding: 0;
+}
+
+#farm-progression li {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-xs) 0;
+    font-size: var(--text-xs);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+#farm-progression span {
+    color: var(--color-text-primary);
+    font-weight: 500;
+}
+
+#expand-farm {
+    width: 100%;
+    padding: var(--space-sm);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-glass-border-strong);
+    background: var(--color-primary);
+    color: var(--color-light);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+}
+
+#expand-farm:hover {
+    background: var(--color-primary-hover);
+}
+
+/* ============================================
+   22. EVENT NOTIFICATION
+   ============================================ */
+#event-notification {
+    position: absolute;
+    top: var(--space-xl);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-md);
+    z-index: var(--z-hud);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-soft);
+    max-width: 400px;
+    pointer-events: none;
+}
+
+#event-notification h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-warning);
+    margin-bottom: var(--space-xs);
+}
+
+#event-message {
+    font-size: var(--text-xs);
+    color: var(--color-text-primary);
+}
+
+/* ============================================
+   23. EDUCATIONAL PANEL
+   ============================================ */
+#learning-panel {
+    bottom: 110px;
+    left: var(--space-lg);
+    width: 250px;
+    padding: var(--space-md);
+}
+
+#learning-panel h3 {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-glass-border);
+    padding-bottom: var(--space-xs);
+}
+
+#learning-content {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    min-height: 40px;
+}
+
+#learn-more {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-glass-border);
+    background: rgba(11, 23, 18, 0.6);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+    width: 100%;
+}
+
+#learn-more:hover {
+    background: rgba(47, 125, 79, 0.3);
+    border-color: var(--color-glass-border-strong);
+}
+
+/* ============================================
+   24. SAVE / LOAD CONTROLS
+   ============================================ */
+#save-load-controls {
+    position: absolute;
+    top: var(--space-lg);
+    right: var(--space-lg);
+    display: flex;
+    gap: var(--space-xs);
+    z-index: var(--z-hud);
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    pointer-events: auto;
+}
+
+#save-load-controls button {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-xs);
+    background: var(--color-glass-bg);
+    border: 1px solid var(--color-glass-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+    white-space: nowrap;
+    min-height: 32px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+#save-load-controls button:hover {
+    background: rgba(47, 125, 79, 0.3);
+    border-color: var(--color-glass-border-strong);
+    color: var(--color-text-primary);
+}
+
+/* ============================================
+   25. LOADING SCREEN
+   ============================================ */
+#farm-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: var(--z-loading);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+    pointer-events: none;
+}
+
+/* Agricultural loading spinner */
+#farm-loading::before {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(139, 195, 74, 0.2);
+    border-top: 3px solid var(--color-accent);
+    border-radius: 50%;
+    animation: farm-spin 1.2s linear infinite;
+}
+
+@keyframes farm-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   26. HIDDEN STATE
+   ============================================ */
+[hidden] {
+    display: none !important;
+}
+
+/* ============================================
+   27. RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    #weather-panel,
+    #farm-info-panel,
+    #inventory-panel,
+    #crop-status-panel,
+    #financial-panel,
+    #farm-progression,
+    #learning-panel {
+        position: static;
+        margin: var(--space-sm);
+        width: auto;
+        min-width: 200px;
+        max-width: none;
+        top: auto;
+        right: auto;
+        left: auto;
+        bottom: auto;
+    }
+
+    /* Rearrange panels for tablet as a side rail */
+    #simulation-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: var(--space-lg);
+        gap: var(--space-sm);
+        overflow-y: auto;
+        pointer-events: auto;
+    }
+
+    #game-hud {
+        position: static;
+        width: 100%;
+    }
+
+    #farm-world {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    #interaction-panel,
+    #land-preparation-panel,
+    #post-harvest-panel {
+        position: static;
+        transform: none;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    #time-controls {
+        position: static;
+        width: 100%;
+    }
+
+    #event-notification {
+        position: static;
+        transform: none;
+        margin: var(--space-sm);
+        max-width: none;
+        width: auto;
+    }
+
+    #save-load-controls {
+        position: static;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    body {
+        overflow-y: auto;
+    }
+
+    #farm-simulation {
+        overflow-y: auto;
+    }
+
+    #farm-setup {
+        width: 95%;
+        max-width: none;
+        padding: var(--space-lg);
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .option-group {
+        flex-direction: column;
+    }
+
+    .option-group button {
+        flex: 1 1 auto;
+        width: 100%;
+    }
+
+    #simulation-stage {
+        padding: var(--space-sm);
+        gap: var(--space-xs);
+    }
+
+    #game-hud {
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+
+    .hud-left,
+    .hud-right {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+    }
+
+    .hud-left p,
+    .hud-right p {
+        font-size: var(--text-xs);
+        padding: var(--space-xs) var(--space-sm);
+    }
+
+    #interaction-panel {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-xs);
+    }
+
+    #interaction-panel h3 {
+        margin-right: 0;
+        text-align: center;
+    }
+
+    .action-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .action-buttons button,
+    #land-preparation-panel button,
+    #post-harvest-panel button,
+    #market-panel button,
+    #time-controls button,
+    #save-load-controls button {
+        min-height: 44px;
+        padding: var(--space-sm) var(--space-md);
+        font-size: var(--text-xs);
+    }
+
+    #time-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #save-load-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #seed-shop,
+    #negotiation-panel,
+    #market-panel,
+    #financial-panel,
+    #farm-progression,
+    #learning-panel,
+    #inventory-panel,
+    #crop-status-panel {
+        width: 100%;
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    #post-harvest-panel {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #post-harvest-panel button {
+        width: 100%;
+    }
+
+    #farm-loading {
+        font-size: var(--text-sm);
+    }
+
+    #farmer-container {
+        bottom: 15%;
+    }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+    :root {
+        --text-xs: 0.65rem;
+        --text-sm: 0.75rem;
+        --text-md: 0.8rem;
+        --text-lg: 0.95rem;
+        --text-xl: 1.2rem;
+        --text-2xl: 1.5rem;
+    }
+
+    #farm-setup {
+        padding: var(--space-md);
+        border-radius: var(--radius-lg);
+    }
+
+    #game-hud {
+        padding: 0;
+    }
+
+    .hud-left p,
+    .hud-right p {
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+    }
+
+    #farm-loading::before {
+        width: 30px;
+        height: 30px;
+        border-width: 2px;
+    }
+}

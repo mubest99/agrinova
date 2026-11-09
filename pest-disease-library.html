@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriNova — Pest & Disease Library</title>
+  <link rel="stylesheet" href="pest-disease-library.css" />
+</head>
+<body>
+
+  <!-- ========== BANNER ========== -->
+  <div id="langBanner" class="lang-banner" hidden>
+    <span class="banner-icon">🌐</span>
+    <div class="banner-text">
+      <strong id="bannerTitle">Translate this page</strong>
+      <span id="bannerMsg"></span>
+    </div>
+    <button id="bannerClose" class="banner-close" aria-label="Close">✕</button>
+  </div>
+
+  <!-- ========== LIBRARY VIEW ========== -->
+  <div id="libraryView">
+
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand">
+          <span class="brand-mark">🌱</span>
+          <h1 class="brand-title">AgriNova Pest and Disease Library</h1>
+        </div>
+
+        <div class="lang-wrap">
+          <button id="langBtn" class="lang-btn" aria-haspopup="true" aria-expanded="false">
+            <span>🌐</span>
+            <span id="langLabel">Language</span>
+            <span class="lang-caret">▾</span>
+          </button>
+          <ul id="langMenu" class="lang-menu" role="menu">
+            <li data-lang="am" data-name="Amharic">አማርኛ — Amharic</li>
+            <li data-lang="ti" data-name="Tigrinya">ትግርኛ — Tigrinya</li>
+            <li data-lang="en" data-name="English">English</li>
+            <li data-lang="om" data-name="Afaan Oromo">Afaan Oromo</li>
+            <li data-lang="so" data-name="Somali">Af-Soomaali — Somali</li>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+    <section class="page-title-block">
+      <p class="crumb">AgriNova Crop Production</p>
+      <h2 class="page-title">Pest and Disease Library</h2>
+    </section>
+
+    <section class="filter-bar">
+      <div class="filter-group">
+        <label for="filterCategory">Category</label>
+        <select id="filterCategory"><option value="">All Categories</option></select>
+      </div>
+      <div class="filter-group">
+        <label for="filterCrop">Affected Crop</label>
+        <select id="filterCrop"><option value="">All Crops</option></select>
+      </div>
+      <div class="filter-group">
+        <label for="filterSeverity">Severity</label>
+        <select id="filterSeverity"><option value="">All Severity</option></select>
+      </div>
+      <div class="filter-group filter-search">
+        <label for="filterSearch">Search</label>
+        <input type="text" id="filterSearch" placeholder="Search by name, crop, or ID…" />
+      </div>
+      <button id="resetFilters" class="reset-btn">Reset</button>
+    </section>
+
+    <p class="result-count" id="resultCount"></p>
+
+    <section id="cardGrid" class="card-grid"></section>
+
+    <footer class="site-footer">
+      <p>© AgriNova — Pest and Disease Library</p>
+    </footer>
+  </div>
+
+  <!-- ========== DETAIL VIEW ========== -->
+  <div id="detailView" class="detail-view" hidden>
+    <button id="backBtn" class="back-btn">← Back to Library</button>
+
+    <article class="detail-article">
+
+      <!-- 1. Large picture -->
+      <div class="detail-hero-img">
+        <img id="detailImage" src="" alt="" />
+      </div>
+
+      <!-- 2 & 3. Name + Scientific name -->
+      <div class="detail-head">
+        <p class="detail-id" id="detailId"></p>
+        <h1 class="detail-name" id="detailName"></h1>
+        <p class="detail-sci" id="detailSci"></p>
+        <div class="badges">
+          <span class="badge badge-cat" id="detailCat"></span>
+          <span class="badge" id="detailSev"></span>
+        </div>
+      </div>
+
+      <!-- 4. Description -->
+      <section class="detail-section">
+        <h2>Description</h2>
+        <p id="sDesc"></p>
+      </section>
+
+      <!-- 5. Symptoms -->
+      <section class="detail-section">
+        <h2>Symptoms</h2>
+        <ul id="sSym"></ul>
+      </section>
+
+      <!-- 6. Affected crops -->
+      <section class="detail-section">
+        <h2>Affected Crops</h2>
+        <ul id="sCrops"></ul>
+      </section>
+
+      <!-- 7. Causes / favorable conditions -->
+      <section class="detail-section">
+        <h2>Causes / Favorable Conditions</h2>
+        <p id="sCauses"></p>
+      </section>
+
+      <!-- 8. Prevention -->
+      <section class="detail-section">
+        <h2>Prevention</h2>
+        <ul id="sPrev"></ul>
+      </section>
+
+      <!-- 9. Control and management -->
+      <section class="detail-section">
+        <h2>Control and Management</h2>
+        <ul id="sCtrl"></ul>
+      </section>
+
+      <!-- 10. Treatment -->
+      <section class="detail-section">
+        <h2>Treatment</h2>
+        <ul id="sTreat"></ul>
+      </section>
+
+      <!-- 11. Life cycle / development -->
+      <section class="detail-section">
+        <h2>Life Cycle / Development</h2>
+        <p id="sLife"></p>
+      </section>
+
+      <!-- 12. Additional information -->
+      <section class="detail-section">
+        <h2>Additional Information</h2>
+        <p id="sExtra"></p>
+      </section>
+
+      <p class="disclaimer">
+        This page may be machine-translated by your browser. For treatment decisions, always consult a local extension officer.
+      </p>
+    </article>
+  </div>
+
+  <script src="pest-disease-library.js"></script>
+</body>
+</html>

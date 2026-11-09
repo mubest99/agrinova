@@ -1,0 +1,431 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#075c3b">
+
+    <title>Marketplace | AgriNova</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="Marketplace.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="Marketplace.js" defer></script>
+</head>
+
+<body>
+
+<div class="marketplace-app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <a href="visitor-dashboard.html" class="brand">
+            <div class="brand-mark">
+                <svg viewBox="0 0 40 40" fill="none">
+                    <path d="M20 34V17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 23C7 23 5 12 7 6C18 6 24 12 20 23Z" fill="currentColor"/>
+                    <path d="M20 18C20 8 28 5 35 6C36 17 30 23 20 18Z" fill="currentColor" opacity=".65"/>
+                </svg>
+            </div>
+            <span>Agri<span class="brand-accent">Nova</span></span>
+        </a>
+
+        <div class="sidebar-label" data-i18n="workspace">WORKSPACE</div>
+
+        <nav class="sidebar-nav">
+
+            <a href="visitor-dashboard.html" class="nav-link">
+                <span class="nav-icon">⌂</span>
+                <span data-i18n="dashboard">Dashboard</span>
+            </a>
+
+            <a href="visitor-dashboard.html#weather" class="nav-link">
+                <span class="nav-icon">◷</span>
+                <span data-i18n="weather">Weather</span>
+            </a>
+
+            <a href="visitor-dashboard.html#education" class="nav-link">
+                <span class="nav-icon">▤</span>
+                <span data-i18n="education">Education</span>
+            </a>
+
+            <a href="visitor-dashboard.html#news" class="nav-link">
+                <span class="nav-icon">▧</span>
+                <span data-i18n="agricultureNews">Agriculture News</span>
+            </a>
+
+            <a href="Marketplace.html" class="nav-link active">
+                <span class="nav-icon">▦</span>
+                <span data-i18n="marketplace">Marketplace</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-help">
+                <div class="help-icon">?</div>
+                <strong data-i18n="needHelp">Need help?</strong>
+                <p data-i18n="helpDescription">Explore agricultural resources and discover opportunities.</p>
+                <a href="visitor-dashboard.html#contact" data-i18n="getSupport">Get support →</a>
+            </div>
+
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                <span data-i18n="platformStatus">AgriNova Marketplace</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <button class="icon-button mobile-menu" id="mobileMenu" aria-label="Open menu">
+                ☰
+            </button>
+
+            <div class="breadcrumb">
+                <span data-i18n="home">Home</span>
+                <span class="breadcrumb-divider">/</span>
+                <strong data-i18n="marketplace">Marketplace</strong>
+            </div>
+
+            <div class="topbar-actions">
+
+                <div class="language-wrapper">
+                    <button class="topbar-button" id="languageButton" aria-expanded="false">
+                        <span>◎</span>
+                        <span id="currentLanguageLabel">English</span>
+                        <span>⌄</span>
+                    </button>
+
+                    <div class="language-dropdown" id="languageDropdown">
+                        <button data-language="en">English</button>
+                        <button data-language="am">አማርኛ</button>
+                        <button data-language="ti">ትግርኛ</button>
+                        <button data-language="om">Afaan Oromo</button>
+                        <button data-language="so">Af Soomaali</button>
+                    </div>
+                </div>
+
+                <a href="visitor-dashboard.html" class="avatar-button" aria-label="Visitor dashboard">
+                    V
+                </a>
+
+            </div>
+
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-container">
+
+            <!-- MARKETPLACE HERO -->
+            <section class="market-hero">
+
+                <div class="hero-content">
+
+                    <div class="hero-eyebrow">
+                        <span class="hero-eyebrow-line"></span>
+                        <span data-i18n="marketEyebrow">ETHIOPIAN AGRICULTURE MARKETPLACE</span>
+                    </div>
+
+                    <h1 data-i18n="heroTitle">
+                        Fresh from the farm.<br>
+                        <span>Direct to you.</span>
+                    </h1>
+
+                    <p data-i18n="heroDescription">
+                        Discover agricultural products from Ethiopian farmers.
+                        Explore quality produce and connect directly with sellers.
+                    </p>
+
+                    <div class="hero-search">
+
+                        <span class="search-symbol">⌕</span>
+
+                        <input
+                            type="search"
+                            id="heroSearch"
+                            placeholder="What are you looking for?"
+                            data-i18n-placeholder="searchPlaceholder"
+                        >
+
+                        <button id="heroSearchButton" data-i18n="search">
+                            Search
+                        </button>
+
+                    </div>
+
+                    <div class="hero-trust">
+                        <span>✓</span>
+                        <span data-i18n="farmerDirect">Direct connections with registered farmers</span>
+                    </div>
+
+                </div>
+
+                <div class="hero-decoration">
+                    <div class="hero-circle hero-circle-one"></div>
+                    <div class="hero-circle hero-circle-two"></div>
+                    <div class="hero-decoration-text">GROWING<br>TOGETHER</div>
+                </div>
+
+            </section>
+
+            <!-- CATEGORY SECTION -->
+            <section class="category-section">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-eyebrow" data-i18n="explore">EXPLORE</span>
+                        <h2 data-i18n="shopCategories">Shop by category</h2>
+                    </div>
+                    <button class="text-button" id="clearCategory" data-i18n="viewAll">
+                        View all →
+                    </button>
+                </div>
+
+                <div class="category-grid" id="categoryGrid">
+
+                    <button class="category-card active" data-category="all">
+                        <span class="category-icon">✳</span>
+                        <span data-i18n="allProducts">All products</span>
+                    </button>
+
+                    <button class="category-card" data-category="grains">
+                        <span class="category-icon">◉</span>
+                        <span data-i18n="grains">Grains</span>
+                    </button>
+
+                    <button class="category-card" data-category="fruits">
+                        <span class="category-icon">◒</span>
+                        <span data-i18n="fruits">Fruits</span>
+                    </button>
+
+                    <button class="category-card" data-category="vegetables">
+                        <span class="category-icon">❋</span>
+                        <span data-i18n="vegetables">Vegetables</span>
+                    </button>
+
+                    <button class="category-card" data-category="legumes">
+                        <span class="category-icon">◌</span>
+                        <span data-i18n="legumes">Legumes</span>
+                    </button>
+
+                    <button class="category-card" data-category="coffee">
+                        <span class="category-icon">◍</span>
+                        <span data-i18n="coffee">Coffee</span>
+                    </button>
+
+                    <button class="category-card" data-category="livestock">
+                        <span class="category-icon">◇</span>
+                        <span data-i18n="livestock">Livestock</span>
+                    </button>
+
+                    <button class="category-card" data-category="other">
+                        <span class="category-icon">▧</span>
+                        <span data-i18n="other">Other</span>
+                    </button>
+
+                </div>
+
+            </section>
+
+            <!-- FEATURED -->
+            <section class="featured-section">
+
+                <div class="section-heading">
+                    <div>
+                        <span class="section-eyebrow" data-i18n="handpicked">DISCOVER AGRINOVA</span>
+                        <h2 data-i18n="featuredProducts">Featured products</h2>
+                    </div>
+                </div>
+
+                <div class="featured-grid" id="featuredGrid">
+
+                    <div class="loading-state">
+                        <div class="loader"></div>
+                        <p data-i18n="loadingProducts">Loading products...</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- MAIN PRODUCT LIST -->
+            <section class="products-section" id="productsSection">
+
+                <div class="section-heading products-heading">
+
+                    <div>
+                        <span class="section-eyebrow" data-i18n="marketCollection">MARKET COLLECTION</span>
+                        <h2 data-i18n="browseProducts">Browse products</h2>
+                        <p class="results-count" id="resultsCount">Loading...</p>
+                    </div>
+
+                    <div class="sort-wrapper">
+                        <label for="sortSelect" data-i18n="sortBy">Sort by</label>
+                        <select id="sortSelect">
+                            <option value="newest" data-i18n="newest">Newest first</option>
+                            <option value="price-low" data-i18n="priceLow">Price: low to high</option>
+                            <option value="price-high" data-i18n="priceHigh">Price: high to low</option>
+                            <option value="name" data-i18n="nameAZ">Name A–Z</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="market-layout">
+
+                    <!-- FILTER SIDEBAR -->
+                    <aside class="filter-panel">
+
+                        <div class="filter-header">
+                            <h3 data-i18n="filters">Filters</h3>
+                            <button id="resetFilters" data-i18n="reset">Reset</button>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="filterSearch" data-i18n="searchProducts">Search products</label>
+                            <input
+                                type="search"
+                                id="filterSearch"
+                                placeholder="Product name..."
+                                data-i18n-placeholder="productSearchPlaceholder"
+                            >
+                        </div>
+
+                        <div class="filter-group">
+                            <h4 data-i18n="category">Category</h4>
+                            <select id="categoryFilter">
+                                <option value="all" data-i18n="allCategories">All categories</option>
+                                <option value="grains" data-i18n="grains">Grains</option>
+                                <option value="fruits" data-i18n="fruits">Fruits</option>
+                                <option value="vegetables" data-i18n="vegetables">Vegetables</option>
+                                <option value="legumes" data-i18n="legumes">Legumes</option>
+                                <option value="coffee" data-i18n="coffee">Coffee</option>
+                                <option value="livestock" data-i18n="livestock">Livestock</option>
+                                <option value="other" data-i18n="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4 data-i18n="region">Region</h4>
+                            <select id="regionFilter">
+                                <option value="all" data-i18n="allRegions">All regions</option>
+                                <option value="Addis Ababa">Addis Ababa</option>
+                                <option value="Oromia">Oromia</option>
+                                <option value="Amhara">Amhara</option>
+                                <option value="Sidama">Sidama</option>
+                                <option value="South Ethiopia">South Ethiopia</option>
+                                <option value="Central Ethiopia">Central Ethiopia</option>
+                                <option value="Tigray">Tigray</option>
+                                <option value="Afar">Afar</option>
+                                <option value="Somali">Somali</option>
+                                <option value="Benishangul-Gumuz">Benishangul-Gumuz</option>
+                                <option value="Gambela">Gambela</option>
+                                <option value="Harari">Harari</option>
+                                <option value="Dire Dawa">Dire Dawa</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4 data-i18n="priceRange">Price range (ETB)</h4>
+
+                            <div class="price-inputs">
+                                <input type="number" id="minPrice" min="0" placeholder="Min">
+                                <span>–</span>
+                                <input type="number" id="maxPrice" min="0" placeholder="Max">
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <h4 data-i18n="availability">Availability</h4>
+                            <select id="availabilityFilter">
+                                <option value="all" data-i18n="allAvailability">All</option>
+                                <option value="available" data-i18n="available">Available</option>
+                            </select>
+                        </div>
+
+                        <button class="apply-filters" id="applyFilters" data-i18n="applyFilters">
+                            Apply filters
+                        </button>
+
+                    </aside>
+
+                    <!-- PRODUCT GRID -->
+                    <div class="product-area">
+
+                        <div class="product-grid" id="productGrid">
+
+                            <div class="loading-state">
+                                <div class="loader"></div>
+                                <p data-i18n="loadingProducts">Loading products...</p>
+                            </div>
+
+                        </div>
+
+                        <div class="pagination" id="pagination"></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- BOTTOM INFORMATION -->
+            <section class="market-banner">
+
+                <div>
+                    <span class="section-eyebrow" data-i18n="ourPurpose">OUR PURPOSE</span>
+                    <h2 data-i18n="bannerTitle">Supporting Ethiopian farmers.<br>Connecting agricultural markets.</h2>
+                    <p data-i18n="bannerDescription">
+                        Discover agricultural opportunities and connect with
+                        farmers across Ethiopia.
+                    </p>
+                </div>
+
+                <div class="banner-symbol">AGRI<br>NOVA</div>
+
+            </section>
+
+            <footer class="market-footer">
+                <span>© <span id="currentYear"></span> AgriNova.</span>
+                <span data-i18n="footerText">Agricultural technology for all.</span>
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+<!-- MOBILE OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- PRODUCT DETAILS MODAL -->
+<div class="modal-overlay" id="productModal" aria-hidden="true">
+
+    <div class="product-modal">
+
+        <button class="modal-close" id="closeProductModal" aria-label="Close">×</button>
+
+        <div id="productDetailsContent"></div>
+
+    </div>
+
+</div>
+
+<!-- NOTIFICATION -->
+<div class="toast" id="toast" role="status"></div>
+
+</body>
+</html>

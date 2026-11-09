@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AgriNova Agriculture News — worldwide farming, crop research, and agricultural innovation.">
+  <meta name="theme-color" content="#164A2A">
+  <title>AgriNova | Agriculture News</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="agriculture-news.css">
+  <script src="agriculture-news.js" defer></script>
+</head>
+<body>
+  <main class="dashboard-page">
+    <div class="dashboard-content">
+      <header class="page-header">
+        <div>
+          <h1>AgriNova</h1>
+          <p class="breadcrumb"><span data-i18n="breadcrumbHome">Home</span> / <span data-i18n="breadcrumbNews">Agriculture News</span></p>
+        </div>
+        <div class="header-mark" aria-label="AgriNova agriculture news">AGRICULTURE • INNOVATION • GROWTH</div>
+      </header>
+
+      <section class="introduction" id="newsHome">
+        <p class="eyebrow" data-i18n="eyebrow">GLOBAL AGRICULTURE UPDATE</p>
+        <h2 class="intro-heading" data-i18n="pageHeading">Agriculture News &amp; Innovations</h2>
+        <p class="intro-description" data-i18n="introDescription">Discover the latest developments in farming, crop science, agricultural research, and technologies shaping food production around the world.</p>
+      </section>
+
+      <section class="news-toolbar" aria-label="News controls">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <button class="filter-toggle-btn" id="filterToggle" type="button" aria-expanded="false" aria-controls="filterPanel">
+              <span aria-hidden="true">☷</span><span data-i18n="filters">Filters</span>
+              <span class="filter-count" id="filterCount" hidden>0</span>
+            </button>
+            <p class="results-info" id="resultsInfo" aria-live="polite"><span id="resultCount">0</span> <span data-i18n="articlesFound">articles found</span></p>
+          </div>
+
+          <div class="toolbar-middle">
+            <label class="language-label" for="languageSelect" data-i18n="language">Language</label>
+            <select id="languageSelect" class="language-select" aria-label="Choose page language">
+              <option value="am">አማርኛ</option>
+              <option value="ti">ትግርኛ</option>
+              <option value="en" selected>English</option>
+              <option value="om">Afaan Oromo</option>
+              <option value="so">Af-Soomaali</option>
+            </select>
+          </div>
+
+          <div class="toolbar-right">
+            <button class="refresh-btn" id="refreshBtn" type="button"><span aria-hidden="true">↻</span><span data-i18n="refresh">Refresh news</span></button>
+          </div>
+        </div>
+
+        <div class="search-container">
+          <label class="search-wrapper" for="searchInput">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input class="search-bar" id="searchInput" type="search" placeholder="Search crops, farming, research, or innovations..." autocomplete="off" data-i18n-placeholder="searchPlaceholder">
+            <button class="search-clear" id="clearSearch" type="button" aria-label="Clear search" hidden>×</button>
+          </label>
+        </div>
+      </section>
+
+      <section class="filter-panel" id="filterPanel" aria-label="News filters">
+        <div class="filter-panel-inner">
+          <div class="filter-section">
+            <h3 data-i18n="filterByTopic">Filter by topic</h3>
+            <div class="filter-options" id="categoryFilters">
+              <label class="filter-option"><input type="checkbox" value="crops"><span data-i18n="crops">Crop news</span></label>
+              <label class="filter-option"><input type="checkbox" value="farming"><span data-i18n="farming">Farming</span></label>
+              <label class="filter-option"><input type="checkbox" value="innovation"><span data-i18n="innovation">Innovation &amp; technology</span></label>
+              <label class="filter-option"><input type="checkbox" value="research"><span data-i18n="research">Research &amp; science</span></label>
+              <label class="filter-option"><input type="checkbox" value="climate"><span data-i18n="climate">Climate &amp; sustainability</span></label>
+              <label class="filter-option"><input type="checkbox" value="livestock"><span data-i18n="livestock">Livestock</span></label>
+            </div>
+          </div>
+          <div class="filter-section">
+            <h3 data-i18n="sortBy">Sort by</h3>
+            <select id="sortSelect" class="sort-select">
+              <option value="newest" data-i18n="newest">Newest first</option>
+              <option value="oldest" data-i18n="oldest">Oldest first</option>
+              <option value="relevance" data-i18n="relevance">Most relevant</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-actions">
+          <button class="clear-filters-btn" id="clearFilters" type="button" data-i18n="clearFilters">Clear filters</button>
+          <button class="apply-filters-btn" id="applyFilters" type="button" data-i18n="applyFilters">Apply filters</button>
+        </div>
+      </section>
+
+      <section class="news-grid-section" aria-label="Agriculture news articles">
+        <div class="news-grid" id="newsGrid" aria-live="polite">
+          <div class="loading-state"><div class="spinner"></div><p data-i18n="loading">Loading agriculture news…</p></div>
+        </div>
+      </section>
+
+      <div class="load-more-container" id="loadMoreContainer" hidden>
+        <button class="load-more-btn" id="loadMoreBtn" type="button" data-i18n="loadMore">Load more news</button>
+      </div>
+
+      <footer class="news-footer">
+        <p data-i18n="footerNote">News articles are provided by external publishers. Select an article to view its details and visit the original source.</p>
+      </footer>
+    </div>
+  </main>
+
+  <template id="articlePageTemplate">
+    <main class="article-detail-page" id="articleDetail">
+      <a class="back-link" href="agriculture-news.html" data-i18n="backToNews">← Back to agriculture news</a>
+      <div class="detail-image" id="detailImage"></div>
+      <span class="news-card-category" id="detailCategory"></span>
+      <h1 class="detail-title" id="detailTitle"></h1>
+      <p class="detail-tagline" id="detailTagline"></p>
+      <div class="detail-meta" id="detailMeta"></div>
+      <div class="detail-full-content" id="detailContent"></div>
+      <p class="article-limit-note" data-i18n="articleLimit">The news provider supplies a short preview. Open the publisher's website for the complete report.</p>
+      <a class="detail-source-link" id="detailSourceLink" href="#" target="_blank" rel="noopener noreferrer" data-i18n="readOriginal">Read the full article at the original publisher →</a>
+    </main>
+  </template>
+</body>
+</html>

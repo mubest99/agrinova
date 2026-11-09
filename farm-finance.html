@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriNova · Farm Finance</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="farm-finance.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name"><i class="fas fa-seedling"></i> AgriNova</div>
+      <div class="brand-tagline" data-i18n="tagline">Growing Smarter. Farming Better.</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label" data-i18n="farmerDashboard">Farmer Dashboard</div>
+      <a href="farmer-dashboard.html"><i class="fas fa-th-large"></i><span data-i18n="dashboardHome">Dashboard Home</span></a>
+      <a href="my-farm.html"><i class="fas fa-tractor"></i><span data-i18n="myFarm">My Farm</span></a>
+      <a href="my-crops.html"><i class="fas fa-seedling"></i><span data-i18n="myCrops">My Crops</span></a>
+      <a href="daily-farm.html"><i class="fas fa-calendar-day"></i><span data-i18n="dailyFarm">Daily Farm</span></a>
+      <a href="farm-tasks-calendar.html"><i class="fas fa-tasks"></i><span data-i18n="tasksCalendar">Farm Tasks &amp; Calendar</span></a>
+      <a href="farm-records.html"><i class="fas fa-clipboard-list"></i><span data-i18n="farmRecords">Farm Records</span></a>
+      <a href="farm-calculator.html"><i class="fas fa-calculator"></i><span data-i18n="farmCalculator">Farm Calculator</span></a>
+      <a href="farm-finance.html" class="active"><i class="fas fa-coins"></i><span data-i18n="farmFinance">Farm Finance</span></a>
+      <a href="#"><i class="fas fa-robot"></i><span data-i18n="aiAssistant">AI Agricultural Assistant</span></a>
+      <a href="#"><i class="fas fa-chart-pie"></i><span data-i18n="farmAnalysis">Farm Analysis &amp; ID</span></a>
+      <a href="#"><i class="fas fa-users"></i><span data-i18n="community">Farmer Community</span></a>
+      <a href="#"><i class="fas fa-store"></i><span data-i18n="marketplace">Marketplace</span></a>
+
+      <div class="nav-label" data-i18n="resources">AgriNova Resources</div>
+      <a href="#"><i class="fas fa-newspaper"></i><span data-i18n="articles">Agriculture Articles</span></a>
+      <a href="#"><i class="fas fa-book-open"></i><span data-i18n="cropInformation">Crop Information</span></a>
+      <a href="#"><i class="fas fa-map"></i><span data-i18n="cropMap">Ethiopian Crop Map</span></a>
+      <a href="#"><i class="fas fa-cloud-sun"></i><span data-i18n="weather">Weather</span></a>
+      <a href="#"><i class="fas fa-bug"></i><span data-i18n="pestLibrary">Pest &amp; Disease Library</span></a>
+      <a href="#"><i class="fas fa-flask"></i><span data-i18n="fertilizer">Fertilizer Information</span></a>
+      <a href="#"><i class="fas fa-bullhorn"></i><span data-i18n="agriNews">Agriculture News</span></a>
+      <a href="#"><i class="fas fa-rss"></i><span data-i18n="cropNews">Crop News</span></a>
+      <a href="#"><i class="fas fa-lightbulb"></i><span data-i18n="innovation">Agriculture Innovation</span></a>
+      <a href="#"><i class="fas fa-graduation-cap"></i><span data-i18n="education">Educational Content</span></a>
+      <a href="#"><i class="fas fa-gamepad"></i><span data-i18n="simulation">Farm Simulation</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#"><i class="fas fa-user-circle"></i><span data-i18n="farmerProfile">Farmer Profile</span></a>
+      <a href="#"><i class="fas fa-cog"></i><span data-i18n="settings">Settings</span></a>
+      <a href="index.html"><i class="fas fa-sign-out-alt"></i><span data-i18n="logout">Logout</span></a>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="top-nav">
+      <button class="mobile-menu" id="mobileMenu" aria-label="Open menu"><i class="fas fa-bars"></i></button>
+
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="search" id="globalSearch" placeholder="Search transactions..." data-i18n-placeholder="searchTransactions">
+      </div>
+
+      <div class="nav-right">
+        <div class="language-wrap">
+          <button id="languageButton" class="language-button" type="button">
+            <i class="fas fa-globe"></i>
+            <span id="currentLanguage">English</span>
+            <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="language-menu" id="languageMenu">
+            <button type="button" data-language="en">English</button>
+            <button type="button" data-language="am">አማርኛ</button>
+            <button type="button" data-language="ti">ትግርኛ</button>
+            <button type="button" data-language="om">Afaan Oromo</button>
+            <button type="button" data-language="so">Af Soomaali</button>
+          </div>
+        </div>
+
+        <button class="notification-button" id="notifIcon" type="button" aria-label="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="nav-badge" id="notifBadge">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      <section class="page-header">
+        <div>
+          <h1 data-i18n="farmFinance">Farm Finance</h1>
+          <p class="subtitle" data-i18n="financeSubtitle">Manage your money. Strengthen your farm.</p>
+        </div>
+        <div class="header-right">
+          <div class="date-range-selector">
+            <select id="dateRange">
+              <option value="week" data-i18n="thisWeek">This Week</option>
+              <option value="month" selected data-i18n="thisMonth">This Month</option>
+              <option value="year" data-i18n="thisYear">This Year</option>
+              <option value="all" data-i18n="allTime">All Time</option>
+              <option value="custom" data-i18n="customRange">Custom Range</option>
+            </select>
+          </div>
+          <div class="current-date">
+            <i class="fas fa-calendar-alt"></i>
+            <div>
+              <div class="date-day" id="dateDay"></div>
+              <div class="date-full" id="dateFull"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="custom-date-panel" id="customDatePanel" hidden>
+        <label><span data-i18n="fromDate">From</span><input type="date" id="customStartDate"></label>
+        <label><span data-i18n="toDate">To</span><input type="date" id="customEndDate"></label>
+        <button class="btn-primary btn-sm" id="applyCustomDate" type="button" data-i18n="apply">Apply</button>
+      </section>
+
+      <section class="overview-section">
+        <div class="overview-grid">
+          <article class="overview-card">
+            <div class="overview-label" data-i18n="totalIncome">Total Income</div>
+            <div class="overview-value" id="totalIncome">ETB 0.00</div>
+            <div class="overview-change" id="incomeChange">—</div>
+          </article>
+          <article class="overview-card">
+            <div class="overview-label" data-i18n="totalExpenses">Total Expenses</div>
+            <div class="overview-value expense" id="totalExpenses">ETB 0.00</div>
+            <div class="overview-change" id="expenseChange">—</div>
+          </article>
+          <article class="overview-card">
+            <div class="overview-label" data-i18n="netProfit">Net Profit</div>
+            <div class="overview-value" id="netProfit">ETB 0.00</div>
+            <div class="overview-change" id="profitChange">—</div>
+          </article>
+          <article class="overview-card">
+            <div class="overview-label" data-i18n="transactions">Transactions</div>
+            <div class="overview-value" id="totalTransactions">0</div>
+            <div class="overview-change" id="transactionDetail">0 income · 0 expense</div>
+          </article>
+        </div>
+
+        <div class="quick-actions">
+          <button class="action-btn income" id="addIncomeButton"><i class="fas fa-plus-circle"></i><span data-i18n="addIncome">Add Income</span></button>
+          <button class="action-btn expense" id="addExpenseButton"><i class="fas fa-minus-circle"></i><span data-i18n="addExpense">Add Expense</span></button>
+          <button class="action-btn transfer" id="addTransferButton"><i class="fas fa-exchange-alt"></i><span data-i18n="transfer">Transfer</span></button>
+        </div>
+      </section>
+
+      <section class="timeline-goals-row">
+        <article class="section-card">
+          <div class="section-header">
+            <div class="section-title"><i class="fas fa-chart-line"></i><h3 data-i18n="financialTimeline">Financial Timeline</h3></div>
+            <div class="timeline-controls">
+              <button class="timeline-btn" data-period="daily" data-i18n="daily">Daily</button>
+              <button class="timeline-btn" data-period="weekly" data-i18n="weekly">Weekly</button>
+              <button class="timeline-btn active" data-period="monthly" data-i18n="monthly">Monthly</button>
+              <button class="timeline-btn" data-period="yearly" data-i18n="yearly">Yearly</button>
+            </div>
+          </div>
+          <div class="chart-holder"><canvas id="timelineChart"></canvas></div>
+          <div id="timelineEmpty" class="empty-state" hidden><i class="fas fa-chart-line"></i><p data-i18n="noTimeline">Your financial timeline will appear when you add transactions.</p></div>
+        </article>
+
+        <article class="section-card">
+          <div class="section-header">
+            <div class="section-title"><i class="fas fa-bullseye"></i><h3 data-i18n="financialGoals">Financial Goals</h3></div>
+            <button class="btn-secondary btn-sm" id="createGoalButton"><i class="fas fa-plus"></i><span data-i18n="createGoal">Create Goal</span></button>
+          </div>
+          <div id="goalsContainer"></div>
+        </article>
+      </section>
+
+      <section class="analysis-row">
+        <article class="section-card">
+          <div class="section-header"><div class="section-title"><i class="fas fa-chart-pie"></i><h3 data-i18n="expenseDistribution">Expense Distribution</h3></div></div>
+          <div class="chart-holder pie-holder"><canvas id="expenseChart"></canvas></div>
+          <div id="expenseDistributionContainer"></div>
+        </article>
+
+        <article class="section-card">
+          <div class="section-header"><div class="section-title"><i class="fas fa-scale-balanced"></i><h3 data-i18n="incomeExpenseAnalysis">Income vs Expense</h3></div></div>
+          <div class="chart-holder"><canvas id="incomeExpenseChart"></canvas></div>
+        </article>
+
+        <article class="section-card">
+          <div class="section-header"><div class="section-title"><i class="fas fa-seedling"></i><h3 data-i18n="cropPerformance">Crop Financial Performance</h3></div></div>
+          <div id="cropPerformanceContainer" class="empty-state"><p data-i18n="cropPerformanceInfo">Link transactions to crops to view crop-specific financial performance.</p></div>
+        </article>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-wallet"></i><h3 data-i18n="budgetTracker">Budget Tracker</h3></div>
+          <button class="btn-secondary btn-sm" id="createBudgetButton"><i class="fas fa-plus"></i><span data-i18n="setBudget">Set Budget</span></button>
+        </div>
+        <div id="budgetContainer"></div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-bolt"></i><h3 data-i18n="utilityPayments">Utility Payments</h3></div>
+          <button class="btn-secondary btn-sm" id="addUtilityButton"><i class="fas fa-plus"></i><span data-i18n="addUtility">Add Utility</span></button>
+        </div>
+        <p class="section-subtitle" data-i18n="utilityDescription">Track recurring bills, unpaid payments, due dates and reminders.</p>
+        <div id="utilitySummary" class="utility-summary"></div>
+        <div id="utilityContainer"></div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header">
+          <div class="section-title"><i class="fas fa-list-ul"></i><h3 data-i18n="transactionHistory">Transaction History</h3></div>
+          <div class="transaction-controls">
+            <input type="search" id="transactionSearch" placeholder="Search transactions..." data-i18n-placeholder="searchTransactions">
+            <select id="transactionTypeFilter">
+              <option value="all" data-i18n="allTypes">All Types</option>
+              <option value="income" data-i18n="income">Income</option>
+              <option value="expense" data-i18n="expense">Expense</option>
+              <option value="transfer" data-i18n="transfer">Transfer</option>
+            </select>
+            <button class="btn-secondary btn-sm" id="exportButton"><i class="fas fa-download"></i><span data-i18n="export">Export</span></button>
+          </div>
+        </div>
+        <div id="transactionContainer"></div>
+      </section>
+
+      <section class="section-card">
+        <div class="section-header"><div class="section-title"><i class="fas fa-link"></i><h3 data-i18n="connectedRecords">Connected Records</h3></div></div>
+        <div class="connected-grid">
+          <div class="connected-item"><i class="fas fa-seedling"></i><div><div class="connected-label" data-i18n="myCrops">My Crops</div><div class="connected-count" id="connectedCrops">—</div></div></div>
+          <div class="connected-item"><i class="fas fa-clipboard-list"></i><div><div class="connected-label" data-i18n="farmRecords">Farm Records</div><div class="connected-count" id="connectedRecords">—</div></div></div>
+          <div class="connected-item"><i class="fas fa-tags"></i><div><div class="connected-label" data-i18n="marketPrices">Market Prices</div><div class="connected-count" id="connectedMarket">—</div></div></div>
+          <div class="connected-item"><i class="fas fa-tasks"></i><div><div class="connected-label" data-i18n="farmTasks">Farm Tasks</div><div class="connected-count" id="connectedTasks">—</div></div></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- TRANSACTION MODAL -->
+  <div class="modal" id="transactionModal">
+    <div class="modal-content modal-large">
+      <div class="modal-header"><h3 id="transactionModalTitle" data-i18n="addTransaction">Add Transaction</h3><button class="modal-close" data-close="transactionModal">&times;</button></div>
+      <form id="transactionForm">
+        <input type="hidden" id="editTransactionId">
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="type">Type</label><select id="transTypeSelect"><option value="income" data-i18n="income">Income</option><option value="expense" data-i18n="expense">Expense</option></select></div>
+          <div class="form-group"><label data-i18n="category">Category</label><select id="transCategory"></select></div>
+        </div>
+        <div class="form-group"><label data-i18n="description">Description</label><input id="transDescription" required maxlength="160"></div>
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="relatedCrop">Related Crop (optional)</label><input id="transCrop" placeholder="Crop name (optional)"></div>
+          <div class="form-group"><label data-i18n="paymentMethod">Payment Method</label><select id="transPayment"><option>Cash</option><option>Mobile Money</option><option>Bank Transfer</option><option>Other</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="amountETB">Amount (ETB)</label><input type="number" id="transAmount" min="0.01" step="0.01" required></div>
+          <div class="form-group"><label data-i18n="date">Date</label><input type="date" id="transDate" required></div>
+        </div>
+        <div class="form-group"><label data-i18n="notes">Notes</label><textarea id="transNotes" rows="2"></textarea></div>
+        <button class="btn-primary full-width" type="submit" data-i18n="saveTransaction">Save Transaction</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- GOAL MODAL -->
+  <div class="modal" id="goalModal">
+    <div class="modal-content">
+      <div class="modal-header"><h3 id="goalModalTitle" data-i18n="createGoal">Create Goal</h3><button class="modal-close" data-close="goalModal">&times;</button></div>
+      <form id="goalForm">
+        <input type="hidden" id="editGoalId">
+        <div class="form-group"><label data-i18n="goalType">Goal Type</label><select id="goalType"><option value="savings" data-i18n="savingsGoal">Savings Goal</option><option value="equipment" data-i18n="equipmentGoal">Equipment Goal</option></select></div>
+        <div class="form-group"><label data-i18n="goalName">Goal Name</label><input id="goalName" required></div>
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="targetAmount">Target Amount (ETB)</label><input type="number" id="goalTarget" min="0.01" step="0.01" required></div>
+          <div class="form-group"><label data-i18n="currentAmount">Current Amount (ETB)</label><input type="number" id="goalCurrent" min="0" step="0.01" value="0"></div>
+        </div>
+        <div class="form-group"><label data-i18n="targetDate">Target Date</label><input type="date" id="goalDate"></div>
+        <div class="form-group"><label data-i18n="notes">Notes</label><textarea id="goalNotes" rows="2"></textarea></div>
+        <button class="btn-primary full-width" type="submit" data-i18n="saveGoal">Save Goal</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- BUDGET MODAL -->
+  <div class="modal" id="budgetModal">
+    <div class="modal-content">
+      <div class="modal-header"><h3 id="budgetModalTitle" data-i18n="createBudget">Create Budget</h3><button class="modal-close" data-close="budgetModal">&times;</button></div>
+      <form id="budgetForm">
+        <input type="hidden" id="editBudgetId">
+        <div class="form-group"><label data-i18n="budgetName">Budget Name</label><input id="budgetName" required></div>
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="startDate">Start Date</label><input type="date" id="budgetStart" required></div>
+          <div class="form-group"><label data-i18n="endDate">End Date</label><input type="date" id="budgetEnd" required></div>
+        </div>
+        <div class="form-group"><label data-i18n="budgetAmount">Total Budget Amount (ETB)</label><input type="number" id="budgetAmount" min="0.01" step="0.01" required></div>
+        <button class="btn-primary full-width" type="submit" data-i18n="saveBudget">Save Budget</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- UTILITY MODAL -->
+  <div class="modal" id="utilityModal">
+    <div class="modal-content">
+      <div class="modal-header"><h3 id="utilityModalTitle" data-i18n="addUtility">Add Utility Payment</h3><button class="modal-close" data-close="utilityModal">&times;</button></div>
+      <form id="utilityForm">
+        <input type="hidden" id="editUtilityId">
+        <div class="form-group"><label data-i18n="utilityName">Payment Name</label><input id="utilityName" placeholder="e.g. Electricity bill" required></div>
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="category">Category</label><select id="utilityCategory"><option>Electricity</option><option>Water</option><option>Internet</option><option>Rent</option><option>Loan</option><option>Labour</option><option>Other</option></select></div>
+          <div class="form-group"><label data-i18n="amountETB">Amount (ETB)</label><input type="number" id="utilityAmount" min="0.01" step="0.01" required></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label data-i18n="nextDueDate">Next Due Date</label><input type="date" id="utilityDueDate" required></div>
+          <div class="form-group"><label data-i18n="recurrence">Recurrence</label><select id="utilityRecurrence"><option value="once" data-i18n="oneTime">One time</option><option value="weekly" data-i18n="weekly">Weekly</option><option value="monthly" data-i18n="monthly">Monthly</option><option value="yearly" data-i18n="yearly">Yearly</option><option value="custom" data-i18n="customDays">Every N days</option></select></div>
+        </div>
+        <div class="form-group" id="customIntervalGroup" hidden><label data-i18n="intervalDays">Repeat every (days)</label><input type="number" id="utilityInterval" min="1" step="1"></div>
+        <div class="form-group"><label data-i18n="remindMe">Remind me</label><select id="utilityReminder"><option value="7" data-i18n="sevenDays">7 days before</option><option value="5" data-i18n="fiveDays">5 days before</option><option value="3" selected data-i18n="threeDays">3 days before</option><option value="1" data-i18n="oneDay">1 day before</option></select></div>
+        <div class="form-group"><label data-i18n="notes">Notes</label><textarea id="utilityNotes" rows="2"></textarea></div>
+        <button class="btn-primary full-width" type="submit" data-i18n="saveUtility">Save Utility</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="farm-finance.js"></script>
+</body>
+</html>

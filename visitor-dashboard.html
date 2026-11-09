@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AgriNova visitor dashboard for agricultural knowledge and weather information.">
+  <title>AgriNova — Visitor Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="visitor-dashboard.css">
+  <script src="visitor-dashboard.js" defer></script>
+</head>
+<body>
+  <header class="top-header">
+    <a class="logo" href="visitor-dashboard.html" aria-label="AgriNova home">AgriNova</a>
+    <div class="header-right">
+      <span class="language-label" data-i18n="language">Language</span>
+      <select id="languageSelect" class="language-select" aria-label="Choose language">
+        <option value="en">English</option>
+        <option value="am">አማርኛ</option>
+        <option value="ti">ትግርኛ</option>
+        <option value="om">Afaan Oromo</option>
+        <option value="so">Soomaali</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="dashboard-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="sidebar-heading" data-i18n="navigation">Navigation</div>
+      <nav class="sidebar-nav">
+        <a href="weather-information.html" data-i18n="weatherInfo">Weather Information</a>
+        <a href="visitor-articles.html" data-i18n="visitorArticles">Visitor Articles</a>
+        <a href="pest-disease-library.html" data-i18n="pestLibrary">Pest and Diseases Library</a>
+        <a href="fertilizer-information.html" data-i18n="fertilizerInfo">Fertilizer Information</a>
+        <a href="educational-content.html" data-i18n="educationContent">Education Content</a>
+        <a href="crop-map.html" data-i18n="cropMap">Crop Map</a>
+        <a href="crop-information.html" data-i18n="cropInfo">Crop Information</a>
+        <a href="agriculture-news.html" data-i18n="agricultureNews">Agricultural News</a>
+        <a href="agricultural-innovation.html" data-i18n="innovation">Agricultural Innovation</a>
+        <a href="marketplace.html" data-i18n="marketplace">Marketplace</a>
+        <a href="farm-simulation.html" data-i18n="simulation">Farm Simulation</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <section class="welcome-section">
+        <p class="eyebrow" data-i18n="welcomeEyebrow">AGRICULTURE • KNOWLEDGE • INNOVATION</p>
+        <h1 data-i18n="welcomeTitle">Welcome, Visitor</h1>
+        <p data-i18n="welcomeText">Explore agricultural knowledge, local weather, and useful farming resources.</p>
+      </section>
+
+      <section class="weather-card weather-default" id="weatherCard" aria-labelledby="weatherTitle">
+        <div class="weather-overlay"></div>
+        <div class="weather-content">
+          <div class="weather-topline">
+            <div>
+              <p class="weather-kicker" data-i18n="localWeather">LOCAL WEATHER</p>
+              <h2 id="weatherTitle" data-i18n="weatherHeading">Weather Information</h2>
+              <p class="weather-location" id="weatherLocation" data-i18n="detectingLocation">Detecting your location…</p>
+            </div>
+            <div class="weather-main">
+              <span class="weather-icon" id="weatherIcon" aria-hidden="true">🌤️</span>
+              <span class="temperature" id="temperature">--°C</span>
+              <span class="weather-condition" id="weatherCondition" data-i18n="loadingWeather">Loading weather…</span>
+            </div>
+          </div>
+
+          <div class="weather-metrics">
+            <div class="weather-metric">
+              <span class="metric-value" id="metricTemperature">--°C</span>
+              <span class="metric-label" data-i18n="temperature">Temperature</span>
+            </div>
+            <div class="weather-metric">
+              <span class="metric-value" id="metricHumidity">--%</span>
+              <span class="metric-label" data-i18n="humidity">Humidity</span>
+            </div>
+            <div class="weather-metric">
+              <span class="metric-value" id="metricWind">-- km/h</span>
+              <span class="metric-label" data-i18n="windSpeed">Wind speed</span>
+            </div>
+            <div class="weather-metric">
+              <span class="metric-value" id="metricRain">--%</span>
+              <span class="metric-label" data-i18n="rainProbability">Rain probability</span>
+            </div>
+          </div>
+          <p class="weather-message" id="weatherMessage" data-i18n="weatherPermission">Allow location access to see weather for your area. If access is denied, AgriNova will try network-based location.</p>
+          <p class="weather-error" id="weatherError" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="cards-section" aria-label="Agricultural resources">
+        <div class="cards-grid">
+          <article class="feature-card">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRybBxla6qu1YzXM9qtXBoxHyohjX7BWTcerFx88lZKtQ&s=10" alt="Fresh produce and agricultural market" loading="lazy">
+            <div class="feature-content">
+              <h2 data-i18n="visitorArticles">Visitor Articles</h2>
+              <p data-i18n="articlesDescription">Read practical articles, farming guides, and agricultural research.</p>
+              <a class="explore-button" href="visitor-articles.html" data-i18n="exploreArticles">Explore Articles</a>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <img src="https://images.unsplash.com/photo-1586771107445-d3ca8881290d?w=900&q=85" alt="Agricultural supplies and fertilizer in a farm setting" loading="lazy">
+            <div class="feature-content">
+              <h2 data-i18n="fertilizerInfo">Fertilizer Information</h2>
+              <p data-i18n="fertilizerDescription">Learn about fertilizer types, nutrients, and responsible application.</p>
+              <a class="explore-button" href="fertilizer-information.html" data-i18n="exploreFertilizers">Explore Fertilizers</a>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=900&q=85" alt="Newspaper representing agricultural news" loading="lazy">
+            <div class="feature-content">
+              <h2 data-i18n="agricultureNews">Agricultural News</h2>
+              <p data-i18n="newsDescription">Stay informed about agricultural developments and news.</p>
+              <a class="explore-button" href="agriculture-news.html" data-i18n="exploreNews">Explore News</a>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=900&q=85" alt="Green crop fields growing on farmland" loading="lazy">
+            <div class="feature-content">
+              <h2 data-i18n="cropInfo">Crop Information</h2>
+              <p data-i18n="cropDescription">Discover crop varieties, growing conditions, and crop care.</p>
+              <a class="explore-button" href="crop-information.html" data-i18n="exploreCrops">Explore Crops</a>
+            </div>
+          </article>
+
+          <article class="feature-card">
+            <img src="https://images.unsplash.com/photo-1584467541268-b040f83be3fd?w=900&q=85" alt="Close-up of an insect on a green plant leaf" loading="lazy">
+            <div class="feature-content">
+              <h2 data-i18n="pestLibrary">Pest and Diseases Library</h2>
+              <p data-i18n="pestDescription">Identify common crop pests and plant diseases and learn prevention methods.</p>
+              <a class="explore-button" href="pest-disease-library.html" data-i18n="explorePests">Explore Pests</a>
+            </div>
+          </article>
+        </div>
+      </section>
+      <footer class="dashboard-footer">© <span id="currentYear"></span> AgriNova</footer>
+    </main>
+  </div>
+</body>
+</html>

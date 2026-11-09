@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgriNova · Daily Farm</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="daily-farm.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="brand"><i class="fa-solid fa-seedling"></i> AgriNova<small>Growing Smarter. Farming Better.</small></div>
+  <nav>
+    <label>FARMER DASHBOARD</label>
+    <a href="farmer-dashboard.html">▦ Dashboard Home</a><a href="my-farm.html">♧ My Farm</a><a href="my-crops.html">🌱 My Crops</a><a class="active" href="daily-farm.html"><i class="fa-solid fa-calendar-day"></i> Daily Farm</a>
+    <a href="#">Farm Tasks &amp; Calendar</a><a href="#">Farm Records</a><a href="#">Farm Calculator</a><a href="#">Farm Finance</a><a href="ai-assistant.html">AI Agricultural Assistant</a><a href="farm-analysis.html">Farm Analysis &amp; ID</a><a href="#">Farmer Community</a><a href="#">Marketplace</a>
+    <label>AGRINOVA RESOURCES</label><a href="visitor-articles.html">Agriculture Articles</a><a href="crop-information.html">Crop Information</a><a href="crop-map.html">Ethiopian Crop Map</a><a href="weather-information.html">Weather</a><a href="pest-disease-library.html">Pest &amp; Disease Library</a><a href="fertilizer-information.html">Fertilizer Information</a>
+  </nav>
+</aside>
+<div class="main">
+  <header class="top">
+    <div class="search"><i class="fa fa-search"></i><input id="globalSearch" type="search" placeholder="Search your daily farm log..."></div>
+    <div class="right"><button id="notifButton" class="bell" aria-label="Notifications"><i class="fa-regular fa-bell"></i><b id="notifBadge">0</b></button>
+      <label class="language-wrap" title="Choose language"><i class="fa-solid fa-language"></i><select id="languageSelect" aria-label="Select language"><option value="en">English</option><option value="am">አማርኛ</option><option value="ti">ትግርኛ</option><option value="om">Afaan Oromo</option><option value="so">Af-Soomaali</option></select></label>
+    </div>
+  </header>
+  <main>
+    <div class="heading"><div><small data-i18n="eyebrow">FARM MANAGEMENT</small><h1 data-i18n="pageTitle">Daily Farm</h1><p data-i18n="pageSubtitle">Record your farm work, monitor field conditions, and assess your day.</p></div><div class="today-box"><span data-i18n="today">Today</span><strong id="todayDate">—</strong><small id="recordStatus" data-i18n="notSaved">Not saved yet</small></div></div>
+    <div id="connectionNotice" class="notice" hidden></div>
+    <section class="panel log-panel">
+      <div class="panelhead"><div><small data-i18n="dailyLogLabel">YOUR DAILY RECORD</small><h2 data-i18n="dailyLogTitle">Daily Farm Log</h2><p data-i18n="dailyLogIntro">Keep a clear record of the work done and what you noticed in your fields.</p></div><span class="date-chip"><i class="fa-regular fa-calendar"></i> <span id="dateChip">—</span></span></div>
+      <section class="log-section">
+        <div class="section-title"><span class="step-number">1</span><div><h3 data-i18n="activitiesTitle">Farm Activities</h3><p data-i18n="activitiesIntro">Record the work performed on your farm today.</p></div></div>
+        <form id="activityForm" class="entry-form">
+          <div class="form-grid">
+            <label><span data-i18n="activityType">Activity type *</span><select id="activityType" required><option value="" data-i18n="chooseActivity">Choose an activity</option><option value="Irrigation">Irrigation</option><option value="Fertilizer application">Fertilizer application</option><option value="Pest and disease treatment">Pest and disease treatment</option><option value="Weeding">Weeding</option><option value="Planting">Planting</option><option value="Soil management">Soil management</option><option value="Pruning">Pruning</option><option value="Harvesting">Harvesting</option><option value="Inspection">Inspection</option><option value="Maintenance">Maintenance</option><option value="Land preparation">Land preparation</option><option value="Other">Other</option></select></label>
+            <label><span data-i18n="relatedCrop">Related crop / field</span><select id="activityCrop"><option value="" data-i18n="noSpecificCrop">Not crop-specific</option></select></label>
+            <label><span data-i18n="activityDate">Date</span><input id="activityDate" type="date" required></label>
+            <label><span data-i18n="quantity">Quantity / amount (optional)</span><input id="activityAmount" type="text" placeholder="e.g. 2 hours, 20 kg"></label>
+          </div>
+          <label class="full-label"><span data-i18n="activityDetails">Activity details *</span><textarea id="activityDetails" rows="3" required placeholder="Describe what you did..."></textarea></label>
+          <div class="form-actions"><button class="primary" type="submit"><i class="fa fa-plus"></i> <span data-i18n="addActivity">Add Activity</span></button></div>
+        </form>
+        <div id="activitiesList" class="entry-list"><div class="empty" data-i18n="noActivities">No activities added yet.</div></div>
+      </section>
+      <section class="log-section">
+        <div class="section-title"><span class="step-number">2</span><div><h3 data-i18n="observationsTitle">Crop &amp; Field Observations</h3><p data-i18n="observationsIntro">Record what you noticed about your crops, soil, water, and field conditions.</p></div></div>
+        <form id="observationForm" class="entry-form">
+          <div class="form-grid">
+            <label><span data-i18n="observationCategory">Observation category *</span><select id="observationCategory" required><option value="" data-i18n="chooseCategory">Choose a category</option><option value="Crop growth and condition">Crop growth and condition</option><option value="Pest signs">Pest signs</option><option value="Disease symptoms">Disease symptoms</option><option value="Soil condition">Soil condition</option><option value="Water and irrigation">Water and irrigation</option><option value="Weather effects">Weather effects</option><option value="Weed pressure">Weed pressure</option><option value="Other">Other</option></select></label>
+            <label><span data-i18n="observedCrop">Crop / field</span><select id="observationCrop"><option value="" data-i18n="generalField">General field observation</option></select></label>
+            <label><span data-i18n="priority">Priority</span><select id="observationPriority"><option value="Normal" data-i18n="normal">Normal</option><option value="Needs attention" data-i18n="needsAttention">Needs attention</option><option value="Urgent" data-i18n="urgent">Urgent</option></select></label>
+          </div>
+          <label class="full-label"><span data-i18n="observationDetails">What did you notice? *</span><textarea id="observationDetails" rows="3" required placeholder="Describe what you observed..."></textarea></label>
+          <div class="form-actions"><button class="primary" type="submit"><i class="fa fa-plus"></i> <span data-i18n="addObservation">Add Observation</span></button></div>
+        </form>
+        <div id="observationsList" class="entry-list"><div class="empty" data-i18n="noObservations">No observations added yet.</div></div>
+      </section>
+      <section class="log-section assessment-section">
+        <div class="section-title"><span class="step-number">3</span><div><h3 data-i18n="assessmentTitle">Farmer's Daily Assessment</h3><p data-i18n="assessmentQuestion">How would you assess your farm today?</p></div></div>
+        <div class="assessment-options" id="assessmentOptions">
+          <label class="assessment-option"><input type="radio" name="assessment" value="Excellent"><span data-i18n="excellent">Excellent</span></label>
+          <label class="assessment-option"><input type="radio" name="assessment" value="Good"><span data-i18n="good">Good</span></label>
+          <label class="assessment-option"><input type="radio" name="assessment" value="Moderate"><span data-i18n="moderate">Moderate</span></label>
+          <label class="assessment-option"><input type="radio" name="assessment" value="Needs Attention"><span data-i18n="needsAttention">Needs Attention</span></label>
+          <label class="assessment-option"><input type="radio" name="assessment" value="Poor"><span data-i18n="poor">Poor</span></label>
+        </div>
+      </section>
+      <section class="log-section weather-section">
+        <div class="section-title"><span class="step-number"><i class="fa-solid fa-cloud-sun"></i></span><div><h3 data-i18n="weatherTitle">Weather Context</h3><p data-i18n="weatherIntro">Weather conditions can affect today's farm work.</p></div></div>
+        <div class="weather-card"><div><small data-i18n="localWeather">LOCAL WEATHER</small><strong id="weatherTemp">—°C</strong><span id="weatherCondition" data-i18n="weatherLoading">Loading weather…</span></div><div class="weather-metrics"><span><i class="fa-solid fa-droplet"></i> <b id="weatherHumidity">—</b></span><span><i class="fa-solid fa-wind"></i> <b id="weatherWind">—</b></span></div></div>
+        <div class="form-grid weather-inputs"><label><span data-i18n="weatherImpact">How did weather affect your farm?</span><select id="weatherImpact"><option value="No noticeable impact" data-i18n="noImpact">No noticeable impact</option><option value="Helpful" data-i18n="helpful">Helpful</option><option value="Delayed farm work" data-i18n="delayed">Delayed farm work</option><option value="Damaged crops" data-i18n="cropDamage">Damaged crops</option><option value="Water shortage" data-i18n="waterShortage">Water shortage</option><option value="Other" data-i18n="other">Other</option></select></label><label><span data-i18n="weatherNotes">Weather impact details (optional)</span><input id="weatherDetails" type="text" placeholder="Add details if needed"></label></div>
+      </section>
+      <div class="save-row"><p data-i18n="saveHint">Your record will be securely saved to your AgriNova Supabase account.</p><button class="primary save-button" id="saveRecordBtn" type="button"><i class="fa fa-cloud-arrow-up"></i> <span data-i18n="saveRecord">Save Daily Record</span></button></div>
+    </section>
+    <footer>AgriNova · <span data-i18n="footer">Your daily farm records, securely stored.</span></footer>
+  </main>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="daily-farm.js"></script>
+</body></html>

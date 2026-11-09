@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriNova · farm platform</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PAGE 1: LANDING -->
+  <div id="page-landing" class="page active">
+
+    <!-- LANGUAGE SELECTOR -->
+<div class="language-header">
+  <select class="language-select" aria-label="Choose language">
+    <option value="en">🇬🇧 English</option>
+    <option value="am">🇪🇹 አማርኛ</option>
+    <option value="ti">ትግርኛ</option>
+    <option value="om">Afaan Oromo</option>
+    <option value="so">Af-Soomaali</option>
+  </select>
+</div>
+
+    <div class="landing-content">
+      <h1 data-i18n="agriNova">AgriNova</h1>
+      <div class="landing-sub" data-i18n="tagline">
+        Growing Smarter, Farming Better
+      </div>
+      <button class="btn-start" id="btnStartJourney" data-i18n="start">
+  Start Your Farming Journey
+</button>
+        Start Your Farming Journey
+      </button>
+    </div>
+  </div>
+
+  <!-- PAGE 2: SELECTION -->
+  <div id="page-selection" class="page">
+
+    <div class="language-switcher">
+      <i class="fas fa-globe"></i>
+      <select class="language-select" aria-label="Select language">
+        <option value="en">English</option>
+        <option value="am">አማርኛ</option>
+        <option value="ti">ትግርኛ</option>
+        <option value="om">Afaan Oromoo</option>
+        <option value="so">Af-Soomaali</option>
+      </select>
+    </div>
+
+    <div class="selection-half left-farmer" id="farmerSelect">
+      <div class="sel-title" data-i18n="farmerTitle">
+        I am a farmer
+      </div>
+      <div class="sel-desc" data-i18n="farmerDesc">
+        Access tools designed to help you understand your farm, plan your crops, monitor weather conditions, analyze your resources, follow market prices, manage your farming activities, and make better agricultural decisions.
+      </div>
+    </div>
+
+    <div class="selection-half right-visitor" id="visitorSelect">
+      <div class="sel-title" data-i18n="visitorTitle">
+        I'm not a farmer
+      </div>
+      <div class="sel-desc" data-i18n="visitorDesc">
+        Explore the world of agriculture through interactive learning, real agricultural information, weather, Ethiopia's crop map, farming articles, the Farm Simulator, and other educational experiences.
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: AUTHENTICATION -->
+  <div id="page-auth" class="page">
+
+    <div class="language-switcher">
+      <i class="fas fa-globe"></i>
+      <select class="language-select" aria-label="Select language">
+        <option value="en">English</option>
+        <option value="am">አማርኛ</option>
+        <option value="ti">ትግርኛ</option>
+        <option value="om">Afaan Oromoo</option>
+        <option value="so">Af-Soomaali</option>
+      </select>
+    </div>
+
+    <div class="glass-card" id="authCard">
+
+      <!-- REGISTRATION -->
+      <div id="registerSection">
+        <h2>AgriNova</h2>
+        <div class="sub-auth" data-i18n="registerSubtitle">
+          Create your farmer account
+        </div>
+
+        <form id="farmerForm">
+
+          <div class="form-group">
+            <label data-i18n="fullName">Full name</label>
+            <input type="text" id="regName"
+              placeholder="e.g. Tadesse Ayele"
+              data-i18n-placeholder="namePlaceholder" required>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="email">Email</label>
+            <input type="email" id="regEmail"
+              placeholder="farmer@agrinova.et"
+              data-i18n-placeholder="emailPlaceholder" required>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="phone">Phone number</label>
+            <input type="tel" id="regPhone"
+              placeholder="+251 9XX XXX XXX"
+              data-i18n-placeholder="phonePlaceholder">
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="password">Password</label>
+            <input type="password" id="regPassword"
+              placeholder="••••••••"
+              data-i18n-placeholder="passwordPlaceholder"
+              minlength="6" required>
+          </div>
+
+          <div class="form-row">
+
+            <div class="form-group">
+              <label data-i18n="region">Region</label>
+              <select id="regRegion">
+                <option value="Oromia" data-i18n="oromia">Oromia</option>
+                <option value="Amhara" data-i18n="amhara">Amhara</option>
+                <option value="Tigray" data-i18n="tigray">Tigray</option>
+                <option value="SNNPR" data-i18n="snnpr">SNNPR</option>
+                <option value="Somali" data-i18n="somali">Somali</option>
+                <option value="Benishangul-Gumuz" data-i18n="benishangul">Benishangul-Gumuz</option>
+                <option value="Harari" data-i18n="harari">Harari</option>
+                <option value="Gambela" data-i18n="gambela">Gambela</option>
+                <option value="Addis Ababa" data-i18n="addis">Addis Ababa</option>
+                <option value="Dire Dawa" data-i18n="direDawa">Dire Dawa</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label data-i18n="city">City</label>
+              <input type="text" id="regCity"
+                placeholder="e.g. Adama"
+                data-i18n-placeholder="cityPlaceholder">
+            </div>
+
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="hectares">Farm hectares</label>
+            <input type="number" id="regHectares"
+              placeholder="e.g. 5.5"
+              data-i18n-placeholder="hectaresPlaceholder"
+              step="0.1" min="0">
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="nationalId">National ID (upload photo)</label>
+            <div class="file-input-wrap">
+              <input type="file" id="regNationalId"
+                accept="image/jpeg,image/png,image/webp">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-create" data-i18n="createAccount">
+            Create account
+          </button>
+
+        </form>
+
+        <div class="auth-footer">
+          <span data-i18n="alreadyAccount">Already have an account?</span>
+          <a id="goToLoginLink" data-i18n="login">Login</a>
+        </div>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="loginSection" style="display:none;">
+
+        <h2>AgriNova</h2>
+
+        <div class="sub-auth" data-i18n="loginSubtitle">
+          Login to your farmer account
+        </div>
+
+        <form id="loginForm">
+
+          <div class="form-group">
+            <label data-i18n="email">Email</label>
+            <input type="email" id="loginEmail"
+              placeholder="farmer@agrinova.et"
+              data-i18n-placeholder="emailPlaceholder" required>
+          </div>
+
+          <div class="form-group">
+            <label data-i18n="password">Password</label>
+            <input type="password" id="loginPassword"
+              placeholder="••••••••"
+              data-i18n-placeholder="passwordPlaceholder" required>
+          </div>
+
+          <button type="submit" class="btn-create" data-i18n="login">
+            Login
+          </button>
+
+        </form>
+
+        <div class="auth-footer">
+          <span data-i18n="noAccount">Don't have an account?</span>
+          <a id="goToRegisterLink" data-i18n="createOne">Create one</a>
+        </div>
+      </div>
+
+      <!-- DASHBOARD PLACEHOLDER -->
+      <div id="dashboardSection"
+        style="display:none;text-align:center;padding:1rem 0;">
+
+        <i class="fas fa-tractor"
+          style="font-size:3rem;color:#8bc34a;margin-bottom:1rem;">
+        </i>
+
+        <h2 data-i18n="welcomeDashboard">
+          Welcome to your Dashboard
+        </h2>
+
+        <p data-i18n="loggedIn">
+          You are now logged in to AgriNova.
+        </p>
+
+        <button id="logoutBtn" class="btn-logout" data-i18n="logout">
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="main.js"></script>
+
+</body>
+</html>

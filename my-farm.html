@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AgriNova · My Farm</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<link href="my-farm.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+<body>
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-brand">
+<div class="brand-name"><i class="fas fa-seedling" style="margin-right: 8px; color: #A8C686;"></i>AgriNova</div>
+<div class="brand-tagline">Growing Smarter. Farming Better.</div>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-label">Farmer Dashboard</div>
+<a href="farmer-dashboard.html"><i class="fas fa-th-large"></i> Dashboard Home</a>
+<a class="active" href="my-farm.html"><i class="fas fa-tractor"></i> My Farm</a>
+<a href="my-crops.html"><i class="fas fa-seedling"></i> My Crops</a>
+<a href="#"><i class="fas fa-calendar-day"></i> Daily Farm</a>
+<a href="#"><i class="fas fa-tasks"></i> Farm Tasks &amp; Calendar</a>
+<a href="#"><i class="fas fa-clipboard-list"></i> Farm Records</a>
+<a href="#"><i class="fas fa-calculator"></i> Farm Calculator</a>
+<a href="#"><i class="fas fa-coins"></i> Farm Finance</a>
+<a href="#"><i class="fas fa-robot"></i> AI Agricultural Assistant</a>
+<a href="#"><i class="fas fa-chart-pie"></i> Farm Analysis &amp; ID</a>
+<a href="#"><i class="fas fa-users"></i> Farmer Community</a>
+<a href="#"><i class="fas fa-store"></i> Marketplace</a>
+<div class="nav-label" style="margin-top: 1.8rem;">AgriNova Resources</div>
+<a href="#"><i class="fas fa-newspaper"></i> Agriculture Articles</a>
+<a href="#"><i class="fas fa-book-open"></i> Crop Information</a>
+<a href="#"><i class="fas fa-map"></i> Ethiopian Crop Map</a>
+<a href="#"><i class="fas fa-cloud-sun"></i> Weather</a>
+<a href="#"><i class="fas fa-bug"></i> Pest &amp; Disease Library</a>
+<a href="#"><i class="fas fa-flask"></i> Fertilizer Information</a>
+<a href="#"><i class="fas fa-bullhorn"></i> Agriculture News</a>
+<a href="#"><i class="fas fa-rss"></i> Crop News</a>
+<a href="#"><i class="fas fa-lightbulb"></i> Agriculture Innovation</a>
+<a href="#"><i class="fas fa-graduation-cap"></i> Educational Content</a>
+<a href="#"><i class="fas fa-gamepad"></i> Farm Simulation</a>
+</nav>
+</aside>
+<!-- MAIN WRAPPER -->
+<div class="main-wrapper">
+<!-- TOP NAV -->
+<header class="top-nav">
+<div class="search-wrap">
+<i class="fas fa-search"></i>
+<input id="globalSearch" placeholder="Search anything in AgriNova..." type="text"/>
+</div>
+<div class="nav-right">
+<div class="nav-icon-wrapper">
+<i class="fas fa-bell" id="notifIcon"></i>
+<span class="nav-badge" id="notifBadge">0</span>
+</div>
+
+
+
+<select aria-label="Select language" class="language-select" id="languageSelect"><option value="en">English</option><option value="am">አማርኛ</option><option value="ti">ትግርኛ</option><option value="om">Afaan Oromo</option><option value="so">Soomaali</option></select></div>
+<!-- Profile Dropdown -->
+
+</header>
+<!-- DASHBOARD CONTENT -->
+<div class="dashboard-content">
+<!-- Page Header -->
+<div class="page-header">
+<div>
+<h1>My Farm</h1>
+<p class="subtitle">Manage your farm profile, land, resources, and conditions.</p>
+</div>
+
+</div>
+<!-- Farm Profile Hero -->
+<div class="farm-hero" id="farmHero">
+<div class="farm-hero-overlay"></div>
+<div class="farm-hero-content">
+<div class="farm-hero-text">
+<h2 id="farmNameDisplay">My Farm</h2>
+<p id="farmLocationDisplay">City, Region, Ethiopia</p>
+<div class="farm-hero-details">
+<span><i class="fas fa-ruler-combined"></i> <span id="farmAreaDisplay">--</span> hectares</span>
+<span><i class="fas fa-tag"></i> <span id="farmTypeDisplay">Not set</span></span>
+</div>
+</div>
+<button class="btn-secondary" id="editFarmProfileBtn2">
+<i class="fas fa-edit"></i> Edit Profile
+                    </button>
+</div>
+</div>
+<!-- Farm Overview Stats -->
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-icon"><i class="fas fa-ruler-combined"></i></div>
+<div class="stat-info">
+<div class="stat-value" id="statTotalArea">--</div>
+<div class="stat-label">Total Farm Area</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon"><i class="fas fa-seedling"></i></div>
+<div class="stat-info">
+<div class="stat-value" id="statCultivated">--</div>
+<div class="stat-label">Cultivated Area</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon"><i class="fas fa-map"></i></div>
+<div class="stat-info">
+<div class="stat-value" id="statAvailable">--</div>
+<div class="stat-label">Available Area</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+<div class="stat-info">
+<div class="stat-value" id="statSections">0</div>
+<div class="stat-label">Land Sections</div>
+</div>
+</div>
+</div>
+<!-- Land Sections -->
+<div class="section-card">
+<div class="section-header">
+<div class="section-title">
+<i class="fas fa-map"></i>
+<h3>Land Sections</h3>
+</div>
+<button class="btn-primary btn-sm" id="addLandSectionBtn">
+<i class="fas fa-plus"></i> Add Land Section
+                    </button>
+</div>
+<div id="landSectionsContainer">
+<div class="empty-state">
+<i class="fas fa-map"></i>
+<p>No land sections added yet.</p>
+<button class="btn-primary btn-sm" onclick="document.getElementById('addLandSectionBtn').click()">
+                            + Add First Land Section
+                        </button>
+</div>
+</div>
+</div>
+<!-- Two Column Layout -->
+<div class="two-col-grid">
+<!-- Land Utilization -->
+<div class="section-card">
+<div class="section-header">
+<div class="section-title">
+<i class="fas fa-chart-pie"></i>
+<h3>Land Utilization</h3>
+</div>
+</div>
+<div id="landUtilizationContainer">
+<div class="empty-state">
+<i class="fas fa-chart-pie"></i>
+<p>Add land sections to view land utilization.</p>
+</div>
+</div>
+</div>
+<!-- Farm Conditions -->
+
+</div>
+<!-- Two Column Layout -->
+<div class="two-col-grid">
+<!-- Water & Irrigation -->
+<div class="section-card">
+<div class="section-header">
+<div class="section-title">
+<i class="fas fa-water"></i>
+<h3>Water &amp; Irrigation</h3>
+</div>
+<button class="btn-primary btn-sm" id="editWaterBtn">
+<i class="fas fa-edit"></i> Edit
+                        </button>
+</div>
+<div id="waterContainer">
+<div class="empty-state">
+<i class="fas fa-water"></i>
+<p>Water and irrigation information not added.</p>
+</div>
+</div>
+</div>
+<!-- Farm Location -->
+<div class="section-card">
+<div class="section-header">
+<div class="section-title">
+<i class="fas fa-map-marker-alt"></i>
+<h3>Farm Location</h3>
+</div>
+<button class="btn-primary btn-sm" id="editLocationBtn">
+<i class="fas fa-edit"></i> Edit
+                        </button>
+</div>
+<div id="locationContainer">
+<div class="empty-state">
+<i class="fas fa-map-marker-alt"></i>
+<p>Farm location not set.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Two Column Layout -->
+<div class="two-col-grid">
+<!-- Assets & Equipment -->
+<div class="section-card">
+<div class="section-header">
+<div class="section-title">
+<i class="fas fa-tools"></i>
+<h3>Assets &amp; Equipment</h3>
+</div>
+<button class="btn-primary btn-sm" id="addAssetBtn">
+<i class="fas fa-plus"></i> Add Asset
+                        </button>
+</div>
+<div id="assetsContainer">
+<div class="empty-state">
+<i class="fas fa-tools"></i>
+<p>No farm assets recorded yet.</p>
+</div>
+</div>
+</div>
+<!-- Infrastructure -->
+<div class="section-card">
+<div class="section-header">
+<div class="section-title">
+<i class="fas fa-warehouse"></i>
+<h3>Infrastructure</h3>
+</div>
+<button class="btn-primary btn-sm" id="addInfrastructureBtn">
+<i class="fas fa-plus"></i> Add Infrastructure
+                        </button>
+</div>
+<div id="infrastructureContainer">
+<div class="empty-state">
+<i class="fas fa-warehouse"></i>
+<p>No farm infrastructure recorded yet.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Two Column Layout -->
+<div class="two-col-grid">
+<!-- Seasonal Planning -->
+<div class="section-card">
+<div class="section-header">
+<div class="section-title">
+<i class="fas fa-calendar-alt"></i>
+<h3>Seasonal Planning</h3>
+</div>
+<button class="btn-primary btn-sm" id="addSeasonalPlanBtn">
+<i class="fas fa-plus"></i> Create Plan
+                        </button>
+</div>
+<div id="seasonalPlanContainer">
+<div class="empty-state">
+<i class="fas fa-calendar-alt"></i>
+<p>No seasonal plan created yet.</p>
+</div>
+</div>
+</div>
+<!-- Farm Documents -->
+
+</div>
+<!-- Two Column Layout -->
+
+</div>
+</div>
+<!-- MODALS -->
+<!-- Edit Farm Profile Modal -->
+<div class="modal" id="farmProfileModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3>Edit Farm Profile</h3>
+<button class="modal-close" onclick="closeModal('farmProfileModal')">×</button>
+</div>
+<form id="farmProfileForm">
+<div class="form-group">
+<label>Farm Name</label>
+<input id="farmNameInput" placeholder="Enter farm name" type="text"/>
+</div>
+<div class="form-group">
+<label>Farm Type</label>
+<select id="farmTypeInput">
+<option value="">Select farm type</option>
+<option value="Crop Farming">Crop Farming</option>
+<option value="Livestock Farming">Livestock Farming</option>
+<option value="Mixed Farming">Mixed Farming</option>
+<option value="Other">Other</option>
+</select>
+</div>
+<div class="form-group">
+<label>Farm Description</label>
+<textarea id="farmDescriptionInput" placeholder="Describe your farm..." rows="3"></textarea>
+</div>
+<div class="form-group">
+<label>Total Farm Area (hectares)</label>
+<input id="farmAreaInput" min="0" placeholder="Enter total area" step="0.01" type="number"/>
+</div>
+<div class="form-group">
+<label>Farm Location (City)</label>
+<input id="farmCityInput" placeholder="Enter city" type="text"/>
+</div>
+<div class="form-group">
+<label>Farm Location (Region)</label>
+<input id="farmRegionInput" placeholder="Enter region" type="text"/>
+</div>
+<button class="btn-primary" style="width:100%;" type="submit">Save Farm Profile</button>
+</form>
+</div>
+</div>
+<!-- Land Section Modal -->
+<div class="modal" id="landSectionModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 id="landSectionModalTitle">Add Land Section</h3>
+<button class="modal-close" onclick="closeModal('landSectionModal')">×</button>
+</div>
+<form id="landSectionForm">
+<input id="editSectionId" type="hidden"/>
+<div class="form-group">
+<label>Section Name *</label>
+<input id="sectionNameInput" placeholder="e.g., Field A, Northern Field" required="" type="text"/>
+</div>
+<div class="form-group">
+<label>Area (hectares) *</label>
+<input id="sectionAreaInput" min="0.01" placeholder="Enter area" required="" step="0.01" type="number"/>
+</div>
+<div class="form-group"><label>Section Shape *</label><select id="sectionShapeInput" required="">
+<option value="rectangle">Rectangle</option><option value="square">Square</option><option value="triangle">Triangle</option><option value="trapezoid">Trapezoid</option><option value="irregular">Irregular</option></select></div>
+<div class="form-group"><label>Length (metres, optional)</label><input id="sectionLengthInput" min="0" step="0.1" type="number"/></div>
+<div class="form-group"><label>Width (metres, optional)</label><input id="sectionWidthInput" min="0" step="0.1" type="number"/></div>
+<div class="form-group"><label>Soil / Land Details</label><input id="sectionSoilInput" placeholder="e.g. loam, gently sloping" type="text"/></div>
+
+<div class="form-group">
+<label>Current Land Use</label>
+<select id="sectionUseInput">
+<option value="Crop Production">Crop Production</option>
+<option value="Fallow / Unused">Fallow / Unused</option>
+<option value="Pasture">Pasture</option>
+<option value="Infrastructure">Infrastructure</option>
+<option value="Other">Other</option>
+</select>
+</div>
+<div class="form-group">
+<label>Assigned Crop</label>
+<input id="sectionCropInput" placeholder="Enter crop name if applicable" type="text"/>
+</div>
+<div class="form-group">
+<label>Notes</label>
+<textarea id="sectionNotesInput" placeholder="Optional notes" rows="2"></textarea>
+</div>
+<button class="btn-primary" style="width:100%;" type="submit">Save Land Section</button>
+</form>
+</div>
+</div>
+<!-- Farm Conditions Modal -->
+
+<!-- Water & Irrigation Modal -->
+<div class="modal" id="waterModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3>Edit Water &amp; Irrigation</h3>
+<button class="modal-close" onclick="closeModal('waterModal')">×</button>
+</div>
+<form id="waterForm">
+<div class="form-group">
+<label>Water Source</label>
+<select id="waterSourceInput">
+<option value="">Select water source</option>
+<option value="Rain-fed">Rain-fed</option>
+<option value="River">River</option>
+<option value="Well">Well</option>
+<option value="Borehole">Borehole</option>
+<option value="Reservoir">Reservoir</option>
+<option value="Irrigation Canal">Irrigation Canal</option>
+<option value="Other">Other</option>
+</select>
+</div>
+<div class="form-group">
+<label>Irrigation Availability</label>
+<select id="irrigationAvailabilityInput">
+<option value="">Select availability</option>
+<option value="Available">Available</option>
+<option value="Not Available">Not Available</option>
+<option value="Seasonal">Seasonal</option>
+<option value="Unknown">Unknown</option>
+</select>
+</div>
+<div class="form-group">
+<label>Irrigation Method</label>
+<select id="irrigationMethodInput">
+<option value="">Select method</option>
+<option value="Drip">Drip</option>
+<option value="Sprinkler">Sprinkler</option>
+<option value="Surface">Surface</option>
+<option value="Manual">Manual</option>
+<option value="Other">Other</option>
+</select>
+</div>
+<div class="form-group">
+<label>Irrigated Land Area (hectares)</label>
+<input id="irrigatedAreaInput" min="0" placeholder="Enter irrigated area" step="0.01" type="number"/>
+</div>
+<div class="form-group">
+<label>Water Notes</label>
+<textarea id="waterNotesInput" placeholder="Additional water information..." rows="2"></textarea>
+</div>
+<button class="btn-primary" style="width:100%;" type="submit">Save Water Information</button>
+</form>
+</div>
+</div>
+<!-- Farm Location Modal -->
+<div class="modal" id="locationModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3>Edit Farm Location</h3>
+<button class="modal-close" onclick="closeModal('locationModal')">×</button>
+</div>
+<form id="locationForm">
+<div class="form-group">
+<label>City</label>
+<input id="locationCityInput" placeholder="Enter city" type="text"/>
+</div>
+<div class="form-group">
+<label>Region</label>
+<input id="locationRegionInput" placeholder="Enter region" type="text"/>
+</div>
+<div class="form-group">
+<label>Latitude (optional)</label>
+<input id="locationLatInput" placeholder="e.g., 9.0320" step="any" type="number"/>
+</div>
+<div class="form-group">
+<label>Longitude (optional)</label>
+<input id="locationLngInput" placeholder="e.g., 38.7420" step="any" type="number"/>
+</div>
+<div class="form-group">
+<label>Location Notes</label>
+<textarea id="locationNotesInput" placeholder="Additional location details..." rows="2"></textarea>
+</div>
+<button class="btn-primary" style="width:100%;" type="submit">Save Location</button>
+</form>
+</div>
+</div>
+<!-- Asset Modal -->
+<div class="modal" id="assetModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 id="assetModalTitle">Add Asset</h3>
+<button class="modal-close" onclick="closeModal('assetModal')">×</button>
+</div>
+<form id="assetForm">
+<input id="editAssetId" type="hidden"/>
+<div class="form-group">
+<label>Asset Name *</label>
+<input id="assetNameInput" placeholder="Enter asset name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label>Category</label>
+<select id="assetCategoryInput">
+<option value="Machinery">Machinery</option>
+<option value="Irrigation Equipment">Irrigation Equipment</option>
+<option value="Storage Equipment">Storage Equipment</option>
+<option value="Farm Tools">Farm Tools</option>
+<option value="Transportation">Transportation</option>
+<option value="Other">Other</option>
+</select>
+</div>
+<div class="form-group">
+<label>Quantity</label>
+<input id="assetQuantityInput" min="1" type="number" value="1"/>
+</div>
+<div class="form-group">
+<label>Condition</label>
+<select id="assetConditionInput">
+<option value="New">New</option>
+<option value="Good">Good</option>
+<option value="Fair">Fair</option>
+<option value="Poor">Poor</option>
+<option value="Unknown">Unknown</option>
+</select>
+</div>
+<div class="form-group">
+<label>Notes</label>
+<textarea id="assetNotesInput" placeholder="Additional notes" rows="2"></textarea>
+</div>
+<button class="btn-primary" style="width:100%;" type="submit">Save Asset</button>
+</form>
+</div>
+</div>
+<!-- Infrastructure Modal -->
+<div class="modal" id="infrastructureModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 id="infrastructureModalTitle">Add Infrastructure</h3>
+<button class="modal-close" onclick="closeModal('infrastructureModal')">×</button>
+</div>
+<form id="infrastructureForm">
+<input id="editInfrastructureId" type="hidden"/>
+<div class="form-group">
+<label>Infrastructure Type *</label>
+<select id="infrastructureTypeInput">
+<option value="Storage">Storage</option>
+<option value="Warehouse">Warehouse</option>
+<option value="Greenhouse">Greenhouse</option>
+<option value="Irrigation Infrastructure">Irrigation Infrastructure</option>
+<option value="Animal Shelter">Animal Shelter</option>
+<option value="Processing Area">Processing Area</option>
+<option value="Other">Other</option>
+</select>
+</div>
+<div class="form-group">
+<label>Name / Description *</label>
+<input id="infrastructureNameInput" placeholder="e.g., Main Storage Shed" required="" type="text"/>
+</div>
+<div class="form-group">
+<label>Capacity</label>
+<input id="infrastructureCapacityInput" placeholder="e.g., 50 tons, 100 sqm" type="text"/>
+</div>
+<div class="form-group">
+<label>Condition</label>
+<select id="infrastructureConditionInput">
+<option value="New">New</option>
+<option value="Good">Good</option>
+<option value="Fair">Fair</option>
+<option value="Poor">Poor</option>
+<option value="Unknown">Unknown</option>
+</select>
+</div>
+<div class="form-group">
+<label>Notes</label>
+<textarea id="infrastructureNotesInput" placeholder="Additional notes" rows="2"></textarea>
+</div>
+<button class="btn-primary" style="width:100%;" type="submit">Save Infrastructure</button>
+</form>
+</div>
+</div>
+<!-- Seasonal Plan Modal -->
+<div class="modal" id="seasonalPlanModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3 id="seasonalPlanModalTitle">Create Seasonal Plan</h3>
+<button class="modal-close" onclick="closeModal('seasonalPlanModal')">×</button>
+</div>
+<form id="seasonalPlanForm">
+<input id="editSeasonalPlanId" type="hidden"/>
+<div class="form-group">
+<label>Season Name *</label>
+<input id="seasonNameInput" placeholder="e.g., Rainy Season 2026" required="" type="text"/>
+</div>
+<div class="form-group">
+<label>Planned Crops</label>
+<input id="seasonCropsInput" placeholder="e.g., Maize, Teff, Wheat" type="text"/>
+</div>
+<div class="form-group">
+<label>Planned Land Allocation (hectares)</label>
+<input id="seasonLandInput" min="0" placeholder="Enter planned area" step="0.01" type="number"/>
+</div>
+<div class="form-group">
+<label>Season Notes</label>
+<textarea id="seasonNotesInput" placeholder="Additional planning notes" rows="2"></textarea>
+</div>
+<button class="btn-primary" style="width:100%;" type="submit">Save Seasonal Plan</button>
+</form>
+</div>
+</div>
+<!-- Document Upload Modal -->
+
+<!-- Note Modal -->
+
+<script src="my-farm.js"></script>
+</body>
+</html>

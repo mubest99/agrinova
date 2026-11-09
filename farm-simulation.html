@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNova Farm Simulation</title>
+    <link rel="stylesheet" href="farm-simulation.css">
+    <script src="farm-simulation.js" defer></script>
+</head>
+<body>
+
+    <!-- ============================================
+    MAIN SIMULATION CONTAINER
+    ============================================ -->
+    <main id="farm-simulation">
+
+        <!-- ============================================
+        SECTION 2: INITIAL FARM SETUP / LAND SELECTION
+        ============================================ -->
+        <section id="farm-setup" aria-labelledby="setup-heading">
+            <h2 id="setup-heading">Create Your Farm</h2>
+            <p>Choose your land and prepare your farming journey.</p>
+
+            <!-- Farm Name -->
+            <div class="setup-field">
+                <label for="farm-name">Farm Name</label>
+                <input type="text" id="farm-name" name="farm-name" placeholder="My Farm" autocomplete="off">
+            </div>
+
+            <!-- Land Type -->
+            <fieldset class="setup-group">
+                <legend>Select Land</legend>
+                <div class="option-group" role="radiogroup" aria-label="Land type">
+                    <button type="button" class="land-option" role="radio" aria-checked="false" data-land-type="highland">Highland</button>
+                    <button type="button" class="land-option" role="radio" aria-checked="false" data-land-type="lowland">Lowland</button>
+                    <button type="button" class="land-option" role="radio" aria-checked="false" data-land-type="dryland">Dryland</button>
+                </div>
+            </fieldset>
+
+            <!-- Farm Size -->
+            <fieldset class="setup-group">
+                <legend>Farm Size</legend>
+                <div class="option-group" role="radiogroup" aria-label="Farm size">
+                    <button type="button" class="size-option" role="radio" aria-checked="false" data-farm-size="small">Small</button>
+                    <button type="button" class="size-option" role="radio" aria-checked="false" data-farm-size="medium">Medium</button>
+                    <button type="button" class="size-option" role="radio" aria-checked="false" data-farm-size="large">Large</button>
+                </div>
+            </fieldset>
+
+            <!-- Soil Type -->
+            <fieldset class="setup-group">
+                <legend>Soil Type</legend>
+                <div class="option-group" role="radiogroup" aria-label="Soil type">
+                    <button type="button" class="soil-option" role="radio" aria-checked="false" data-soil-type="loam">Loam</button>
+                    <button type="button" class="soil-option" role="radio" aria-checked="false" data-soil-type="clay">Clay</button>
+                    <button type="button" class="soil-option" role="radio" aria-checked="false" data-soil-type="sandy">Sandy</button>
+                </div>
+            </fieldset>
+
+            <!-- Starting Budget -->
+            <div class="starting-budget" aria-live="polite">
+                <span class="budget-label">Starting Budget:</span>
+                <span id="starting-budget">10,000</span> ETB
+            </div>
+
+            <!-- Start Farm Button -->
+            <button type="button" id="start-farm" aria-label="Start the farm simulation">Start Farm</button>
+        </section>
+
+        <!-- ============================================
+        SECTION 3: MAIN SIMULATION WORLD (hidden until started)
+        ============================================ -->
+        <div id="simulation-stage" hidden>
+
+            <!-- ============================================
+            SECTION 4: MAIN GAME HUD
+            ============================================ -->
+            <section id="game-hud" aria-label="Game status">
+                <!-- Top left: day and season -->
+                <div class="hud-left">
+                    <p>
+                        <span class="hud-label">Day:</span>
+                        <span id="current-day">1</span>
+                    </p>
+                    <p>
+                        <span class="hud-label">Season:</span>
+                        <span id="current-season">1</span>
+                    </p>
+                </div>
+
+                <!-- Top right: money -->
+                <div class="hud-right">
+                    <p>
+                        <span class="hud-label">Money:</span>
+                        <span id="player-money">10,000</span> ETB
+                    </p>
+                </div>
+            </section>
+
+            <!-- ============================================
+            SECTION 5: WEATHER INFORMATION
+            ============================================ -->
+            <section id="weather-panel" aria-labelledby="weather-heading">
+                <h3 id="weather-heading">Weather</h3>
+                <ul>
+                    <li>Temperature: <span id="temperature">--</span></li>
+                    <li>Condition: <span id="weather-condition">--</span></li>
+                    <li>Rain Probability: <span id="rain-probability">--</span></li>
+                    <li>Humidity: <span id="humidity">--</span></li>
+                    <li>Wind: <span id="wind-speed">--</span></li>
+                </ul>
+            </section>
+
+            <!-- ============================================
+            SECTION 6: FARM INFORMATION PANEL
+            ============================================ -->
+            <section id="farm-info-panel" aria-labelledby="farm-info-heading">
+                <h3 id="farm-info-heading">Farm Info</h3>
+                <ul>
+                    <li>Farm Name: <span id="info-farm-name">--</span></li>
+                    <li>Land Type: <span id="info-land-type">--</span></li>
+                    <li>Soil Type: <span id="info-soil-type">--</span></li>
+                    <li>Current Crop: <span id="info-current-crop">--</span></li>
+                    <li>Growth Stage: <span id="info-growth-stage">--</span></li>
+                    <li>Crop Health: <span id="info-crop-health">--</span></li>
+                    <li>Soil Moisture: <span id="info-soil-moisture">--</span></li>
+                </ul>
+            </section>
+
+            <!-- ============================================
+            SECTION 7: 3D FARM WORLD
+            ============================================ -->
+            <div id="farm-world" aria-label="3D farm environment">
+                <!-- Loading element, later controlled by JS -->
+                <div id="farm-loading">Preparing your farm...</div>
+                <!-- Three.js canvas will be appended here -->
+            </div>
+
+            <!-- ============================================
+            SECTION 8: FARMER CHARACTER CONTAINER
+            ============================================ -->
+            <div id="farmer-container" aria-label="Farmer character area">
+                <span id="farmer-status">Farmer</span>
+                <!-- Farmer model rendered by JS -->
+            </div>
+
+            <!-- ============================================
+            SECTION 9: FARM INTERACTION SYSTEM
+            ============================================ -->
+            <section id="interaction-panel" aria-labelledby="interaction-heading" hidden>
+                <h3 id="interaction-heading">Actions</h3>
+                <div class="action-buttons">
+                    <button type="button" id="prepare-land" aria-label="Prepare land">Prepare Land</button>
+                    <button type="button" id="sow-crop" aria-label="Sow crop">Sow</button>
+                    <button type="button" id="water-crop" aria-label="Water crop">Water</button>
+                    <button type="button" id="fertilize-crop" aria-label="Fertilize crop">Fertilize</button>
+                    <button type="button" id="weed-field" aria-label="Weed the field">Weed</button>
+                    <button type="button" id="inspect-crop" aria-label="Inspect crop">Inspect</button>
+                    <button type="button" id="apply-pesticide" aria-label="Apply pesticide">Apply Pesticide</button>
+                    <button type="button" id="apply-herbicide" aria-label="Apply herbicide">Apply Herbicide</button>
+                    <button type="button" id="harvest-crop" aria-label="Harvest crop">Harvest</button>
+                    <button type="button" id="wash-crop" aria-label="Wash or process crop">Wash / Process</button>
+                    <button type="button" id="pack-crop" aria-label="Pack crop">Pack</button>
+                    <button type="button" id="transport-crop" aria-label="Transport crop">Transport</button>
+                </div>
+            </section>
+
+            <!-- ============================================
+            SECTION 10: LAND PREPARATION OPTIONS
+            ============================================ -->
+            <section id="land-preparation-panel" aria-labelledby="prep-heading" hidden>
+                <h3 id="prep-heading">Preparation Method</h3>
+                <button type="button" id="manual-preparation" aria-label="Manual land preparation">Manual</button>
+                <button type="button" id="ox-plough" aria-label="Use ox plough">Ox Plough</button>
+                <button type="button" id="tractor-preparation" aria-label="Use tractor">Tractor</button>
+            </section>
+
+            <!-- ============================================
+            SECTION 11: SEED SHOP
+            ============================================ -->
+            <section id="seed-shop" aria-labelledby="seed-shop-heading" hidden>
+                <h3 id="seed-shop-heading">Seed Market</h3>
+                <ul class="seed-list">
+                    <li data-crop="maize">
+                        <span class="crop-name">Maize</span>
+                        <span class="crop-price">-- ETB</span>
+                        <span class="crop-qty">Qty: --</span>
+                        <button type="button" class="buy-seed" aria-label="Buy maize seeds">Buy</button>
+                        <button type="button" class="negotiate-seed" aria-label="Negotiate maize seeds">Negotiate</button>
+                    </li>
+                    <li data-crop="wheat">
+                        <span class="crop-name">Wheat</span>
+                        <span class="crop-price">-- ETB</span>
+                        <span class="crop-qty">Qty: --</span>
+                        <button type="button" class="buy-seed" aria-label="Buy wheat seeds">Buy</button>
+                        <button type="button" class="negotiate-seed" aria-label="Negotiate wheat seeds">Negotiate</button>
+                    </li>
+                    <li data-crop="teff">
+                        <span class="crop-name">Teff</span>
+                        <span class="crop-price">-- ETB</span>
+                        <span class="crop-qty">Qty: --</span>
+                        <button type="button" class="buy-seed" aria-label="Buy teff seeds">Buy</button>
+                        <button type="button" class="negotiate-seed" aria-label="Negotiate teff seeds">Negotiate</button>
+                    </li>
+                    <li data-crop="barley">
+                        <span class="crop-name">Barley</span>
+                        <span class="crop-price">-- ETB</span>
+                        <span class="crop-qty">Qty: --</span>
+                        <button type="button" class="buy-seed" aria-label="Buy barley seeds">Buy</button>
+                        <button type="button" class="negotiate-seed" aria-label="Negotiate barley seeds">Negotiate</button>
+                    </li>
+                    <li data-crop="sorghum">
+                        <span class="crop-name">Sorghum</span>
+                        <span class="crop-price">-- ETB</span>
+                        <span class="crop-qty">Qty: --</span>
+                        <button type="button" class="buy-seed" aria-label="Buy sorghum seeds">Buy</button>
+                        <button type="button" class="negotiate-seed" aria-label="Negotiate sorghum seeds">Negotiate</button>
+                    </li>
+                    <li data-crop="potato">
+                        <span class="crop-name">Potato</span>
+                        <span class="crop-price">-- ETB</span>
+                        <span class="crop-qty">Qty: --</span>
+                        <button type="button" class="buy-seed" aria-label="Buy potato seeds">Buy</button>
+                        <button type="button" class="negotiate-seed" aria-label="Negotiate potato seeds">Negotiate</button>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- ============================================
+            SECTION 12: NEGOTIATION PANEL
+            ============================================ -->
+            <section id="negotiation-panel" aria-labelledby="negotiation-heading" hidden>
+                <h3 id="negotiation-heading">Negotiation</h3>
+                <p>Seller/Buyer: <span id="negotiation-party">--</span></p>
+                <p>Product: <span id="negotiation-product">--</span></p>
+                <p>Offered Price: <span id="negotiation-offer">--</span> ETB</p>
+                <p>Quantity: <span id="negotiation-qty">--</span></p>
+                <div class="negotiation-actions">
+                    <button type="button" id="accept-offer">Accept</button>
+                    <button type="button" id="counter-offer">Counter Offer</button>
+                    <button type="button" id="decline-offer">Decline</button>
+                    <button type="button" id="another-offer">Look for Another Offer</button>
+                </div>
+            </section>
+
+            <!-- ============================================
+            SECTION 13: INVENTORY
+            ============================================ -->
+            <section id="inventory-panel" aria-labelledby="inventory-heading" hidden>
+                <h3 id="inventory-heading">Inventory</h3>
+                <ul>
+                    <li>Seeds: <span id="inv-seeds">0</span></li>
+                    <li>Fertilizer: <span id="inv-fertilizer">0</span></li>
+                    <li>Pesticide: <span id="inv-pesticide">0</span></li>
+                    <li>Herbicide: <span id="inv-herbicide">0</span></li>
+                    <li>Tools: <span id="inv-tools">0</span></li>
+                    <li>Harvested Crops: <span id="inv-harvested">0</span></li>
+                    <li>Packaging Materials: <span id="inv-packaging">0</span></li>
+                </ul>
+            </section>
+
+            <!-- ============================================
+            SECTION 14: CROP INFORMATION
+            ============================================ -->
+            <section id="crop-status-panel" aria-labelledby="crop-status-heading" hidden>
+                <h3 id="crop-status-heading">Crop Status</h3>
+                <ul>
+                    <li>Crop: <span id="crop-name">--</span></li>
+                    <li>Growth Stage: <span id="crop-stage">--</span></li>
+                    <li>Days Since Planting: <span id="crop-days">0</span></li>
+                    <li>Health: <span id="crop-health">--</span></li>
+                    <li>Water Status: <span id="crop-water">--</span></li>
+                    <li>Nutrient Status: <span id="crop-nutrient">--</span></li>
+                    <li>Pest Risk: <span id="crop-pest">--</span></li>
+                    <li>Disease Risk: <span id="crop-disease">--</span></li>
+                    <li>Expected Harvest: <span id="crop-harvest-status">--</span></li>
+                </ul>
+            </section>
+
+            <!-- ============================================
+            SECTION 15: HARVEST / PROCESSING SYSTEM
+            ============================================ -->
+            <section id="post-harvest-panel" aria-labelledby="post-harvest-heading" hidden>
+                <h3 id="post-harvest-heading">Post-Harvest</h3>
+                <div class="post-harvest-actions">
+                    <button type="button" id="action-harvest">Harvest</button>
+                    <button type="button" id="action-wash">Wash / Clean</button>
+                    <button type="button" id="action-grade">Grade</button>
+                    <button type="button" id="action-pack">Pack</button>
+                    <button type="button" id="action-store">Store</button>
+                    <button type="button" id="action-transport">Transport</button>
+                    <button type="button" id="action-sell">Sell</button>
+                </div>
+            </section>
+
+            <!-- ============================================
+            SECTION 16: MARKET
+            ============================================ -->
+            <section id="market-panel" aria-labelledby="market-heading" hidden>
+                <h3 id="market-heading">Market</h3>
+                <ul>
+                    <li>Crop: <span id="market-crop">--</span></li>
+                    <li>Quantity: <span id="market-qty">--</span></li>
+                    <li>Quality: <span id="market-quality">--</span></li>
+                    <li>Current Offer: <span id="market-offer">--</span> ETB</li>
+                    <li>Negotiated Offer: <span id="market-negotiated">--</span> ETB</li>
+                    <li>Final Price: <span id="market-final">--</span> ETB</li>
+                    <li>Expected Revenue: <span id="market-revenue">--</span> ETB</li>
+                </ul>
+                <div class="market-actions">
+                    <button type="button" id="market-sell">Sell</button>
+                    <button type="button" id="market-negotiate">Negotiate</button>
+                    <button type="button" id="market-find-buyer">Find Another Buyer</button>
+                </div>
+            </section>
+
+            <!-- ============================================
+            SECTION 17: FINANCIAL PANEL
+            ============================================ -->
+            <section id="financial-panel" aria-labelledby="financial-heading" hidden>
+                <h3 id="financial-heading">Finances</h3>
+                <ul>
+                    <li>Starting Money: <span id="fin-starting">10,000</span> ETB</li>
+                    <li>Total Expenses: <span id="fin-expenses">0</span> ETB</li>
+                    <li>Total Revenue: <span id="fin-revenue">0</span> ETB</li>
+                    <li>Current Balance: <span id="fin-balance">10,000</span> ETB</li>
+                    <li>Profit/Loss: <span id="fin-profit">0</span> ETB</li>
+                </ul>
+            </section>
+
+            <!-- ============================================
+            SECTION 18: TIME CONTROL
+            ============================================ -->
+            <section id="time-controls" aria-labelledby="time-heading">
+                <h3 id="time-heading" class="visually-hidden">Time Controls</h3>
+                <button type="button" id="advance-1-day">Advance 1 Day</button>
+                <button type="button" id="advance-3-days">Advance 3 Days</button>
+                <button type="button" id="advance-7-days">Advance 7 Days</button>
+                <button type="button" id="pause-sim">Pause</button>
+            </section>
+
+            <!-- ============================================
+            SECTION 19: FARM PROGRESSION
+            ============================================ -->
+            <section id="farm-progression" aria-labelledby="progression-heading" hidden>
+                <h3 id="progression-heading">Farm Progress</h3>
+                <ul>
+                    <li>Farm Level: <span id="progress-level">1</span></li>
+                    <li>Land Area: <span id="progress-land">--</span></li>
+                    <li>Available Fields: <span id="progress-fields">0</span></li>
+                    <li>Irrigation Level: <span id="progress-irrigation">0</span></li>
+                    <li>Storage Level: <span id="progress-storage">0</span></li>
+                    <li>Equipment Level: <span id="progress-equipment">0</span></li>
+                </ul>
+                <button type="button" id="expand-farm">Expand Farm</button>
+            </section>
+
+            <!-- ============================================
+            SECTION 20: EVENT / NOTIFICATION SYSTEM
+            ============================================ -->
+            <section id="event-notification" aria-labelledby="event-heading" aria-live="polite">
+                <h3 id="event-heading">Events</h3>
+                <p id="event-message">No current events</p>
+            </section>
+
+            <!-- ============================================
+            SECTION 21: EDUCATIONAL INFORMATION PANEL
+            ============================================ -->
+            <section id="learning-panel" aria-labelledby="learning-heading" hidden>
+                <h3 id="learning-heading">Learning</h3>
+                <div id="learning-content">
+                    <!-- educational text inserted later -->
+                </div>
+                <button type="button" id="learn-more">Learn More</button>
+            </section>
+
+            <!-- ============================================
+            SECTION 22: SAVE / LOAD STRUCTURE
+            ============================================ -->
+            <section id="save-load-controls" aria-label="Save and load controls">
+                <button type="button" id="save-farm">Save Farm</button>
+                <button type="button" id="load-farm">Load Farm</button>
+                <button type="button" id="reset-farm">Reset Farm</button>
+            </section>
+
+        </div><!-- end simulation-stage -->
+
+    </main>
+
+</body>
+</html>

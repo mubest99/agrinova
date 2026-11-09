@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173f2a">
+  <title>AgriNova | Farm Tasks & Calendar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="farm-tasks-calendar.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="farm-tasks-calendar.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-icon">A</span> Agri<span>Nova</span></a>
+    <div class="top-tools">
+      <input id="globalSearch" type="search" placeholder="Search tasks, crops and events">
+      <select id="languageSelect" aria-label="Language">
+        <option value="en">English</option>
+        <option value="am">አማርኛ</option>
+        <option value="ti">ትግርኛ</option>
+        <option value="om">Afaan Oromo</option>
+        <option value="so">Soomaali</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <section class="welcome">
+      <div>
+        <p class="eyebrow" data-i18n="workspace">FARM WORKSPACE</p>
+        <h1 data-i18n="title">Farm Tasks & Calendar</h1>
+        <p data-i18n="subtitle">Plan your work, follow your crops, and stay one step ahead.</p>
+      </div>
+      <button class="btn primary" id="addTaskTop" data-i18n="addTask">+ Add task</button>
+    </section>
+
+    <section class="profile-strip">
+      <div class="avatar" id="avatarInitials">F</div>
+      <div>
+        <strong id="farmerName">Farmer</strong>
+        <span id="greetingText">Welcome</span>
+        <small id="farmerEmail"></small>
+      </div>
+      <div class="connection" id="connectionStatus">Starting…</div>
+    </section>
+
+    <section class="stats">
+      <article class="stat"><span data-i18n="todayTasks">Tasks today</span><strong id="statToday">0</strong><small data-i18n="todayCaption">Scheduled for today</small></article>
+      <article class="stat"><span data-i18n="pending">Pending tasks</span><strong id="statPending">0</strong><small data-i18n="pendingCaption">Awaiting completion</small></article>
+      <article class="stat"><span data-i18n="crops">Active crops</span><strong id="statCrops">0</strong><small data-i18n="cropsCaption">In your farm</small></article>
+      <article class="stat"><span data-i18n="completed">Completed</span><strong id="statCompleted">0</strong><small data-i18n="completedCaption">Tasks completed</small></article>
+    </section>
+
+    <section class="panel priority-panel">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow" data-i18n="priorityEyebrow">PRIORITY FARM WORK</p>
+          <h2 data-i18n="priorityTitle">Your priority tasks</h2>
+          <p data-i18n="priorityText">Overdue and urgent work appears here first.</p>
+        </div>
+        <button class="btn primary" id="addPriorityTask" data-i18n="addTask">+ Add task</button>
+      </div>
+      <div id="priorityTasks" class="priority-list"><p class="empty">No priority tasks yet.</p></div>
+    </section>
+
+    <section class="main-grid">
+      <section class="panel calendar-panel">
+        <div class="section-heading calendar-heading">
+          <div>
+            <p class="eyebrow" data-i18n="schedule">YOUR SCHEDULE</p>
+            <h2 data-i18n="calendar">Farm calendar</h2>
+          </div>
+          <div class="calendar-controls">
+            <button class="icon-btn" id="prevMonth" aria-label="Previous month">‹</button>
+            <strong id="monthLabel"></strong>
+            <button class="icon-btn" id="nextMonth" aria-label="Next month">›</button>
+            <button class="btn light small" id="todayBtn" data-i18n="today">Today</button>
+          </div>
+        </div>
+
+        <div class="legend">
+          <span><i class="dot harvest"></i><span data-i18n="harvest">Harvest</span></span>
+          <span><i class="dot fertilizer"></i><span data-i18n="fertilizer">Fertilizer</span></span>
+          <span><i class="dot protection"></i><span data-i18n="protection">Crop protection</span></span>
+          <span><i class="dot holiday"></i><span data-i18n="holiday">Holiday</span></span>
+          <span><i class="dot general"></i><span data-i18n="general">General</span></span>
+        </div>
+
+        <div id="weekdayLabels" class="weekdays"></div>
+        <div id="calendarDays" class="calendar-days"></div>
+
+        <div class="selected-day">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow" data-i18n="selectedDay">SELECTED DAY</p>
+              <h3 id="selectedDateLabel"></h3>
+            </div>
+            <button class="text-btn" id="addEventBtn" data-i18n="addEvent">+ Add event</button>
+          </div>
+          <div id="selectedDateItems"><p class="empty">No tasks or events for this date.</p></div>
+        </div>
+      </section>
+
+      <aside class="side-column">
+        <section class="panel">
+          <div class="section-heading">
+            <div><p class="eyebrow" data-i18n="stayOnTrack">STAY ON TRACK</p><h2 data-i18n="upcoming">Upcoming tasks</h2></div>
+          </div>
+          <div id="upcomingTasks"><p class="empty">No upcoming tasks.</p></div>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <div><p class="eyebrow" data-i18n="growing">GROWING NOW</p><h2 data-i18n="myCrops">My crops</h2></div>
+          </div>
+          <div id="cropList"><p class="empty">No crops found.</p></div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="panel ai-panel">
+      <div class="ai-heading">
+        <div class="ai-icon">✦</div>
+        <div>
+          <p class="eyebrow" data-i18n="assistant">SMART FARM ASSISTANT</p>
+          <h2 data-i18n="aiTitle">AI weekly farm plan</h2>
+          <p data-i18n="aiDescription">Generate a seven-day farm plan using your crops and farm records.</p>
+        </div>
+      </div>
+      <div class="ai-controls">
+        <label><span data-i18n="weekStarting">Week starting</span><input type="date" id="weekStart"></label>
+        <button class="btn primary" id="generatePlanBtn" data-i18n="generate">Generate weekly plan</button>
+      </div>
+      <div id="weeklyPlanResult" class="weekly-result">
+        <p class="empty" data-i18n="planPlaceholder">Your personalized weekly plan will appear here.</p>
+      </div>
+    </section>
+
+    <footer>© AgriNova · <span data-i18n="footer">Your farm, thoughtfully planned.</span></footer>
+  </main>
+</div>
+
+<dialog id="taskDialog" class="modal">
+  <form id="taskForm" class="modal-card">
+    <div class="modal-title">
+      <h2 id="taskDialogTitle" data-i18n="newTask">New task</h2>
+      <button type="button" class="icon-btn" data-close="taskDialog">×</button>
+    </div>
+    <input type="hidden" id="taskId">
+    <label><span data-i18n="taskTitle">Task title</span><input id="taskTitle" required maxlength="140"></label>
+    <div class="form-row">
+      <label><span data-i18n="taskType">Task type</span>
+        <select id="taskType">
+          <option value="general">General</option><option value="planting">Planting</option>
+          <option value="watering">Watering</option><option value="fertilizer">Fertilizer</option>
+          <option value="pesticide">Pesticide</option><option value="herbicide">Herbicide</option>
+          <option value="weeding">Weeding</option><option value="harvest">Harvest</option>
+          <option value="inspection">Inspection</option><option value="other">Other</option>
+        </select>
+      </label>
+      <label><span data-i18n="crop">Crop</span><select id="taskCrop"><option value="">No specific crop</option></select></label>
+    </div>
+    <div class="form-row">
+      <label><span data-i18n="dueDate">Due date</span><input type="date" id="taskDate" required></label>
+      <label><span data-i18n="priority">Priority</span>
+        <select id="taskPriority">
+          <option value="low">Low</option><option value="medium" selected>Medium</option>
+          <option value="high">High</option><option value="urgent">Urgent</option>
+        </select>
+      </label>
+    </div>
+    <label><span data-i18n="description">Description / notes</span><textarea id="taskDescription" rows="3"></textarea></label>
+    <div class="modal-actions">
+      <button type="button" class="btn light" data-close="taskDialog" data-i18n="cancel">Cancel</button>
+      <button type="submit" class="btn primary" data-i18n="saveTask">Save task</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="eventDialog" class="modal">
+  <form id="eventForm" class="modal-card">
+    <div class="modal-title">
+      <h2 data-i18n="newEvent">New calendar event</h2>
+      <button type="button" class="icon-btn" data-close="eventDialog">×</button>
+    </div>
+    <label><span data-i18n="eventTitle">Event title</span><input id="eventTitle" required maxlength="140"></label>
+    <div class="form-row">
+      <label><span data-i18n="eventType">Event type</span>
+        <select id="eventType">
+          <option value="general">General</option><option value="special_date">Special date</option>
+          <option value="planting">Planting</option><option value="harvest">Harvest</option>
+          <option value="fertilizer">Fertilizer</option><option value="pesticide">Pesticide</option>
+          <option value="herbicide">Herbicide</option><option value="inspection">Inspection</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+      <label><span data-i18n="crop">Crop</span><select id="eventCrop"><option value="">No specific crop</option></select></label>
+    </div>
+    <div class="form-row">
+      <label><span data-i18n="startDate">Start date</span><input type="date" id="eventStart" required></label>
+      <label><span data-i18n="endDate">End date</span><input type="date" id="eventEnd"></label>
+    </div>
+    <label><span data-i18n="description">Description / notes</span><textarea id="eventDescription" rows="3"></textarea></label>
+    <div class="modal-actions">
+      <button type="button" class="btn light" data-close="eventDialog" data-i18n="cancel">Cancel</button>
+      <button type="submit" class="btn primary" data-i18n="saveEvent">Save event</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status"></div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriNova — Agricultural Innovation</title>
+    <link rel="stylesheet" href="agricultural-innovation.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- =============================================== -->
+    <!-- AGRINOVA GLOBAL HEADER                          -->
+    <!-- =============================================== -->
+    <header class="agrinova-header">
+        <div class="header-container">
+            <div class="header-left">
+                <div class="logo">AgriNova</div>
+            </div>
+            <nav class="header-nav">
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Crop Information</a></li>
+                    <li><a href="#">Crop News</a></li>
+                    <li><a href="#" class="active">Innovation</a></li>
+                    <li><a href="#">Fertilizer</a></li>
+                    <li><a href="#">Weather</a></li>
+                    <li><a href="#">Market</a></li>
+                    <li><a href="#">Dashboard</a></li>
+                </ul>
+            </nav>
+            <div class="header-right">
+                <button class="header-btn">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- =============================================== -->
+    <!-- MAIN CONTENT                                    -->
+    <!-- =============================================== -->
+    <main class="innovation-page">
+
+        <!-- Page Introduction -->
+        <section class="page-intro">
+            <div class="intro-content">
+                <h1 class="page-title">Agricultural Innovation</h1>
+                <p class="page-description">
+                    Discover innovative technologies, ideas, and farming methods shaping the future of agriculture.
+                </p>
+            </div>
+            <div class="search-wrapper">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" id="searchInput" class="search-bar" placeholder="Search innovations...">
+            </div>
+        </section>
+
+        <!-- Category Filters -->
+        <section class="filter-section">
+            <div class="filter-scroll" id="filterContainer">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="smart-farming">Smart Farming</button>
+                <button class="filter-btn" data-filter="irrigation">Irrigation</button>
+                <button class="filter-btn" data-filter="machinery">Machinery</button>
+                <button class="filter-btn" data-filter="soil-technology">Soil Technology</button>
+                <button class="filter-btn" data-filter="crop-monitoring">Crop Monitoring</button>
+                <button class="filter-btn" data-filter="renewable-energy">Renewable Energy</button>
+                <button class="filter-btn" data-filter="climate-smart">Climate-Smart</button>
+                <button class="filter-btn" data-filter="post-harvest">Post-Harvest</button>
+                <button class="filter-btn" data-filter="greenhouse">Greenhouse</button>
+                <button class="filter-btn" data-filter="research">Research</button>
+            </div>
+        </section>
+
+        <!-- Location Filter -->
+        <section class="location-filter-section">
+            <span class="location-label">Location:</span>
+            <div class="location-options">
+                <button class="location-btn active" data-location="all">All</button>
+                <button class="location-btn" data-location="ethiopia">Ethiopia</button>
+                <button class="location-btn" data-location="africa">Africa</button>
+                <button class="location-btn" data-location="global">Global</button>
+            </div>
+        </section>
+
+        <!-- Featured Innovation -->
+        <section class="featured-section" id="featuredSection">
+            <div class="featured-card" id="featuredCard">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- Latest Innovations -->
+        <section class="latest-innovations-section">
+            <div class="section-header">
+                <h2 class="section-title">Latest Innovations</h2>
+                <span class="results-count" id="resultsCount">Showing 0 innovations</span>
+            </div>
+            <div class="innovation-grid" id="innovationGrid">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <p>No agricultural innovations found matching your search.</p>
+            </div>
+        </section>
+
+        <!-- Load More -->
+        <div class="load-more-container" id="loadMoreContainer" style="display:none;">
+            <button class="load-more-btn" id="loadMoreBtn">Load More Innovations</button>
+        </div>
+
+    </main>
+
+    <!-- =============================================== -->
+    <!-- INNOVATION DETAIL VIEW (Hidden by default)      -->
+    <!-- =============================================== -->
+    <section class="detail-view" id="detailView" style="display:none;">
+        <div class="detail-overlay" id="detailOverlay"></div>
+        <div class="detail-panel" id="detailPanel">
+            <button class="detail-close-btn" id="detailCloseBtn">&times;</button>
+            <div class="detail-content" id="detailContent">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </section>
+
+    <script src="agricultural-innovation.js"></script>
+</body>
+</html>

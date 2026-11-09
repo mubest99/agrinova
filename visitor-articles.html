@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AgriNova — Agricultural Knowledge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="visitor-articles.css" />
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="#" class="brand" onclick="goHome(event)">
+      <span class="brand-mark">A</span>
+      <span class="brand-text">
+        <span class="brand-name">AgriNova</span>
+        <span class="brand-tagline" data-i18n="brandTagline">Growing Smarter. Farming Better.</span>
+      </span>
+    </a>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="#" onclick="goHome(event)" data-i18n="navHome">Home</a>
+      <a href="#articlesSection" data-i18n="navExplore">Explore</a>
+      <a href="#articlesSection" data-i18n="navArticles">Articles</a>
+      <a href="#" data-i18n="navSolutions">Agricultural Solutions</a>
+      <a href="#siteFooter" data-i18n="navAbout">About</a>
+    </nav>
+
+    <div class="header-actions">
+      <select id="languageSelect" class="lang-select" aria-label="Language">
+        <option value="en">English</option>
+        <option value="am">አማርኛ</option>
+        <option value="om">Afaan Oromoo</option>
+        <option value="so">Af Soomaali</option>
+        <option value="ti">ትግርኛ</option>
+      </select>
+      <button class="icon-btn" aria-label="Notifications" title="Notifications">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="icon-btn" aria-label="Profile" title="Profile">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== LISTING VIEW ===================== -->
+<main id="listingView">
+
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 data-i18n="heroHeading">Knowledge That Helps Agriculture Grow</h1>
+      <p data-i18n="heroDesc">Discover practical agricultural knowledge, scientific research, farming techniques, innovations, and expert insights to support a more productive and sustainable agricultural future.</p>
+
+      <form class="hero-search" onsubmit="handleSearchSubmit(event)">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Search agricultural articles..." />
+      </form>
+
+      <div class="hero-count">
+        <span id="heroArticleCount">20</span>
+        <span data-i18n="articleCountLabel">articles available</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured-section">
+    <div class="container">
+      <article class="featured-card" id="featuredCard"></article>
+    </div>
+  </section>
+
+  <section class="filters-section" id="articlesSection">
+    <div class="container">
+      <div class="section-head">
+        <h2 data-i18n="articlesHeading">Agricultural Articles</h2>
+        <p data-i18n="articlesSubheading">Explore expert knowledge across every field of agriculture.</p>
+      </div>
+
+      <div class="filter-bar">
+        <div class="category-chips" id="categoryChips"></div>
+        <div class="filter-controls">
+          <div class="control-group">
+            <label data-i18n="sortBy">Sort by</label>
+            <select id="sortSelect">
+              <option value="latest" data-i18n="sortLatest">Latest</option>
+              <option value="oldest" data-i18n="sortOldest">Oldest</option>
+              <option value="relevant" data-i18n="sortRelevant">Most Relevant</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label data-i18n="readingTime">Reading time</label>
+            <select id="readingSelect">
+              <option value="all" data-i18n="rtAll">All</option>
+              <option value="under5" data-i18n="rtUnder5">Under 5 minutes</option>
+              <option value="5to10" data-i18n="rt5to10">5–10 minutes</option>
+              <option value="above10" data-i18n="rtAbove10">Above 10 minutes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-info"><span id="resultsCount"></span></div>
+      <div class="article-grid" id="articleGrid"></div>
+
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <h3 data-i18n="noResultsTitle">No articles found</h3>
+        <p data-i18n="noResultsDesc">Try adjusting your search or filters.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== READING VIEW ===================== -->
+<main id="readingView" style="display:none;">
+  <div class="container reading-container">
+    <button class="back-btn" onclick="goBackToArticles(event)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      <span data-i18n="backToArticles">Back to Articles</span>
+    </button>
+
+    <article class="reading-article">
+      <div class="reading-cover"><img id="readImage" src="" alt="" /></div>
+      <div class="reading-meta-top">
+        <span class="cat-badge" id="readCategory"></span>
+        <span class="meta-dot">·</span>
+        <span id="readDate"></span>
+        <span class="meta-dot">·</span>
+        <span id="readTime"></span>
+      </div>
+      <h1 class="reading-title" id="readTitle"></h1>
+      <div class="reading-author" id="readAuthor"></div>
+      <div class="reading-body" id="readBody"></div>
+
+      <div class="related-section">
+        <h3 data-i18n="relatedArticles">Related Articles</h3>
+        <div class="related-grid" id="relatedGrid"></div>
+      </div>
+    </article>
+  </div>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer" id="siteFooter">
+  <div class="container footer-grid">
+    <div class="footer-col footer-brand">
+      <div class="brand brand-footer">
+        <span class="brand-mark">A</span>
+        <div>
+          <div class="brand-name">AgriNova</div>
+          <div class="brand-tagline" data-i18n="brandTagline">Growing Smarter. Farming Better.</div>
+        </div>
+      </div>
+      <p data-i18n="footerDesc">A modern agricultural knowledge platform sharing practical, scientific, and sustainable farming insights for farmers, students, and researchers.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-i18n="footerQuickLinks">Quick Links</h4>
+      <ul>
+        <li><a href="#" onclick="goHome(event)" data-i18n="navHome">Home</a></li>
+        <li><a href="#articlesSection" data-i18n="navExplore">Explore</a></li>
+        <li><a href="#articlesSection" data-i18n="navArticles">Articles</a></li>
+        <li><a href="#siteFooter" data-i18n="navAbout">About</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-i18n="footerSupport">Support</h4>
+      <ul>
+        <li><a href="#" data-i18n="footerContact">Contact</a></li>
+        <li><a href="#" data-i18n="footerPrivacy">Privacy Policy</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-i18n="footerSloganTitle">Our Slogan</h4>
+      <p class="footer-slogan" data-i18n="footerSlogan">Agricultural Technology for All.</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <span data-i18n="footerCopyright">© 2025 AgriNova. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="visitor-articles.js"></script>
+</body>
+</html>

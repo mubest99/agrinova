@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgriNova · My Crops</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="my-crops.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head>
+<body>
+<aside class="sidebar"><div class="brand"><i class="fa-solid fa-seedling"></i> AgriNova<small>Growing Smarter. Farming Better.</small></div>
+<nav><label>FARMER DASHBOARD</label><a href="farmer-dashboard.html">▦ Dashboard Home</a><a href="my-farm.html">♧ My Farm</a><a class="active" href="my-crops.html">🌱 My Crops</a><a href="#">Daily Farm</a><a href="#">Farm Tasks & Calendar</a><a href="#">Farm Records</a><a href="#">Farm Calculator</a><a href="#">Farm Finance</a><a href="ai-assistant.html">AI Agricultural Assistant</a><a href="farm-analysis.html">Farm Analysis & ID</a><a href="#">Farmer Community</a><a href="#">Marketplace</a><label>AGRINOVA RESOURCES</label><a href="#">Agriculture Articles</a><a href="#">Crop Information</a><a href="#">Ethiopian Crop Map</a><a href="#">Weather</a><a href="#">Pest & Disease Library</a><a href="#">Fertilizer Information</a></nav></aside>
+<div class="main"><header class="top"><div class="search"><i class="fa fa-search"></i><input id="globalSearch" placeholder="Search your crops..."></div><div class="right"><button id="notifButton" class="bell" aria-label="Notifications"><i class="fa-regular fa-bell"></i><b id="notifBadge">0</b></button><select id="languageSelect" aria-label="Select language"><option value="en">English</option><option value="am">አማርኛ</option><option value="ti">ትግርኛ</option><option value="om">Afaan Oromo</option><option value="so">Soomaali</option></select></div></header>
+<main><div class="heading"><div><small>FARM MANAGEMENT</small><h1 data-i18n="myCrops">My Crops</h1><p data-i18n="subtitle">Monitor crop growth, checkpoints, and harvest timelines.</p></div></div>
+<section class="stats">
+<article><i class="fa fa-seedling"></i><div><strong id="statActiveCrops">0</strong><span data-i18n="active">Active Crops</span></div></article>
+<article><i class="fa fa-ruler-combined"></i><div><strong id="statCultivatedArea">—</strong><span data-i18n="cultivated">Cultivated Area</span></div></article>
+<article><i class="fa fa-hourglass-half"></i><div><strong id="statLongestHarvest">—</strong><span data-i18n="longest">Longest Harvest</span><small>Farthest upcoming harvest</small></div></article>
+<article><i class="fa fa-calendar-check"></i><div><strong id="statNearestHarvest">—</strong><span data-i18n="nearest">Nearest Harvest</span><small>Next expected harvest</small></div></article></section>
+<section class="panel"><div class="panelhead"><div><small>YOUR FIELDS</small><h2>Crop portfolio</h2></div><div><span><b id="cropCount">0</b> crop records</span><button class="primary" id="addCropBtn"><i class="fa fa-plus"></i> Add Crop</button></div></div>
+<div id="connectionNotice" class="notice" hidden></div><div class="filters"><select id="categoryFilter"><option value="all">All categories</option><option value="field">Field crops</option><option value="fruit">Fruits</option><option value="vegetable">Vegetables</option><option value="legume">Legumes</option></select><select id="statusFilter"><option value="all">All statuses</option><option value="active">Active</option><option value="planned">Planned</option><option value="harvested">Harvested</option></select></div>
+<div id="cropsGrid" class="grid"><div class="empty">Loading crops…</div></div></section><footer>AgriNova · Crop timelines are estimates based on the selected schedule and planting date.</footer></main></div>
+<div class="modal" id="cropModal"><div class="dialog"><div class="modalhead"><div><small>CROP SETUP</small><h2 id="cropModalTitle">Add Crop</h2></div><button data-close="cropModal">×</button></div>
+<form id="cropForm"><input type="hidden" id="editCropId"><div class="fields">
+<label>Crop name *<input id="cropNameInput" list="cropCatalog" required placeholder="e.g. Maize"><datalist id="cropCatalog"></datalist></label>
+<label>Crop category *<select id="cropCategoryInput" required><option value="field">Field crop</option><option value="fruit">Fruit</option><option value="vegetable">Vegetable</option><option value="legume">Legume</option></select></label>
+<label>Selection field / land section *<select id="cropFieldInput" required><option value="">Loading…</option></select></label>
+<label>Plant type / variety<input id="cropVarietyInput" placeholder="Variety"></label>
+<label>Area (hectares) *<input id="cropAreaInput" type="number" min=".01" step=".01" required></label>
+<label>Quantity planted<input id="cropQuantityInput" type="number" min="0" step=".01"></label>
+<label>Quantity unit<select id="cropQuantityUnitInput"><option>kg</option><option>quintal</option><option>seeds</option><option>seedlings</option><option>plants</option></select></label>
+<label>Planting date *<input id="cropPlantingDateInput" type="date" required></label></div>
+<label class="wide">Notes<textarea id="cropNotesInput" rows="3"></textarea></label><p id="fieldWarning" class="hint"></p>
+<div class="actions"><button type="button" class="secondary" data-close="cropModal">Cancel</button><button class="primary" type="submit">Save Crop</button></div></form></div></div>
+<div class="modal" id="cropDetailModal"><div class="dialog large"><div class="modalhead"><h2 id="cropDetailTitle">Crop details</h2><button data-close="cropDetailModal">×</button></div><div id="cropDetailContent"></div></div></div>
+<div class="modal" id="checkpointModal"><div class="dialog"><div class="modalhead"><h2 id="checkpointModalTitle">Stage checkpoint</h2><button data-close="checkpointModal">×</button></div>
+<form id="checkpointForm"><input type="hidden" id="checkpointCropId"><input type="hidden" id="checkpointStageIndex"><p id="checkpointStageDescription"></p>
+<label>Upload crop photograph *<input type="file" id="checkpointPhotoInput" accept="image/*" required></label><div id="checkpointQuestions"></div><label>Additional observations<textarea id="checkpointNotesInput" rows="3"></textarea></label>
+<div class="actions"><button type="button" class="secondary" data-close="checkpointModal">Cancel</button><button class="primary" type="submit">Save checkpoint</button></div></form></div></div>
+<div id="cropToast" class="toast"></div><script src="my-crops.js"></script></body></html>

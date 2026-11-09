@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12352a">
+  <title>AgriNova AI Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="ai-assistant.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="farmer-dashboard.html" aria-label="AgriNova home">
+        <span class="brand-mark">A</span><span>AgriNova <small>AI AGRICULTURAL ASSISTANT</small></span>
+      </a>
+      <div class="top-actions">
+        <div class="language-wrap">
+          <button id="languageButton" class="language-button" aria-expanded="false"><span>◎</span><span id="currentLanguage">English</span><span>⌄</span></button>
+          <div id="languageDropdown" class="language-menu hidden">
+            <button data-language="en">English</button><button data-language="am">አማርኛ</button>
+            <button data-language="ti">ትግርኛ</button><button data-language="om">Afaan Oromo</button><button data-language="so">Soomaali</button>
+          </div>
+        </div>
+        <button id="newChatButton" class="new-chat-button"><span>＋</span><span data-i18n="newChat">New chat</span></button>
+      </div>
+    </header>
+
+    <main class="chat-layout">
+      <section class="chat-column">
+        <div id="welcomeScreen" class="welcome-screen">
+          <div class="welcome-icon">✦</div>
+          <p class="eyebrow" data-i18n="eyebrow">YOUR FARMING COMPANION</p>
+          <h1 data-i18n="welcomeTitle">What can I help you grow today?</h1>
+          <p class="welcome-copy" data-i18n="welcomeCopy">Ask about crops, pests, soil, irrigation or upload a photo of a plant for guidance.</p>
+          <div class="prompt-grid">
+            <button class="prompt-card" data-prompt-key="cropPrompt"><span>🌱</span><b data-i18n="cropPromptTitle">Improve crop growth</b><small data-i18n="cropPromptText">Get practical growing recommendations</small></button>
+            <button class="prompt-card" data-prompt-key="diseasePrompt"><span>🍃</span><b data-i18n="diseasePromptTitle">Identify a plant problem</b><small data-i18n="diseasePromptText">Understand visible crop symptoms</small></button>
+            <button class="prompt-card" data-prompt-key="soilPrompt"><span>🌾</span><b data-i18n="soilPromptTitle">Soil and fertilizer advice</b><small data-i18n="soilPromptText">Plan healthier soil nutrition</small></button>
+            <button class="prompt-card" data-prompt-key="waterPrompt"><span>💧</span><b data-i18n="waterPromptTitle">Water and irrigation</b><small data-i18n="waterPromptText">Use water more efficiently</small></button>
+          </div>
+        </div>
+
+        <div id="conversationMessages" class="messages" aria-live="polite"></div>
+        <div id="typingIndicator" class="typing-row hidden"><span class="typing-dots"><i></i><i></i><i></i></span><span data-i18n="thinking">AgriNova is thinking…</span></div>
+        <div id="errorBanner" class="error-banner hidden" role="alert"></div>
+      </section>
+    </main>
+
+    <footer class="composer-area">
+      <div id="attachmentPreview" class="attachment-preview hidden">
+        <img id="previewImage" alt="Selected crop image">
+        <div class="attachment-meta"><b id="imageFileName"></b><small data-i18n="imageReady">Image ready to send</small></div>
+        <button id="removeAttachment" class="remove-attachment" aria-label="Remove image">×</button>
+      </div>
+      <form id="chatForm" class="composer">
+        <textarea id="messageInput" rows="1" data-i18n-placeholder="inputPlaceholder" placeholder="Ask AgriNova anything about farming…" aria-label="Message AgriNova"></textarea>
+        <div class="composer-tools">
+          <div class="tool-group">
+            <button type="button" id="uploadImageButton" class="tool-button" title="Upload photo" aria-label="Upload photo">＋ <span data-i18n="attach">Attach</span></button>
+            <button type="button" id="cameraButton" class="tool-button" title="Take photo" aria-label="Take photo">▣ <span data-i18n="camera">Camera</span></button>
+            <button type="button" id="voiceInputButton" class="tool-button voice-button" title="Voice input" aria-label="Voice input">🎙 <span data-i18n="voice">Voice</span></button>
+            <span id="voiceStatus" class="voice-status" aria-live="polite"></span>
+          </div>
+          <button type="submit" id="sendButton" class="send-button" aria-label="Send message">↑</button>
+        </div>
+      </form>
+      <input id="imageUpload" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+      <input id="cameraUpload" type="file" accept="image/*" capture="environment" hidden>
+      <p class="disclaimer" data-i18n="disclaimer">AgriNova AI can make mistakes. Confirm important crop-treatment decisions with a local agricultural expert.</p>
+    </footer>
+  </div>
+  <script src="ai-assistant.js"></script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information — AgriNova</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="weather-information.css">
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="weather-header">
+        <div class="header-left">
+            <a href="visitor-dashboard.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Back to Dashboard
+            </a>
+            <div class="brand">
+                <div class="brand-name">AgriNova</div>
+                <div class="brand-sub">Weather Information</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <label class="language-control" aria-label="Choose language">
+                <span class="language-icon">文</span>
+                <select id="languageSelect" aria-label="Choose language">
+                    <option value="en">English</option>
+                    <option value="am">አማርኛ</option>
+                    <option value="ti">ትግርኛ</option>
+                    <option value="om">Afaan Oromo</option>
+                    <option value="so">Af-Soomaali</option>
+                </select>
+            </label>
+            <div class="search-wrapper">
+                <input type="text" id="locationSearch" placeholder="Search city or location...">
+                <button id="searchBtn">Search</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== WEATHER HERO ===== -->
+    <section class="weather-hero" id="weatherHero">
+        <div class="hero-background" id="heroBackground"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-location" id="heroLocation">Addis Ababa, Ethiopia</div>
+            <div class="hero-temp" id="heroTemp">22°C</div>
+            <div class="hero-condition" id="heroCondition">Partly Cloudy</div>
+            <div class="hero-details">
+                <div class="hero-detail">
+                    <span class="detail-label">Feels Like</span>
+                    <span class="detail-value" id="heroFeels">21°C</span>
+                </div>
+                <div class="hero-detail">
+                    <span class="detail-label">Rain</span>
+                    <span class="detail-value" id="heroRain">35%</span>
+                </div>
+                <div class="hero-detail">
+                    <span class="detail-label">Humidity</span>
+                    <span class="detail-value" id="heroHumidity">62%</span>
+                </div>
+                <div class="hero-detail">
+                    <span class="detail-label">Wind</span>
+                    <span class="detail-value" id="heroWind">14 km/h</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== LOADING / ERROR STATES ===== -->
+    <div class="weather-message" id="weatherMessage" style="display:none;">
+        <p id="messageText">Loading weather information...</p>
+        <button id="retryBtn" style="display:none;">Try Again</button>
+    </div>
+
+    <!-- ===== FARMING RECOMMENDATION ===== -->
+    <section class="weather-section">
+        <div class="section-header">
+            <h2 id="headingRecommendation">Farming Recommendation</h2>
+        </div>
+        <div class="recommendation-card" id="recommendationCard">
+            <p id="recommendationText">Current weather conditions are generally suitable for routine field activities, subject to crop and soil conditions.</p>
+        </div>
+    </section>
+
+    <!-- ===== CURRENT WEATHER DETAILS ===== -->
+    <section class="weather-section">
+        <div class="section-header">
+            <h2 id="headingDetails">Current Weather Details</h2>
+        </div>
+        <div class="details-grid" id="detailsGrid">
+            <div class="detail-card">
+                <span class="detail-label">Temperature</span>
+                <span class="detail-value" id="detailTemp">--</span>
+            </div>
+            <div class="detail-card">
+                <span class="detail-label">Feels Like</span>
+                <span class="detail-value" id="detailFeels">--</span>
+            </div>
+            <div class="detail-card">
+                <span class="detail-label">Rain Probability</span>
+                <span class="detail-value" id="detailRain">--</span>
+            </div>
+            <div class="detail-card">
+                <span class="detail-label">Humidity</span>
+                <span class="detail-value" id="detailHumidity">--</span>
+            </div>
+            <div class="detail-card">
+                <span class="detail-label">Wind Speed</span>
+                <span class="detail-value" id="detailWind">--</span>
+            </div>
+            <div class="detail-card">
+                <span class="detail-label">Wind Direction</span>
+                <span class="detail-value" id="detailDirection">--</span>
+            </div>
+            <div class="detail-card">
+                <span class="detail-label">Pressure</span>
+                <span class="detail-value" id="detailPressure">--</span>
+            </div>
+            <div class="detail-card">
+                <span class="detail-label">Visibility</span>
+                <span class="detail-value" id="detailVisibility">--</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== AGRICULTURAL WEATHER ALERTS ===== -->
+    <section class="weather-section" id="alertsSection">
+        <div class="section-header">
+            <h2 id="headingAlerts">Agricultural Weather Alerts</h2>
+        </div>
+        <div id="alertsContainer">
+            <p style="color: #7a8f7a; font-size: 0.9rem;">No active agricultural weather alerts for this location.</p>
+        </div>
+    </section>
+
+    <!-- ===== HOURLY FORECAST ===== -->
+    <section class="weather-section">
+        <div class="section-header">
+            <h2 id="headingToday">Today's Forecast</h2>
+        </div>
+        <div class="hourly-forecast" id="hourlyForecast">
+            <!-- Rendered by JavaScript -->
+        </div>
+    </section>
+
+    <!-- ===== 7-DAY FORECAST ===== -->
+    <section class="weather-section">
+        <div class="section-header">
+            <h2 id="headingSeven">7-Day Forecast</h2>
+        </div>
+        <div class="daily-forecast" id="dailyForecast">
+            <!-- Rendered by JavaScript -->
+        </div>
+    </section>
+
+    <!-- ===== RAINFALL FORECAST ===== -->
+    <section class="weather-section">
+        <div class="section-header">
+            <h2 id="headingRainfall">Rainfall Forecast</h2>
+        </div>
+        <div class="chart-container">
+            <canvas id="rainfallChart"></canvas>
+            <div class="rainfall-stats" id="rainfallStats">
+                <!-- Rendered by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TEMPERATURE FORECAST ===== -->
+    <section class="weather-section">
+        <div class="section-header">
+            <h2 id="headingTempForecast">Temperature Forecast</h2>
+        </div>
+        <div class="chart-container">
+            <canvas id="temperatureChart"></canvas>
+        </div>
+    </section>
+
+    <!-- ===== WHAT SHOULD I DO TODAY? ===== -->
+    <section class="weather-section" hidden>
+        <div class="section-header">
+            <h2>What Should I Do Today?</h2>
+        </div>
+        <div class="activities-card" id="activitiesCard">
+            <p id="activitiesText">Based on current weather conditions, consider general field activities. Check specific crop requirements for detailed guidance.</p>
+        </div>
+    </section>
+
+    <!-- ===== CHECK WEATHER FOR MY CROP ===== -->
+    <section class="weather-section" hidden>
+        <div class="section-header">
+            <h2>Check Weather for My Crop</h2>
+        </div>
+        <div class="crop-weather-container">
+            <div class="crop-selector">
+                <label for="cropSelect">Select Crop:</label>
+                <select id="cropSelect">
+                    <option value="maize">Maize</option>
+                    <option value="teff">Teff</option>
+                    <option value="wheat">Wheat</option>
+                    <option value="coffee">Coffee</option>
+                    <option value="sorghum">Sorghum</option>
+                    <option value="barley">Barley</option>
+                    <option value="sesame">Sesame</option>
+                    <option value="enset">Enset</option>
+                </select>
+            </div>
+            <div class="crop-weather-result" id="cropWeatherResult">
+                <p>Select a crop to compare with current weather conditions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ETHIOPIAN WEATHER MAP ===== -->
+    <section class="weather-section">
+        <div class="section-header">
+            <h2 id="headingMap">Ethiopian Weather Map</h2>
+        </div>
+        <div class="weather-map-container">
+            <div class="map-controls">
+                <button class="map-layer-btn active" data-layer="temperature">Temperature</button>
+                <button class="map-layer-btn" data-layer="rainfall">Rainfall</button>
+                <button class="map-layer-btn" data-layer="wind">Wind</button>
+                <button class="map-layer-btn" data-layer="humidity">Humidity</button>
+            </div>
+            <div class="weather-map" id="weatherMap" role="img" aria-label="Ethiopia regional weather overview">
+                <!-- Lightweight regional weather map rendered by JavaScript -->
+                <div id="mapPlaceholder">
+                    <p style="color: #7a8f7a; text-align: center; padding: 3rem;">
+                        Weather map will appear here.<br>
+                        <span style="font-size: 0.85rem;">Select a weather variable above to visualize.</span>
+                    </p>
+                </div>
+            </div>
+            <div class="map-legend" id="mapLegend">
+                <div class="legend-header">Legend</div>
+                <div class="legend-content" id="mapLegendContent">
+                    <div class="legend-item"><span class="legend-color" style="background:#1a237e;"></span>Low</div>
+                    <div class="legend-item"><span class="legend-color" style="background:#42a5f5;"></span>Medium</div>
+                    <div class="legend-item"><span class="legend-color" style="background:#ff6f00;"></span>High</div>
+                    <div class="legend-item"><span class="legend-color" style="background:#c62828;"></span>Very High</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== DATA SOURCE ===== -->
+    <section class="weather-section">
+        <div class="data-source" id="dataSource">
+            <div class="source-item">
+                <span class="source-label">Weather Data Source</span>
+                <span class="source-value" id="sourceName">Open-Meteo API</span>
+            </div>
+            <div class="source-item">
+                <span class="source-label">Last Updated</span>
+                <span class="source-value" id="sourceUpdated">--</span>
+            </div>
+            <div class="source-item">
+                <span class="source-label">Forecast Period</span>
+                <span class="source-value" id="sourcePeriod">7 days</span>
+            </div>
+            <div class="source-item">
+                <span class="source-label">Location</span>
+                <span class="source-value" id="sourceLocation">Addis Ababa, Ethiopia</span>
+            </div>
+        </div>
+    </section>
+
+    <script src="weather-information.js"></script>
+</body>
+</html>

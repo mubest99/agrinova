@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Records | AgriNova</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" href="farm-records.css">
+
+    <!-- Supabase JavaScript library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="farm-records.js" defer></script>
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-seedling"></i>
+            </div>
+            <div>
+                <h2>AgriNova</h2>
+                <span data-i18n="platform">Agricultural Platform</span>
+            </div>
+        </div>
+
+        <div class="sidebar-scroll">
+
+            <p class="sidebar-heading" data-i18n="farmerDashboard">
+                Farmer Dashboard
+            </p>
+
+            <nav class="sidebar-nav">
+
+                <a href="farmer-dashboard.html" class="nav-link">
+                    <i class="fa-solid fa-house"></i>
+                    <span data-i18n="dashboardHome">Dashboard Home</span>
+                </a>
+
+                <a href="my-farm.html" class="nav-link">
+                    <i class="fa-solid fa-tractor"></i>
+                    <span data-i18n="myFarm">My Farm</span>
+                </a>
+
+                <a href="my-crops.html" class="nav-link">
+                    <i class="fa-solid fa-wheat-awn"></i>
+                    <span data-i18n="myCrops">My Crops</span>
+                </a>
+
+                <a href="daily-farm.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-day"></i>
+                    <span data-i18n="dailyFarm">Daily Farm</span>
+                </a>
+
+                <a href="farm-tasks-calendar.html" class="nav-link">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span data-i18n="farmTasks">Farm Tasks & Calendar</span>
+                </a>
+
+                <a href="farm-records.html" class="nav-link active">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span data-i18n="farmRecords">Farm Records</span>
+                </a>
+
+                <a href="farm-calculator.html" class="nav-link">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span data-i18n="farmCalculator">Farm Calculator</span>
+                </a>
+
+                <a href="farm-finance.html" class="nav-link">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span data-i18n="farmFinance">Farm Finance</span>
+                </a>
+
+                <a href="ai-assistant.html" class="nav-link">
+                    <i class="fa-solid fa-robot"></i>
+                    <span data-i18n="aiAssistant">AI Agricultural Assistant</span>
+                </a>
+
+                <a href="farm-analysis.html" class="nav-link">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span data-i18n="farmAnalysis">Farm Analysis & ID</span>
+                </a>
+
+                <a href="farmer-community.html" class="nav-link">
+                    <i class="fa-solid fa-users"></i>
+                    <span data-i18n="community">Farmer Community</span>
+                </a>
+
+                <a href="marketplace.html" class="nav-link">
+                    <i class="fa-solid fa-store"></i>
+                    <span data-i18n="marketplace">Marketplace</span>
+                </a>
+
+            </nav>
+
+            <p class="sidebar-heading resources-heading"
+               data-i18n="resources">
+                AgriNova Resources
+            </p>
+
+            <nav class="sidebar-nav">
+
+                <a href="agriculture-articles.html" class="nav-link">
+                    <i class="fa-solid fa-newspaper"></i>
+                    <span data-i18n="articles">Agriculture Articles</span>
+                </a>
+
+                <a href="crop-information.html" class="nav-link">
+                    <i class="fa-solid fa-leaf"></i>
+                    <span data-i18n="cropInformation">Crop Information</span>
+                </a>
+
+                <a href="ethiopian-crop-map.html" class="nav-link">
+                    <i class="fa-solid fa-map"></i>
+                    <span data-i18n="cropMap">Ethiopian Crop Map</span>
+                </a>
+
+                <a href="weather.html" class="nav-link">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                    <span data-i18n="weather">Weather</span>
+                </a>
+
+                <a href="pest-disease-library.html" class="nav-link">
+                    <i class="fa-solid fa-bug"></i>
+                    <span data-i18n="pestLibrary">Pest & Disease Library</span>
+                </a>
+
+                <a href="fertilizer-information.html" class="nav-link">
+                    <i class="fa-solid fa-flask"></i>
+                    <span data-i18n="fertilizer">Fertilizer Information</span>
+                </a>
+
+                <a href="agriculture-news.html" class="nav-link">
+                    <i class="fa-solid fa-globe"></i>
+                    <span data-i18n="agricultureNews">Agriculture News</span>
+                </a>
+
+                <a href="crop-news.html" class="nav-link">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span data-i18n="cropNews">Crop News</span>
+                </a>
+
+                <a href="agriculture-innovation.html" class="nav-link">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span data-i18n="innovation">Agriculture Innovation</span>
+                </a>
+
+                <a href="educational-content.html" class="nav-link">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span data-i18n="education">Educational Content</span>
+                </a>
+
+                <a href="farm-simulation.html" class="nav-link">
+                    <i class="fa-solid fa-chart-area"></i>
+                    <span data-i18n="simulation">Farm Simulation</span>
+                </a>
+
+            </nav>
+        </div>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP HEADER -->
+        <header class="top-header">
+
+            <button class="mobile-menu-button" id="mobileMenuButton"
+                    aria-label="Open menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="search-container">
+                <i class="fa-solid fa-search"></i>
+                <input type="search"
+                       id="recordSearch"
+                       data-i18n-placeholder="searchPlaceholder"
+                       placeholder="Search all farm records...">
+            </div>
+
+            <div class="header-actions">
+
+                <div class="language-wrapper">
+                    <button class="language-button" id="languageButton">
+                        <i class="fa-solid fa-language"></i>
+                        <span id="currentLanguageLabel">English</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+
+                    <div class="language-menu" id="languageMenu">
+                        <button data-language="en">English</button>
+                        <button data-language="am">አማርኛ</button>
+                        <button data-language="ti">ትግርኛ</button>
+                        <button data-language="om">Afaan Oromo</button>
+                        <button data-language="so">Af Soomaali</button>
+                    </div>
+                </div>
+
+                <div class="notification-wrapper">
+                    <button class="notification-button"
+                            id="notificationButton"
+                            aria-label="Notifications">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+
+                    <div class="notification-panel" id="notificationPanel">
+                        <h3 data-i18n="notifications">Notifications</h3>
+                        <p data-i18n="noNotifications">No new notifications.</p>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+
+        <!-- PAGE -->
+        <section class="page-content">
+
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow" data-i18n="farmManagement">
+                        FARM MANAGEMENT
+                    </p>
+                    <h1 data-i18n="pageTitle">Farm Records</h1>
+                    <p class="page-description" data-i18n="pageDescription">
+                        View and organize the information stored in your farm.
+                    </p>
+                </div>
+
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-indicator"></span>
+                    <span id="connectionStatusText"
+                          data-i18n="connecting">Connecting to Supabase...</span>
+                </div>
+            </div>
+
+
+            <!-- SUMMARY CARDS -->
+            <div class="summary-grid">
+
+                <article class="summary-card">
+                    <div class="summary-icon green">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <div>
+                        <p data-i18n="totalRecords">Total Records</p>
+                        <h2 id="totalRecords">0</h2>
+                    </div>
+                </article>
+
+                <article class="summary-card">
+                    <div class="summary-icon gold">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <p data-i18n="recordCategories">Record Categories</p>
+                        <h2 id="totalCategories">0</h2>
+                    </div>
+                </article>
+
+                <article class="summary-card">
+                    <div class="summary-icon blue">
+                        <i class="fa-solid fa-clock"></i>
+                    </div>
+                    <div>
+                        <p data-i18n="latestUpdate">Latest Update</p>
+                        <h2 id="latestUpdate">—</h2>
+                    </div>
+                </article>
+
+            </div>
+
+
+            <!-- HISTORY -->
+            <section class="history-section">
+
+                <div class="section-heading">
+                    <div>
+                        <h2 data-i18n="historyTitle">Farm History</h2>
+                        <p data-i18n="historyDescription">
+                            Your saved farm information, retrieved from Supabase.
+                        </p>
+                    </div>
+
+                    <button class="refresh-button" id="refreshButton">
+                        <i class="fa-solid fa-rotate"></i>
+                        <span data-i18n="refresh">Refresh</span>
+                    </button>
+                </div>
+
+
+                <!-- FILTERS -->
+                <div class="filter-bar">
+
+                    <label for="recordTypeFilter" data-i18n="filterByCategory">
+                        Filter by category
+                    </label>
+
+                    <select id="recordTypeFilter">
+                        <option value="all" data-i18n="allCategories">
+                            All Categories
+                        </option>
+                        <option value="farm_profile" data-i18n="farmProfile">
+                            Farm Profile
+                        </option>
+                        <option value="land_section" data-i18n="landSection">
+                            Land Sections
+                        </option>
+                        <option value="water" data-i18n="water">
+                            Water
+                        </option>
+                        <option value="farm_location" data-i18n="farmLocation">
+                            Farm Location
+                        </option>
+                        <option value="asset" data-i18n="assets">
+                            Assets
+                        </option>
+                        <option value="infrastructure" data-i18n="infrastructure">
+                            Infrastructure
+                        </option>
+                        <option value="seasonal_plan" data-i18n="seasonalPlan">
+                            Seasonal Plans
+                        </option>
+                    </select>
+
+                    <span class="results-count" id="resultsCount">
+                        0 records
+                    </span>
+
+                </div>
+
+
+                <!-- LOADING -->
+                <div class="loading-state" id="loadingState">
+                    <div class="loader"></div>
+                    <p data-i18n="loadingRecords">Loading your farm records...</p>
+                </div>
+
+
+                <!-- ERROR -->
+                <div class="error-state hidden" id="errorState">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <h3 data-i18n="errorTitle">Unable to load records</h3>
+                    <p id="errorMessage"></p>
+                    <button id="retryButton" class="primary-button"
+                            data-i18n="tryAgain">Try Again</button>
+                </div>
+
+
+                <!-- EMPTY -->
+                <div class="empty-state hidden" id="emptyState">
+                    <div class="empty-icon">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <h3 data-i18n="emptyTitle">No farm records found</h3>
+                    <p data-i18n="emptyDescription">
+                        Your saved farm information will appear here.
+                    </p>
+                </div>
+
+
+                <!-- TIMELINE -->
+                <div class="timeline" id="recordsTimeline"></div>
+
+            </section>
+
+
+            <!-- MY CROPS -->
+            <section class="crops-shortcut-section">
+
+                <div class="crops-shortcut-icon">
+                    <i class="fa-solid fa-wheat-awn"></i>
+                </div>
+
+                <div class="crops-shortcut-text">
+                    <h2 data-i18n="myCropsTitle">My Crops</h2>
+                    <p data-i18n="myCropsDescription">
+                        Open your crop information and available crop settings.
+                    </p>
+                </div>
+
+                <button class="secondary-button" id="openCropsButton">
+                    <span data-i18n="viewMyCrops">View My Crops</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+            </section>
+
+        </section>
+    </main>
+</div>
+
+
+<!-- RECORD DETAIL MODAL -->
+<div class="modal-overlay hidden" id="recordModal">
+    <div class="modal-card record-modal-card">
+
+        <div class="modal-header">
+            <div>
+                <p class="eyebrow" data-i18n="recordInformation">
+                    RECORD INFORMATION
+                </p>
+                <h2 id="recordModalTitle">Record Details</h2>
+            </div>
+
+            <button class="modal-close" data-close-modal="recordModal"
+                    aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="modal-body" id="recordModalBody"></div>
+
+    </div>
+</div>
+
+
+<!-- MY CROPS MODAL -->
+<div class="modal-overlay hidden" id="cropsModal">
+    <div class="modal-card crops-modal-card">
+
+        <div class="modal-header">
+            <div>
+                <p class="eyebrow" data-i18n="cropManagement">
+                    CROP MANAGEMENT
+                </p>
+                <h2 data-i18n="myCropsTitle">My Crops</h2>
+            </div>
+
+            <button class="modal-close" data-close-modal="cropsModal"
+                    aria-label="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="modal-body">
+
+            <div id="cropsLoading" class="loading-state">
+                <div class="loader"></div>
+                <p data-i18n="loadingCrops">Loading crop information...</p>
+            </div>
+
+            <div id="cropsError" class="error-state hidden">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <p id="cropsErrorMessage"></p>
+            </div>
+
+            <div id="cropsEmpty" class="empty-state hidden">
+                <div class="empty-icon">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <h3 data-i18n="noCrops">No crop information available</h3>
+                <p data-i18n="noCropsDescription">
+                    Crop information will appear here when it is available.
+                </p>
+            </div>
+
+            <div id="cropsList" class="crops-list"></div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+</body>
+</html>

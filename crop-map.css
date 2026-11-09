@@ -1,0 +1,564 @@
+/* ================================================================
+   AgriNova · Ethiopian Crop Map
+   Complete styles for the interactive crop map feature
+   ================================================================ */
+
+/* ========== Design System Variables ========== */
+:root {
+    --forest: #164A2A;
+    --agri-green: #2E7D32;
+    --fresh-green: #66BB6A;
+    --harvest-gold: #D9A441;
+    --cream: #F7F4EA;
+    --white: #FFFFFF;
+    --charcoal: #26332A;
+    --shadow: 0 8px 30px rgba(22, 74, 42, 0.15);
+    --radius: 12px;
+    --transition: 0.25s ease;
+}
+
+/* ========== Page Layout ========== */
+.cropmap-page {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--cream);
+    color: var(--charcoal);
+    line-height: 1.5;
+}
+
+/* ========== Header ========== */
+.map-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(22, 74, 42, 0.10);
+    margin-bottom: 1.25rem;
+}
+
+.map-header-left {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+}
+
+.logo-cursive {
+    font-family: 'Georgia', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--forest);
+    letter-spacing: -0.5px;
+}
+
+.logo-cursive span {
+    color: var(--harvest-gold);
+    font-weight: 400;
+}
+
+.map-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--charcoal);
+    letter-spacing: -0.3px;
+}
+
+.map-title small {
+    font-weight: 400;
+    font-size: 0.95rem;
+    color: #4a5a4e;
+    display: inline-block;
+    margin-left: 0.5rem;
+}
+
+.map-subtitle {
+    font-size: 0.95rem;
+    color: #4a5a4e;
+    margin-top: 0.2rem;
+    max-width: 700px;
+}
+
+/* ========== Controls Bar ========== */
+.controls-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin: 1rem 0 1.25rem;
+    padding: 0.75rem 1rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.search-wrap {
+    flex: 2 1 260px;
+    display: flex;
+    align-items: center;
+    background: var(--cream);
+    border-radius: 40px;
+    padding: 0 1rem;
+    border: 1px solid #dde3df;
+    transition: border var(--transition);
+    position: relative;
+}
+
+.search-wrap:focus-within {
+    border-color: var(--agri-green);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+}
+
+.search-wrap input {
+    border: none;
+    background: transparent;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.95rem;
+    width: 100%;
+    outline: none;
+    color: var(--charcoal);
+}
+
+.search-wrap input::placeholder {
+    color: #889e92;
+}
+
+.search-wrap .search-icon {
+    color: #6f8a7c;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* Suggestions dropdown */
+.suggestions-container {
+    position: relative;
+    width: 100%;
+}
+
+.suggestions-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 999;
+    padding: 0.25rem 0;
+    margin-top: 4px;
+}
+
+.suggestions-dropdown .suggestion-item {
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f3ef;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: background var(--transition);
+}
+
+.suggestions-dropdown .suggestion-item:hover {
+    background: #f0f5ef;
+}
+
+.suggestions-dropdown .suggestion-item .suggestion-icon {
+    font-size: 1rem;
+}
+
+.suggestions-dropdown .suggestion-item .suggestion-type {
+    font-size: 0.7rem;
+    color: #6f8a7c;
+    margin-left: auto;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ========== Buttons ========== */
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 40px;
+    border: 1px solid transparent;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    background: var(--cream);
+    color: var(--charcoal);
+    border-color: #d0d9d3;
+    text-decoration: none;
+    font-family: inherit;
+}
+
+.btn:hover {
+    background: var(--agri-green);
+    color: var(--white);
+    border-color: var(--agri-green);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+}
+
+.btn-primary {
+    background: var(--forest);
+    color: var(--white);
+    border-color: var(--forest);
+}
+
+.btn-primary:hover {
+    background: #1d5f34;
+    border-color: #1d5f34;
+}
+
+.btn-outline {
+    background: transparent;
+    border-color: var(--agri-green);
+    color: var(--agri-green);
+}
+
+.btn-outline:hover {
+    background: var(--agri-green);
+    color: var(--white);
+}
+
+.btn-sm {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.8rem;
+}
+
+.btn.active-layer {
+    background: var(--forest);
+    color: var(--white);
+    border-color: var(--forest);
+}
+
+.btn-reset {
+    background: transparent;
+    color: #6f8a7c;
+    border-color: #d0d9d3;
+}
+
+.btn-reset:hover {
+    background: #d9534f;
+    border-color: #d9534f;
+    color: var(--white);
+}
+
+/* ========== Map + Panel Grid ========== */
+.map-panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 1.5rem;
+    flex: 1;
+    min-height: 580px;
+}
+
+.map-container {
+    position: relative;
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    min-height: 500px;
+}
+
+#ethiopiaMap {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+}
+
+/* ========== Leaflet Overrides ========== */
+.leaflet-control-zoom a {
+    background: var(--white) !important;
+    color: var(--charcoal) !important;
+    border-color: #d0d9d3 !important;
+}
+
+.leaflet-control-zoom a:hover {
+    background: var(--agri-green) !important;
+    color: var(--white) !important;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.leaflet-popup-content {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: var(--charcoal);
+    font-size: 0.9rem;
+    min-width: 180px;
+}
+
+.leaflet-popup-content strong {
+    color: var(--forest);
+}
+
+/* Dominant production label override */
+.dominant-label {
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    text-align: center;
+}
+
+/* ========== Info Panel ========== */
+.info-panel {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.25rem 1.25rem 1rem;
+    overflow-y: auto;
+    max-height: 600px;
+    transition: all var(--transition);
+}
+
+.info-panel .panel-empty {
+    color: #6f8a7c;
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 2.5rem 0.5rem;
+}
+
+.info-panel .panel-empty .icon-big {
+    font-size: 2.4rem;
+    display: block;
+    margin-bottom: 0.75rem;
+    opacity: 0.5;
+}
+
+.info-panel h2 {
+    font-size: 1.35rem;
+    color: var(--forest);
+    border-bottom: 2px solid var(--fresh-green);
+    padding-bottom: 0.4rem;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.info-panel h3 {
+    font-size: 1rem;
+    color: var(--agri-green);
+    margin-top: 0.9rem;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+}
+
+.info-panel .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid #f0f3ef;
+    font-size: 0.9rem;
+}
+
+.info-panel .data-row .label {
+    color: #4a5a4e;
+    font-weight: 500;
+}
+
+.info-panel .data-row .value {
+    color: var(--charcoal);
+    font-weight: 500;
+    text-align: right;
+    max-width: 60%;
+}
+
+.info-panel .data-row .value.unavailable {
+    color: #b0beb5;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.info-panel .source-note {
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: #6f8a7c;
+    border-top: 1px solid #e8edea;
+    padding-top: 0.75rem;
+    background: var(--cream);
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+}
+
+.info-panel .source-note strong {
+    color: var(--forest);
+}
+
+/* ========== Legend Box ========== */
+.legend-box {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: var(--cream);
+    border-radius: 8px;
+    border-left: 4px solid var(--harvest-gold);
+}
+
+.legend-box h4 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #4a5a4e;
+    margin-bottom: 0.4rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.15rem 0;
+}
+
+.legend-color {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ========== Layer Switcher ========== */
+.layer-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.layer-switcher .layer-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--forest);
+    letter-spacing: 0.3px;
+}
+
+.layer-switcher .layer-meta {
+    font-size: 0.75rem;
+    color: #6f8a7c;
+    margin-left: auto;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 992px) {
+    .map-panel-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .info-panel {
+        max-height: 380px;
+    }
+
+    .map-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .map-title small {
+        display: block;
+        margin-left: 0;
+        font-size: 0.85rem;
+    }
+
+    .layer-switcher .layer-meta {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+        margin-top: 0.25rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .cropmap-page {
+        padding: 0.75rem;
+    }
+
+    .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-group {
+        justify-content: center;
+    }
+
+    .map-title {
+        font-size: 1.2rem;
+    }
+
+    .logo-cursive {
+        font-size: 1.5rem;
+    }
+
+    #ethiopiaMap {
+        min-height: 340px;
+    }
+
+    .info-panel {
+        max-height: 300px;
+        padding: 0.9rem;
+    }
+
+    .layer-switcher {
+        justify-content: center;
+    }
+
+    .layer-switcher .layer-label {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ========== Utilities ========== */
+.mt-1 {
+    margin-top: 0.5rem;
+}
+
+.mb-1 {
+    margin-bottom: 0.5rem;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.gap-1 {
+    gap: 0.5rem;
+}
+
+.text-muted {
+    color: #6f8a7c;
+    font-size: 0.85rem;
+}
+
+.hidden {
+    display: none !important;
+}

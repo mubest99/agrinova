@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0B3D2E">
+  <title>AgriNova · Farmer Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="farmer-dashboard.css">
+</head>
+<body>
+  <!-- Sidebar: existing navigation retained; Documents added; resources trimmed as requested. -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name"><i class="fas fa-seedling"></i> AgriNova</div>
+      <div class="brand-tagline" data-i18n="tagline">Growing Smarter. Farming Better.</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label" data-i18n="farmerDashboard">Farmer Dashboard</div>
+      <a href="farmer-dashboard.html" class="active"><i class="fas fa-th-large"></i><span data-i18n="dashboardHome">Dashboard Home</span></a>
+      <a href="my-farm.html"><i class="fas fa-tractor"></i><span data-i18n="myFarm">My Farm</span></a>
+      <a href="my-crops.html"><i class="fas fa-seedling"></i><span data-i18n="myCrops">My Crops</span></a>
+      <a href="daily-farm.html"><i class="fas fa-calendar-day"></i><span data-i18n="dailyFarm">Daily Farm</span></a>
+      <a href="farm-tasks-calendar.html"><i class="fas fa-tasks"></i><span data-i18n="farmTasks">Farm Tasks &amp; Calendar</span></a>
+      <a href="farm-records.html"><i class="fas fa-clipboard-list"></i><span data-i18n="farmRecords">Farm Records</span></a>
+      <a href="farm-calculator.html"><i class="fas fa-calculator"></i><span data-i18n="farmCalculator">Farm Calculator</span></a>
+      <a href="farm-finance.html"><i class="fas fa-coins"></i><span data-i18n="farmFinance">Farm Finance</span></a>
+      <a href="documents.html"><i class="fas fa-folder-open"></i><span data-i18n="documents">Documents</span></a>
+      <a href="ai-assistant.html"><i class="fas fa-robot"></i><span data-i18n="aiAssistant">AI Agricultural Assistant</span></a>
+      <a href="farm-analysis.html"><i class="fas fa-chart-pie"></i><span data-i18n="farmAnalysis">Farm Analysis &amp; ID</span></a>
+      <a href="farmer-community.html"><i class="fas fa-users"></i><span data-i18n="community">Farmer Community</span></a>
+      <a href="farmer-marketplace.html"><i class="fas fa-store"></i><span data-i18n="marketplace">Marketplace</span></a>
+
+      <div class="nav-label resource-label" data-i18n="resources">AgriNova Resources</div>
+      <a href="visitor-articles.html"><i class="fas fa-newspaper"></i><span data-i18n="articles">Agriculture Articles</span></a>
+      <a href="crop-information.html"><i class="fas fa-book-open"></i><span data-i18n="cropInformation">Crop Information</span></a>
+      <a href="crop-map.html"><i class="fas fa-map"></i><span data-i18n="cropMap">Ethiopian Crop Map</span></a>
+      <a href="weather-information.html"><i class="fas fa-cloud-sun"></i><span data-i18n="weather">Weather</span></a>
+      <a href="pest-disease-library.html"><i class="fas fa-bug"></i><span data-i18n="pestLibrary">Pest &amp; Disease Library</span></a>
+      <a href="fertilizer-information.html"><i class="fas fa-flask"></i><span data-i18n="fertilizer">Fertilizer Information</span></a>
+      <a href="agriculture-news.html"><i class="fas fa-bullhorn"></i><span data-i18n="agricultureNews">Agriculture News</span></a>
+    </nav>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="top-nav">
+      <button class="mobile-menu icon-button" id="mobileMenu" aria-label="Open navigation"><i class="fas fa-bars"></i></button>
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="search" id="globalSearch" placeholder="Search anything in AgriNova..." data-i18n-placeholder="searchPlaceholder">
+      </div>
+
+      <div class="nav-right">
+        <label class="language-control" aria-label="Select language">
+          <i class="fas fa-globe"></i>
+          <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="am">አማርኛ</option>
+            <option value="ti">ትግርኛ</option>
+            <option value="om">Afaan Oromoo</option>
+            <option value="so">Af-Soomaali</option>
+          </select>
+        </label>
+
+        <div class="notification-wrap">
+          <button class="icon-button notification-button" id="notifButton" aria-label="Notifications" aria-expanded="false">
+            <i class="fas fa-bell"></i><span class="notification-badge" id="notificationBadge" hidden>0</span>
+          </button>
+          <section class="notification-dropdown" id="notificationDropdown" aria-label="Notifications" hidden>
+            <div class="dropdown-heading"><strong data-i18n="notifications">Notifications</strong><button id="markNotificationsRead" data-i18n="markRead">Mark all read</button></div>
+            <div id="notificationList"><div class="empty-state" data-i18n="noNotifications">You have no new notifications.</div></div>
+          </section>
+        </div>
+
+        <a class="icon-button message-button" href="ai-assistant.html" aria-label="Messages"><i class="fas fa-comment-dots"></i></a>
+
+        <div class="profile-wrap">
+          <button class="profile-trigger" id="profileTrigger" aria-expanded="false">
+            <span class="avatar" id="navAvatar"><i class="fas fa-user"></i></span>
+            <span class="pname" id="navName">Farmer</span>
+            <i class="fas fa-chevron-down chevron"></i>
+          </button>
+          <section class="profile-dropdown" id="profileDropdown" hidden>
+            <div class="pd-header">
+              <div class="pd-avatar" id="pdAvatar"><i class="fas fa-user"></i></div>
+              <div class="pd-info"><p class="pd-name" id="pdName">Farmer Name</p><p class="pd-email" id="pdEmail">—</p></div>
+            </div>
+            <div class="profile-detail"><i class="fas fa-map-marker-alt"></i><span id="pdRegion">—</span></div>
+            <div class="profile-detail" id="cityRow"><i class="fas fa-city"></i><span id="pdCity">—</span></div>
+            <div class="profile-detail"><i class="fas fa-phone"></i><span id="pdPhone">—</span></div>
+            <div class="profile-detail"><i class="fas fa-ruler-combined"></i><span id="pdFarmland">—</span></div>
+            <button class="upload-button" id="uploadProfileBtn"><i class="fas fa-camera"></i><span data-i18n="uploadPhoto">Upload photo</span></button>
+            <input type="file" id="profileImageInput" accept="image/*" hidden>
+          </section>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      <section class="greeting-row">
+        <div class="greeting">
+          <h1 id="greetingText">Good morning</h1>
+          <div class="motto" data-i18n="tagline">Growing Smarter. Farming Better.</div>
+        </div>
+        <div class="date-location"><div class="date" id="currentDate">—</div><div class="location" id="farmerLocation">—</div></div>
+      </section>
+
+      <section class="top-grid">
+        <article class="weather-card" id="weatherCard">
+          <div class="weather-overlay"></div>
+          <div class="weather-content">
+            <div class="weather-place" id="weatherPlace" data-i18n="localWeather">Local weather</div>
+            <div class="temp" id="weatherTemp">--°C</div>
+            <div class="condition" id="weatherCondition" data-i18n="weatherAwaiting">Weather data will appear here.</div>
+            <div class="weather-details">
+              <span><i class="fas fa-tint"></i> <span data-i18n="humidity">Humidity</span>: <b id="weatherHumidity">—</b></span>
+              <span><i class="fas fa-wind"></i> <span data-i18n="wind">Wind</span>: <b id="weatherWind">—</b></span>
+              <span><i class="fas fa-temperature-half"></i> <span data-i18n="feelsLike">Feels like</span>: <b id="weatherFeelsLike">—</b></span>
+            </div>
+            <small id="weatherUpdated"></small>
+          </div>
+        </article>
+
+        <article class="card quick-card">
+          <h2 class="card-title"><i class="fas fa-bolt"></i><span data-i18n="quickActions">Quick Actions</span></h2>
+          <div class="quick-actions">
+            <a class="quick-action" href="my-crops.html"><i class="fas fa-plus-circle"></i><span data-i18n="addCrop">Add New Crop</span></a>
+            <a class="quick-action" href="daily-farm.html"><i class="fas fa-pen"></i><span data-i18n="logActivity">Log Daily Activity</span></a>
+            <a class="quick-action" href="#marketCard"><i class="fas fa-chart-line"></i><span data-i18n="marketPrices">Check Market Prices</span></a>
+            <a class="quick-action" href="ai-assistant.html"><i class="fas fa-robot"></i><span data-i18n="askAI">AI Farm Assistant</span></a>
+          </div>
+        </article>
+      </section>
+
+      <section class="stats-grid" aria-label="Farm overview">
+        <article class="stat-card"><div class="stat-icon"><i class="fas fa-ruler-combined"></i></div><div class="stat-value" id="totalArea">—</div><div class="stat-label" data-i18n="totalArea">Total Farm Area</div></article>
+        <article class="stat-card"><div class="stat-icon"><i class="fas fa-seedling"></i></div><div class="stat-value" id="activeCrops">0</div><div class="stat-label" data-i18n="activeCrops">Active Crops</div></article>
+        <article class="stat-card"><div class="stat-icon"><i class="fas fa-list-check"></i></div><div class="stat-value" id="pendingTasks">0</div><div class="stat-label" data-i18n="pendingTasks">Pending Tasks</div></article>
+        <article class="stat-card"><div class="stat-icon"><i class="fas fa-hourglass-half"></i></div><div class="stat-value" id="daysToHarvest">—</div><div class="stat-label" data-i18n="daysToHarvest">Days to Nearest Harvest</div></article>
+      </section>
+
+      <section class="three-col">
+        <article class="card">
+          <h2 class="card-title"><i class="fas fa-tasks"></i><span data-i18n="activeTasks">Active Tasks</span></h2>
+          <div id="taskList"><div class="empty-state" data-i18n="noTasks">No pending tasks.</div></div>
+        </article>
+        <article class="card">
+          <h2 class="card-title"><i class="fas fa-history"></i><span data-i18n="recentRecords">Recent Farm Records</span></h2>
+          <div id="recordList"><div class="empty-state" data-i18n="noRecords">No farm activities recorded yet.</div></div>
+        </article>
+        <article class="card" id="marketCard">
+          <h2 class="card-title"><i class="fas fa-tags"></i><span data-i18n="marketPrices">Market Prices</span></h2>
+          <div id="marketList"><div class="empty-state" data-i18n="marketPlaceholder">Connect your market API to display verified prices.</div></div>
+        </article>
+      </section>
+
+      <section class="two-col">
+        <article class="card ai-card" id="aiCard" role="button" tabindex="0" aria-label="Open detailed agricultural AI insight">
+          <h2 class="card-title"><i class="fas fa-lightbulb"></i><span data-i18n="aiInsight">AI Agricultural Insight</span><span class="card-link" data-i18n="viewAnalysis">View analysis <i class="fas fa-arrow-right"></i></span></h2>
+          <div id="aiInsight"><div class="empty-state" data-i18n="aiPlaceholder">Your personalized farm recommendation will appear here when the AI service is connected.</div></div>
+        </article>
+        <article class="card">
+          <h2 class="card-title"><i class="fas fa-coins"></i><span data-i18n="financeSummary">Finance Summary</span></h2>
+          <div id="financeSummary"><div class="empty-state" data-i18n="financePlaceholder">No financial records available yet.</div></div>
+        </article>
+      </section>
+
+      <section class="two-col">
+        <article class="card">
+          <h2 class="card-title"><i class="fas fa-heartbeat"></i><span data-i18n="farmHealth">Farm Health</span></h2>
+          <div id="farmHealth"><div class="empty-state" data-i18n="healthPlaceholder">Connect the farm-health service for verified regional and farm alerts.</div></div>
+        </article>
+        <article class="card">
+          <h2 class="card-title"><i class="fas fa-seedling"></i><span data-i18n="resourceTitle">Explore AgriNova Resources</span></h2>
+          <div class="resource-grid">
+            <a href="visitor-articles.html" data-i18n="articles">Agriculture Articles</a>
+            <a href="crop-information.html" data-i18n="cropInformation">Crop Information</a>
+            <a href="crop-map.html" data-i18n="cropMap">Ethiopian Crop Map</a>
+            <a href="weather-information.html" data-i18n="weather">Weather</a>
+            <a href="pest-disease-library.html" data-i18n="pestLibrary">Pest &amp; Disease Library</a>
+            <a href="fertilizer-information.html" data-i18n="fertilizer">Fertilizer Information</a>
+            <a href="agriculture-news.html" data-i18n="agricultureNews">Agriculture News</a>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <button class="ai-float-button" id="aiFloatButton" aria-label="Open AgriNova AI assistant"><i class="fas fa-robot"></i></button>
+  <section class="ai-float-menu" id="aiFloatMenu" hidden>
+    <div class="ai-menu-heading"><strong data-i18n="aiMenuTitle">How can I help your farm?</strong><button id="closeAiMenu" aria-label="Close"><i class="fas fa-times"></i></button></div>
+    <button data-ai-mode="scan"><i class="fas fa-camera"></i><span data-i18n="scanPests">Scan for pests and diseases</span></button>
+    <button data-ai-mode="chat"><i class="fas fa-comments"></i><span data-i18n="askQuestions">Ask any questions</span></button>
+    <button data-ai-mode="analyze"><i class="fas fa-chart-pie"></i><span data-i18n="analyzeFarm">Analyze my farm</span></button>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="farmer-dashboard.js"></script>
+</body>
+</html>

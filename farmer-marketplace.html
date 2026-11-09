@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgriNova | Farmer Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="farmer-marketplace.css">
+</head>
+<body>
+  <div class="market-shell">
+    <header class="market-header">
+      <a class="brand" href="farmer-dashboard.html" aria-label="AgriNova home">
+        <span class="brand-mark"><i class="fa-solid fa-seedling"></i></span>
+        <span><strong>AgriNova</strong><small>Farmer Marketplace</small></span>
+      </a>
+      <div class="header-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input id="searchInput" type="search" placeholder="Search crops, seeds, fertilizers and supplies…" data-i18n-placeholder="searchPlaceholder">
+        <kbd>Enter</kbd>
+      </div>
+      <div class="header-actions">
+        <div class="language-wrap">
+          <i class="fa-solid fa-globe"></i>
+          <select class="language-select" data-language-select aria-label="Choose language">
+            <option value="en">English</option>
+            <option value="am">አማርኛ</option>
+            <option value="ti">ትግርኛ</option>
+            <option value="om">Afaan Oromo</option>
+            <option value="so">Soomaali</option>
+          </select>
+        </div>
+        <button class="icon-btn" id="notificationsBtn" aria-label="Notifications"><i class="fa-regular fa-bell"></i><span class="dot"></span></button>
+        <button class="icon-btn cart-trigger" id="cartBtn" aria-label="Shopping cart"><i class="fa-solid fa-basket-shopping"></i><span id="cartCount" class="cart-count">0</span></button>
+        <div class="user-chip"><span class="user-avatar" id="userAvatar">F</span><span id="userName">Farmer</span></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="welcome-band">
+        <div>
+          <p class="eyebrow" data-i18n="eyebrow">GROW TOGETHER. TRADE BETTER.</p>
+          <h1 data-i18n="headline">Your farm. Your marketplace.</h1>
+          <p data-i18n="intro">Buy quality farm inputs and fresh produce directly from fellow farmers.</p>
+          <div class="welcome-actions">
+            <button class="btn btn-light" id="sellTopBtn"><i class="fa-solid fa-plus"></i><span data-i18n="sellProduct">Sell a product</span></button>
+            <span class="trust-note"><i class="fa-solid fa-shield-halved"></i><span data-i18n="farmerToFarmer">Farmer-to-farmer trading</span></span>
+          </div>
+        </div>
+        <div class="welcome-art"><div class="art-circle"><i class="fa-solid fa-wheat-awn"></i></div><span class="art-leaf leaf-one">✦</span><span class="art-leaf leaf-two">✧</span></div>
+      </section>
+
+      <section class="market-panel">
+        <div class="panel-topline">
+          <div>
+            <p class="eyebrow dark" data-i18n="discover">DISCOVER</p>
+            <h2 data-i18n="marketTitle">Marketplace</h2>
+            <p class="muted" data-i18n="marketSubtitle">Everything your farm needs, all in one place.</p>
+          </div>
+          <div class="panel-actions">
+            <div class="language-wrap language-secondary">
+              <i class="fa-solid fa-globe"></i>
+              <select class="language-select" data-language-select aria-label="Choose language">
+                <option value="en">English</option><option value="am">አማርኛ</option><option value="ti">ትግርኛ</option><option value="om">Afaan Oromo</option><option value="so">Soomaali</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="sellBtn"><i class="fa-solid fa-plus"></i><span data-i18n="createListing">Create listing</span></button>
+          </div>
+        </div>
+
+        <nav class="market-tabs" aria-label="Marketplace sections">
+          <button class="tab active" data-tab="shop"><i class="fa-solid fa-store"></i><span data-i18n="shop">Shop products</span></button>
+          <button class="tab" data-tab="myListings"><i class="fa-solid fa-box"></i><span data-i18n="myListings">My listings</span></button>
+          <button class="tab" data-tab="myOrders"><i class="fa-solid fa-bag-shopping"></i><span data-i18n="myOrders">My orders</span></button>
+          <button class="tab" data-tab="sales"><i class="fa-solid fa-chart-line"></i><span data-i18n="mySales">My sales</span></button>
+          <button class="tab" data-tab="saved"><i class="fa-regular fa-heart"></i><span data-i18n="saved">Saved</span></button>
+        </nav>
+
+        <div class="filter-area">
+          <div class="filter-heading">
+            <div>
+              <h3 data-i18n="findProducts">Find what you need</h3>
+              <p data-i18n="filterIntro">Browse produce, agricultural inputs, tools and equipment.</p>
+            </div>
+            <button id="clearFilters" class="text-btn" data-i18n="clearFilters">Clear filters</button>
+          </div>
+          <div class="filter-grid">
+            <label class="filter-field">
+              <span data-i18n="category">Category</span>
+              <select id="categoryFilter">
+                <option value="all" data-i18n="allCategories">All categories</option>
+                <option value="grains">Grains & cereals</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="fruits">Fruits</option>
+                <option value="legumes">Legumes</option>
+                <option value="root_crops">Root crops</option>
+                <option value="coffee">Coffee & cash crops</option>
+                <option value="seeds">Seeds & seedlings</option>
+                <option value="fertilizers">Fertilizers & soil nutrients</option>
+                <option value="pesticides">Pesticides & insect control</option>
+                <option value="herbicides">Herbicides & weed control</option>
+                <option value="fungicides">Fungicides</option>
+                <option value="irrigation">Irrigation supplies</option>
+                <option value="tools">Farm tools & equipment</option>
+                <option value="livestock">Livestock supplies</option>
+                <option value="other">Other farm supplies</option>
+              </select>
+            </label>
+            <label class="filter-field">
+              <span data-i18n="location">Location</span>
+              <select id="locationFilter">
+                <option value="all" data-i18n="allLocations">All locations</option>
+                <option>Addis Ababa</option><option>Oromia</option><option>Amhara</option>
+                <option>Sidama</option><option>Tigray</option><option>Dire Dawa</option>
+                <option>Somali</option><option>South Ethiopia</option><option>Other</option>
+              </select>
+            </label>
+            <label class="filter-field">
+              <span data-i18n="sortBy">Sort by</span>
+              <select id="sortFilter">
+                <option value="newest" data-i18n="newest">Newest first</option>
+                <option value="price_low" data-i18n="priceLow">Price: low to high</option>
+                <option value="price_high" data-i18n="priceHigh">Price: high to low</option>
+              </select>
+            </label>
+            <div class="language-wrap language-third">
+              <i class="fa-solid fa-globe"></i>
+              <select class="language-select" data-language-select aria-label="Choose language">
+                <option value="en">English</option><option value="am">አማርኛ</option><option value="ti">ትግርኛ</option><option value="om">Afaan Oromo</option><option value="so">Soomaali</option>
+              </select>
+            </div>
+          </div>
+          <div class="quick-categories" id="quickCategories">
+            <button class="quick-chip selected" data-category="all" data-i18n="all">All</button>
+            <button class="quick-chip" data-category="grains">🌾 <span data-i18n="grains">Grains</span></button>
+            <button class="quick-chip" data-category="seeds">🌱 <span data-i18n="seeds">Seeds</span></button>
+            <button class="quick-chip" data-category="fertilizers">🧪 <span data-i18n="fertilizers">Fertilizers</span></button>
+            <button class="quick-chip" data-category="pesticides">🛡️ <span data-i18n="pesticides">Pesticides</span></button>
+            <button class="quick-chip" data-category="herbicides">🌿 <span data-i18n="herbicides">Herbicides</span></button>
+            <button class="quick-chip" data-category="tools">🧰 <span data-i18n="tools">Tools</span></button>
+          </div>
+        </div>
+
+        <div class="results-bar">
+          <p><strong id="resultCount">0</strong> <span data-i18n="productsFound">products found</span></p>
+          <span class="secure-label"><i class="fa-solid fa-lock"></i><span data-i18n="secureTrading">Secure account-based marketplace</span></span>
+        </div>
+        <div id="productGrid" class="product-grid">
+          <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading marketplace…</div>
+        </div>
+        <div id="contentView" class="content-view hidden"></div>
+      </section>
+    </main>
+
+    <footer class="market-footer">
+      <span>© <span id="year"></span> AgriNova</span>
+      <span data-i18n="footerText">Connecting farmers. Growing opportunity.</span>
+      <div class="language-wrap">
+        <i class="fa-solid fa-globe"></i>
+        <select class="language-select" data-language-select aria-label="Choose language">
+          <option value="en">English</option><option value="am">አማርኛ</option><option value="ti">ትግርኛ</option><option value="om">Afaan Oromo</option><option value="so">Soomaali</option>
+        </select>
+      </div>
+    </footer>
+  </div>
+
+  <dialog id="listingDialog" class="modal">
+    <form id="listingForm" class="modal-card" method="dialog">
+      <div class="modal-head">
+        <div><p class="eyebrow dark" data-i18n="sellerCorner">SELLER CORNER</p><h2 id="listingDialogTitle" data-i18n="createListing">Create listing</h2></div>
+        <button type="button" class="close-btn" data-close="listingDialog">×</button>
+      </div>
+      <input type="hidden" id="listingId">
+      <div class="form-grid">
+        <label class="form-field full"><span data-i18n="productName">Product name *</span><input id="productName" required maxlength="120" placeholder="e.g. Improved wheat seeds"></label>
+        <label class="form-field"><span data-i18n="category">Category *</span>
+          <select id="listingCategory" required>
+            <option value="">Choose category</option>
+            <option value="grains">Grains & cereals</option><option value="vegetables">Vegetables</option>
+            <option value="fruits">Fruits</option><option value="legumes">Legumes</option>
+            <option value="root_crops">Root crops</option><option value="coffee">Coffee & cash crops</option>
+            <option value="seeds">Seeds & seedlings</option><option value="fertilizers">Fertilizers & soil nutrients</option>
+            <option value="pesticides">Pesticides & insect control</option><option value="herbicides">Herbicides & weed control</option>
+            <option value="fungicides">Fungicides</option><option value="irrigation">Irrigation supplies</option>
+            <option value="tools">Farm tools & equipment</option><option value="livestock">Livestock supplies</option>
+            <option value="other">Other farm supplies</option>
+          </select>
+        </label>
+        <label class="form-field"><span data-i18n="unit">Unit *</span>
+          <select id="productUnit" required>
+            <option value="kg">Kilogram (kg)</option><option value="quintal">Quintal</option>
+            <option value="ton">Tonne</option><option value="bag">Bag</option><option value="piece">Piece</option>
+            <option value="liter">Litre</option><option value="bottle">Bottle</option><option value="sack">Sack</option><option value="set">Set</option>
+          </select>
+        </label>
+        <label class="form-field"><span data-i18n="quantity">Available quantity *</span><input id="productQuantity" type="number" min="0.01" step="0.01" required></label>
+        <label class="form-field"><span data-i18n="price">Price per unit (ETB) *</span><input id="productPrice" type="number" min="0.01" step="0.01" required></label>
+        <label class="form-field"><span data-i18n="minimumOrder">Minimum order</span><input id="minimumOrder" type="number" min="0.01" step="0.01" value="1"></label>
+        <label class="form-field"><span data-i18n="region">Region / city</span><input id="sellerLocation" maxlength="100" placeholder="e.g. Oromia, Adama"></label>
+        <label class="form-field full"><span data-i18n="description">Description</span><textarea id="productDescription" rows="4" maxlength="2000" placeholder="Describe quality, variety, packaging and collection details…"></textarea></label>
+        <label class="form-field full"><span data-i18n="photos">Product photos (up to 5, 2 MB each)</span><input id="productPhotos" type="file" accept="image/jpeg,image/png,image/webp" multiple><small data-i18n="photoHint">Images are uploaded to AgriNova Supabase Storage.</small><div id="photoPreview" class="photo-preview"></div></label>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" data-close="listingDialog" data-i18n="cancel">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="publishBtn"><i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="publish">Publish listing</span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="productDialog" class="modal"><div class="modal-card product-modal"><button class="close-btn floating-close" data-close="productDialog">×</button><div id="productDetail"></div></div></dialog>
+  <dialog id="cartDialog" class="modal"><div class="modal-card"><div class="modal-head"><h2 data-i18n="yourCart">Your cart</h2><button class="close-btn" data-close="cartDialog">×</button></div><div id="cartContent"></div></div></dialog>
+  <dialog id="checkoutDialog" class="modal">
+    <form id="checkoutForm" class="modal-card">
+      <div class="modal-head"><h2 data-i18n="checkout">Checkout</h2><button type="button" class="close-btn" data-close="checkoutDialog">×</button></div>
+      <div id="checkoutSummary"></div>
+      <div class="form-grid">
+        <label class="form-field full"><span data-i18n="deliveryLocation">Delivery / collection location *</span><input id="deliveryLocation" required></label>
+        <label class="form-field"><span data-i18n="paymentMethod">Payment method</span><select id="paymentMethod"><option value="cash_on_delivery">Cash on delivery / collection</option><option value="bank_transfer">Bank transfer</option><option value="mobile_money">Mobile money</option></select></label>
+        <label class="form-field"><span data-i18n="phone">Contact phone *</span><input id="buyerPhone" required></label>
+      </div>
+      <p class="safety-note"><i class="fa-solid fa-circle-info"></i> <span data-i18n="paymentNote">For bank or mobile payments, the seller will confirm payment after reviewing the proof.</span></p>
+      <div class="modal-actions"><button type="button" class="btn btn-ghost" data-close="checkoutDialog" data-i18n="cancel">Cancel</button><button class="btn btn-primary" type="submit" data-i18n="placeOrder">Place order</button></div>
+    </form>
+  </dialog>
+  <dialog id="toastDialog" class="toast-dialog"><div id="toastMessage"></div><button class="btn btn-primary" data-close="toastDialog">OK</button></dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="farmer-marketplace.js"></script>
+</body>
+</html>

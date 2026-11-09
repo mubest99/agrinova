@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriNova · Farm Analysis & Identification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="farm-analysis.css" />
+</head>
+<body>
+    <!-- MAIN WRAPPER (sidebar intentionally removed) -->
+    <div class="main-wrapper">
+        <!-- TOP NAV -->
+        <header class="top-nav">
+            <div class="search-wrap">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input type="search" placeholder="Search analyses..." data-i18n-placeholder="searchAnalyses" id="globalSearch" aria-label="Search analyses">
+            </div>
+            <div class="nav-right">
+                <div class="language-control">
+                    <button class="language-trigger" id="languageTrigger" type="button" aria-expanded="false" aria-controls="languageMenu">
+                        <i class="fas fa-globe" aria-hidden="true"></i><span id="currentLanguageLabel">English</span><i class="fas fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div class="language-menu" id="languageMenu" role="menu" aria-label="Choose language" hidden>
+                        <button type="button" role="menuitem" data-language="en">English</button>
+                        <button type="button" role="menuitem" data-language="am">አማርኛ</button>
+                        <button type="button" role="menuitem" data-language="om">Afaan Oromoo</button>
+                        <button type="button" role="menuitem" data-language="ti">ትግርኛ</button>
+                        <button type="button" role="menuitem" data-language="so">Soomaali</button>
+                    </div>
+                </div>
+                <div class="notification-control">
+                    <button class="notification-trigger" id="notificationTrigger" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel">
+                        <i class="fas fa-bell" aria-hidden="true"></i><span class="nav-badge" id="notifBadge">0</span>
+                    </button>
+                    <div class="notification-panel" id="notificationPanel" hidden>
+                        <strong data-i18n="notifications">Notifications</strong>
+                        <p data-i18n="noNotifications">You have no new notifications.</p>
+                    </div>
+                </div>
+                <div class="nav-weather" id="navWeather" aria-label="Weather">
+                    <i class="fas fa-cloud-sun" aria-hidden="true"></i><span id="navTemp">--°C</span>
+                </div>
+                <button class="back-dashboard-btn" id="backDashboardBtn" type="button" onclick="window.location.href='farmer-dashboard.html'">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i><span data-i18n="backDashboard">Back to Dashboard</span>
+                </button>
+                <div class="profile-trigger" id="profileTrigger" role="button" tabindex="0" aria-label="Farmer profile">
+                    <div class="avatar" id="navAvatar"><i class="fas fa-user"></i></div>
+                    <span class="pname" id="navName">Farmer</span>
+                    <i class="fas fa-chevron-down" style="font-size:0.7rem;"></i>
+                </div>
+            </div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="pd-header">
+                    <div class="pd-avatar" id="pdAvatar"><i class="fas fa-user"></i></div>
+                    <div class="pd-info"><p class="pd-name" id="pdName">Farmer Name</p><p class="pd-email" id="pdEmail">email@example.com</p></div>
+                </div>
+                <div><i class="fas fa-phone" style="width:1.4rem;"></i> <span id="pdPhone">—</span></div>
+                <div><i class="fas fa-map-pin"></i> <span id="pdLocation">—</span></div>
+                <div><i class="fas fa-ruler-combined"></i> <span id="pdFarmland">—</span></div>
+                <div style="margin-top:0.8rem;border-top:1px solid #edf0e9;padding-top:0.6rem;display:flex;gap:0.8rem;">
+                    <button id="uploadProfileBtn" style="background:#2F7D4A;color:#fff;padding:0.2rem 1rem;border-radius:30px;font-size:0.8rem;"><i class="fas fa-camera"></i> Upload</button>
+                </div>
+                <input type="file" id="profileImageInput" accept="image/*" style="display:none;">
+            </div>
+        </header>
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="dashboard-content">
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+                <div>
+                    <h1 data-i18n="pageTitle">Farm Analysis &amp; Identification</h1>
+                    <p class="subtitle" data-i18n="pageSubtitle">Investigate, observe, and understand your farm.</p>
+                </div>
+                <div class="header-right">
+                    <div class="current-date" id="currentDate">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <div class="date-day" id="dateDay">Saturday</div>
+                            <div class="date-full" id="dateFull">August 30, 2026</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FARM HEALTH OVERVIEW -->
+            <div class="health-overview">
+                <div class="health-score-container">
+                    <div class="health-score" id="healthScore">
+                        <svg viewBox="0 0 120 120" class="score-ring">
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#EAE7DE" stroke-width="8"/>
+                            <circle cx="60" cy="60" r="50" fill="none" stroke="#2F7D4A" stroke-width="8" 
+                                    stroke-dasharray="0 314" stroke-linecap="round" 
+                                    id="scoreCircle" transform="rotate(-90 60 60)"/>
+                            <text x="60" y="55" text-anchor="middle" font-size="22" font-weight="700" fill="#1F2D26" id="scoreText">--</text>
+                            <text x="60" y="78" text-anchor="middle" font-size="12" fill="#6B746E" id="scoreLabel">out of 100</text>
+                        </svg>
+                    </div>
+                    <div class="health-info">
+                        <h2 id="healthStatus" data-i18n="healthOverview">Farm Health Overview</h2>
+                        <p id="healthDescription" data-i18n="healthDescription">Based on your recorded farm observations</p>
+                        <div class="health-meta">
+                            <button class="btn-primary btn-sm" id="runAiScore" type="button"><i class="fas fa-wand-magic-sparkles"></i> Analyze all 4 data sources with AI</button>
+                            <span><span data-i18n="lastAssessmentLabel">Last assessment:</span> <strong id="lastAssessment">Not yet assessed</strong></span>
+                            <button class="btn-secondary btn-sm" onclick="showScoreBreakdown()">
+                                <i class="fas fa-chart-bar"></i> <span data-i18n="viewScore">View Score Breakdown</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONNECTED FARM DATA SOURCES -->
+            <section class="farm-data-section" aria-labelledby="farmDataHeading">
+                <div class="section-heading-row">
+                    <div>
+                        <span class="eyebrow">CONNECTED FARM RECORDS</span>
+                        <h3 id="farmDataHeading">Your farm data</h3>
+                        <p>Analysis combines your saved farm profile, crop records, daily farm log, and crop checkpoints.</p>
+                    </div>
+                    <button class="btn-secondary btn-sm" id="refreshFarmData" type="button"><i class="fas fa-rotate"></i> Refresh data</button>
+                </div>
+                <div class="farm-data-grid">
+                    <button class="farm-data-card" type="button" data-source="farm">
+                        <span class="farm-data-icon"><i class="fas fa-tractor"></i></span><span class="farm-data-copy"><strong>My Farm</strong><small>Farm profile &amp; location</small><b id="farmDataCount">—</b></span><i class="fas fa-arrow-up-right-from-square card-open-icon"></i>
+                    </button>
+                    <button class="farm-data-card" type="button" data-source="crops">
+                        <span class="farm-data-icon"><i class="fas fa-seedling"></i></span><span class="farm-data-copy"><strong>My Crops</strong><small>Registered crops &amp; fields</small><b id="cropsDataCount">—</b></span><i class="fas fa-arrow-up-right-from-square card-open-icon"></i>
+                    </button>
+                    <button class="farm-data-card" type="button" data-source="dailyFarm">
+                        <span class="farm-data-icon"><i class="fas fa-calendar-day"></i></span><span class="farm-data-copy"><strong>Daily Farm</strong><small>Activities &amp; observations</small><b id="dailyFarmDataCount">—</b></span><i class="fas fa-arrow-up-right-from-square card-open-icon"></i>
+                    </button>
+                    <button class="farm-data-card" type="button" data-source="dailyCrops">
+                        <span class="farm-data-icon"><i class="fas fa-leaf"></i></span><span class="farm-data-copy"><strong>Daily Crops</strong><small>Crop checkpoints &amp; stages</small><b id="dailyCropsDataCount">—</b></span><i class="fas fa-arrow-up-right-from-square card-open-icon"></i>
+                    </button>
+                </div>
+                <div class="data-connection-status" id="dataConnectionStatus" role="status"><span class="status-dot"></span><span>Connecting to your farm records…</span></div>
+            </section>
+
+            <!-- INVESTIGATION TOOLS -->
+            <div class="investigation-section">
+                <h3 data-i18n="startInvestigation">Start a New Investigation</h3>
+                <div class="investigation-grid">
+                    <div class="investigation-card" onclick="openSmartInvestigation('pest')">
+                        <i class="fas fa-bug"></i>
+                        <h4 data-i18n="pestDisease">Pest &amp; Disease</h4>
+                        <p data-i18n="pestDescription">Identify pests and diseases affecting your crops</p>
+                        <button class="btn-primary btn-sm"><span data-i18n="startInvestigationBtn">Start Investigation</span></button>
+                    </div>
+                    <div class="investigation-card" onclick="openSmartInvestigation('soil')">
+                        <i class="fas fa-earth"></i>
+                        <h4 data-i18n="soilAssessment">Soil Assessment</h4>
+                        <p data-i18n="soilDescription">Analyze your soil characteristics and suitability</p>
+                        <button class="btn-primary btn-sm"><span data-i18n="startInvestigationBtn">Start Investigation</span></button>
+                    </div>
+                    <div class="investigation-card" onclick="openSmartInvestigation('plant')">
+                        <i class="fas fa-seedling"></i>
+                        <h4 data-i18n="plantHealth">Plant Health Check</h4>
+                        <p data-i18n="plantDescription">Check the health and condition of your crops</p>
+                        <button class="btn-primary btn-sm"><span data-i18n="startInvestigationBtn">Start Investigation</span></button>
+                    </div>
+                    <div class="investigation-card" onclick="openSmartInvestigation('weed')">
+                        <i class="fas fa-leaf"></i>
+                        <h4 data-i18n="weedIdentification">Weed Identification</h4>
+                        <p data-i18n="weedDescription">Identify weeds in your fields</p>
+                        <button class="btn-primary btn-sm"><span data-i18n="startInvestigationBtn">Start Investigation</span></button>
+                    </div>
+                    <div class="investigation-card" onclick="openSmartInvestigation('observation')">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h4 data-i18n="generalObservation">General Farm Observation</h4>
+                        <p data-i18n="observationDescription">Record detailed observations about your farm</p>
+                        <button class="btn-primary btn-sm"><span data-i18n="startInvestigationBtn">Start Investigation</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECENT INVESTIGATIONS -->
+            <div class="section-card">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-history"></i>
+                        <h3 data-i18n="recentInvestigations">Recent Investigations</h3>
+                    </div>
+                    <div class="filter-controls">
+                        <select id="analysisFilter" onchange="renderHistory()">
+                            <option value="all">All</option>
+                            <option value="pest">Pest & Disease</option>
+                            <option value="soil">Soil Assessment</option>
+                            <option value="plant">Plant Health</option>
+                            <option value="weed">Weed ID</option>
+                            <option value="observation">Farm Observation</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="historyContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <p data-i18n="emptyHistory">No investigations have been recorded yet.</p>
+                        <button class="btn-primary btn-sm" onclick="document.querySelector('.investigation-card').click()">
+                            <i class="fas fa-plus"></i> <span data-i18n="firstInvestigation">Start Your First Investigation</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GUIDED AI INVESTIGATION -->
+    <div class="modal" id="smartInvestigationModal" aria-hidden="true">
+        <div class="modal-content modal-large smart-modal-content">
+            <div class="modal-header"><div><span class="eyebrow">AGRINOVA AI ANALYSIS</span><h3 id="smartInvestigationTitle">New farm investigation</h3></div><button class="modal-close" type="button" onclick="closeSmartInvestigation()" aria-label="Close">&times;</button></div>
+            <form id="smartInvestigationForm" class="smart-investigation-form">
+                <div class="smart-form-grid">
+                    <div class="form-group"><label for="smartCrop">Crop / plant</label><select id="smartCrop"><option value="">Choose crop (or describe below)</option></select></div>
+                    <div class="form-group"><label for="smartConcern">What do you want to investigate?</label><select id="smartConcern"><option value="pest">Pest</option><option value="disease">Disease</option><option value="plant_health">Plant health</option><option value="soil">Soil condition</option><option value="weed">Weed identification</option><option value="other">Other farm concern</option></select></div>
+                    <div class="form-group"><label for="smartPlantPart">Affected part</label><select id="smartPlantPart"><option value="">Not sure</option><option>Leaf</option><option>Stem</option><option>Root</option><option>Fruit</option><option>Flower</option><option>Whole plant</option><option>Soil</option></select></div>
+                    <div class="form-group"><label for="smartField">Field / farm location</label><input id="smartField" type="text" placeholder="Field name, village, district or location"></div>
+                    <div class="form-group"><label for="smartPhone">Contact phone (optional)</label><input id="smartPhone" type="tel" placeholder="Phone number"></div>
+                    <div class="form-group"><label for="smartSeverity">How serious is it?</label><select id="smartSeverity"><option value="unsure">Not sure</option><option value="mild">Mild</option><option value="moderate">Moderate</option><option value="severe">Severe / spreading quickly</option></select></div>
+                </div>
+                <div class="form-group"><label for="smartDescription">Describe what you see</label><textarea id="smartDescription" rows="5" required placeholder="Describe symptoms, when they started, how many plants are affected, recent rain or irrigation, and anything else you noticed…"></textarea></div>
+                <div class="form-group"><label>Upload photos for AI visual analysis</label><label class="smart-photo-drop" for="smartPhotos"><i class="fas fa-camera"></i><strong>Add clear photos</strong><small>Leaf front and back, whole plant, affected fruit/stem, or soil. JPG, PNG or WEBP.</small></label><input id="smartPhotos" type="file" accept="image/*" multiple hidden><div id="smartPhotoPreview" class="smart-photo-preview"></div></div>
+                <div class="smart-form-actions"><button class="btn-secondary" type="button" onclick="closeSmartInvestigation()">Cancel</button><button class="btn-primary" id="runSmartDiagnosis" type="submit"><i class="fas fa-robot"></i> Analyze with AI</button></div>
+            </form>
+            <div id="smartDiagnosisResult" class="smart-diagnosis-result" hidden></div>
+        </div>
+    </div>
+
+    <!-- CONNECTED DATA DETAILS -->
+    <div class="modal" id="farmDataModal" aria-hidden="true"><div class="modal-content modal-large"><div class="modal-header"><h3 id="farmDataModalTitle">Farm data</h3><button class="modal-close" type="button" onclick="closeModal('farmDataModal')">&times;</button></div><div id="farmDataModalContent"></div></div></div>
+
+    <!-- ============================================================ -->
+    <!-- INVESTIGATION MODAL -->
+    <!-- ============================================================ -->
+    <div class="modal" id="investigationModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="investigationTitle">Pest & Disease Investigation</h3>
+                <button class="modal-close" onclick="closeModal('investigationModal')">&times;</button>
+            </div>
+            <div id="investigationContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SCORE BREAKDOWN MODAL -->
+    <!-- ============================================================ -->
+    <div class="modal" id="scoreModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Farm Score Breakdown</h3>
+                <button class="modal-close" onclick="closeModal('scoreModal')">&times;</button>
+            </div>
+            <div id="scoreContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="farm-analysis.js"></script>
+</body>
+</html>

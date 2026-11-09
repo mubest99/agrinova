@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Information — AgriNova</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="crop-information.css">
+</head>
+<body>
+
+    <!-- ===== PAGE HEADER ===== -->
+    <header class="crop-header">
+        <div class="header-left">
+            <a href="visitor-dashboard.html" class="back-link">← Back to Dashboard</a>
+            <div class="brand">
+                <div class="brand-name">AgriNova</div>
+                <div class="brand-sub">Crop Information</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search crops...">
+                <button id="searchBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="crop-main">
+
+        <!-- FILTERS -->
+        <section class="crop-controls">
+            <div class="filter-tags" id="filterTags">
+                <button class="filter-tag active" data-category="all">All</button>
+                <button class="filter-tag" data-category="cereals">Cereals</button>
+                <button class="filter-tag" data-category="vegetables">Vegetables</button>
+                <button class="filter-tag" data-category="fruits">Fruits</button>
+                <button class="filter-tag" data-category="legumes">Legumes</button>
+                <button class="filter-tag" data-category="cash-crops">Cash Crops</button>
+                <button class="filter-tag" data-category="ethiopian-crops">Ethiopian Crops</button>
+            </div>
+        </section>
+
+        <!-- CROP COLLECTION VIEW -->
+        <section class="crop-collection" id="cropCollection">
+            <div class="crop-grid" id="cropGrid">
+                <!-- Crops rendered by JavaScript -->
+            </div>
+        </section>
+
+        <!-- CROP DETAIL VIEW (hidden by default) -->
+        <section class="crop-detail" id="cropDetail" style="display: none;">
+            <button class="back-to-crops" id="backToCrops">← Back to Crops</button>
+            <div class="crop-detail-content" id="cropDetailContent">
+                <!-- Crop detail rendered by JavaScript -->
+            </div>
+        </section>
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <p>No crops found matching your criteria.</p>
+            <p>Try adjusting your search or filter settings.</p>
+        </div>
+
+    </main>
+
+    <script src="crop-information.js"></script>
+</body>
+</html>

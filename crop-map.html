@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriNova · Ethiopian Crop Map</title>
+
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+    <!-- D3.js for data-driven visualization -->
+    <script src="https://d3js.org/d3.v7.min.js">
+    </script>
+
+    <style>
+        /* ========== AgriNova Design System ========== */
+        :root {
+            --forest: #164A2A;
+            --agri-green: #2E7D32;
+            --fresh-green: #66BB6A;
+            --harvest-gold: #D9A441;
+            --cream: #F7F4EA;
+            --white: #FFFFFF;
+            --charcoal: #26332A;
+            --shadow: 0 8px 30px rgba(22, 74, 42, 0.15);
+            --radius: 12px;
+            --transition: 0.25s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.5;
+        }
+
+        /* ========== Page Shell ========== */
+        .cropmap-page {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* ========== Header ========== */
+        .map-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(22, 74, 42, 0.10);
+            margin-bottom: 1.25rem;
+        }
+
+        .map-header-left {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 0.5rem 1rem;
+        }
+
+        .logo-cursive {
+            font-family: 'Georgia', serif;
+            font-size: 1.9rem;
+            font-weight: 700;
+            font-style: italic;
+            color: var(--forest);
+            letter-spacing: -0.5px;
+        }
+        .logo-cursive span {
+            color: var(--harvest-gold);
+            font-weight: 400;
+        }
+
+        .map-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--charcoal);
+            letter-spacing: -0.3px;
+        }
+        .map-title small {
+            font-weight: 400;
+            font-size: 0.95rem;
+            color: #4a5a4e;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .map-subtitle {
+            font-size: 0.95rem;
+            color: #4a5a4e;
+            margin-top: 0.2rem;
+            max-width: 700px;
+        }
+
+        /* ========== Controls Bar ========== */
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem 1rem;
+            margin: 1rem 0 1.25rem;
+            padding: 0.75rem 1rem;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .search-wrap {
+            flex: 2 1 260px;
+            display: flex;
+            align-items: center;
+            background: var(--cream);
+            border-radius: 40px;
+            padding: 0 1rem;
+            border: 1px solid #dde3df;
+            transition: border var(--transition);
+        }
+        .search-wrap:focus-within {
+            border-color: var(--agri-green);
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+        }
+        .search-wrap input {
+            border: none;
+            background: transparent;
+            padding: 0.65rem 0.5rem;
+            font-size: 0.95rem;
+            width: 100%;
+            outline: none;
+            color: var(--charcoal);
+        }
+        .search-wrap input::placeholder {
+            color: #889e92;
+        }
+        .search-wrap .search-icon {
+            color: #6f8a7c;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            border: 1px solid transparent;
+            font-weight: 500;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            background: var(--cream);
+            color: var(--charcoal);
+            border-color: #d0d9d3;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: var(--agri-green);
+            color: var(--white);
+            border-color: var(--agri-green);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+        }
+        .btn-primary {
+            background: var(--forest);
+            color: var(--white);
+            border-color: var(--forest);
+        }
+        .btn-primary:hover {
+            background: #1d5f34;
+            border-color: #1d5f34;
+        }
+        .btn-outline {
+            background: transparent;
+            border-color: var(--agri-green);
+            color: var(--agri-green);
+        }
+        .btn-outline:hover {
+            background: var(--agri-green);
+            color: var(--white);
+        }
+        .btn-sm {
+            padding: 0.35rem 0.85rem;
+            font-size: 0.8rem;
+        }
+
+        .btn.active-layer {
+            background: var(--forest);
+            color: var(--white);
+            border-color: var(--forest);
+        }
+
+        /* ========== Main Layout: Map + Panel ========== */
+        .map-panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 1.5rem;
+            flex: 1;
+            min-height: 580px;
+        }
+
+        .map-container {
+            position: relative;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            min-height: 500px;
+        }
+        #ethiopiaMap {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+        }
+
+        /* Leaflet overrides */
+        .leaflet-control-zoom a {
+            background: var(--white) !important;
+            color: var(--charcoal) !important;
+            border-color: #d0d9d3 !important;
+        }
+        .leaflet-control-zoom a:hover {
+            background: var(--agri-green) !important;
+            color: var(--white) !important;
+        }
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        .leaflet-popup-content {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--charcoal);
+            font-size: 0.9rem;
+            min-width: 180px;
+        }
+        .leaflet-popup-content strong {
+            color: var(--forest);
+        }
+
+        /* ========== Info Panel ========== */
+        .info-panel {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.25rem 1.25rem 1rem;
+            overflow-y: auto;
+            max-height: 600px;
+            transition: all var(--transition);
+        }
+
+        .info-panel .panel-empty {
+            color: #6f8a7c;
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 2.5rem 0.5rem;
+        }
+        .info-panel .panel-empty .icon-big {
+            font-size: 2.4rem;
+            display: block;
+            margin-bottom: 0.75rem;
+            opacity: 0.5;
+        }
+
+        .info-panel h2 {
+            font-size: 1.35rem;
+            color: var(--forest);
+            border-bottom: 2px solid var(--fresh-green);
+            padding-bottom: 0.4rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        .info-panel h3 {
+            font-size: 1rem;
+            color: var(--agri-green);
+            margin-top: 0.9rem;
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+        .info-panel .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #f0f3ef;
+            font-size: 0.9rem;
+        }
+        .info-panel .data-row .label {
+            color: #4a5a4e;
+            font-weight: 500;
+        }
+        .info-panel .data-row .value {
+            color: var(--charcoal);
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+        }
+        .info-panel .data-row .value.unavailable {
+            color: #b0beb5;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        .info-panel .source-note {
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #6f8a7c;
+            border-top: 1px solid #e8edea;
+            padding-top: 0.75rem;
+            background: var(--cream);
+            padding: 0.6rem 0.8rem;
+            border-radius: 6px;
+        }
+        .info-panel .source-note strong {
+            color: var(--forest);
+        }
+
+        .legend-box {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--cream);
+            border-radius: 8px;
+            border-left: 4px solid var(--harvest-gold);
+        }
+        .legend-box h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4a5a4e;
+            margin-bottom: 0.4rem;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            padding: 0.15rem 0;
+        }
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        /* ========== Responsive ========== */
+        @media (max-width: 992px) {
+            .map-panel-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .info-panel {
+                max-height: 380px;
+            }
+            .map-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            .map-title small {
+                display: block;
+                margin-left: 0;
+                font-size: 0.85rem;
+            }
+        }
+        @media (max-width: 600px) {
+            .cropmap-page {
+                padding: 0.75rem;
+            }
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-group {
+                justify-content: center;
+            }
+            .map-title {
+                font-size: 1.2rem;
+            }
+            .logo-cursive {
+                font-size: 1.5rem;
+            }
+            #ethiopiaMap {
+                min-height: 340px;
+            }
+            .info-panel {
+                max-height: 300px;
+                padding: 0.9rem;
+            }
+        }
+
+        /* ========== Reset button special ========== */
+        .btn-reset {
+            background: transparent;
+            color: #6f8a7c;
+            border-color: #d0d9d3;
+        }
+        .btn-reset:hover {
+            background: #d9534f;
+            border-color: #d9534f;
+            color: white;
+        }
+
+        /* small utility */
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+        .mb-1 {
+            margin-bottom: 0.5rem;
+        }
+        .flex {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .gap-1 {
+            gap: 0.5rem;
+        }
+        .text-muted {
+            color: #6f8a7c;
+            font-size: 0.85rem;
+        }
+
+        /* dominant production mini icons */
+        .prod-icon {
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cropmap-page">
+        <!-- ===== HEADER ===== -->
+        <header class="map-header">
+            <div class="map-header-left">
+                <div class="logo-cursive">Agri<span>Nova</span></div>
+                <div class="map-title">
+                    Ethiopian Crop Map
+                    <small>Explore Ethiopia's agricultural landscape</small>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== CONTROLS ===== -->
+        <div class="controls-bar">
+            <div class="search-wrap">
+                <span class="search-icon">&#128269;</span>
+                <input type="text" id="searchInput" placeholder="Search crops, regions, or locations..." autocomplete="off" />
+                <div id="searchSuggestions" style="display:none; position:absolute; background:white; border-radius:8px; box-shadow:var(--shadow); max-height:220px; overflow-y:auto; width:300px; z-index:999; margin-top:150px; padding:0.25rem 0;"></div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-sm btn-primary" id="exploreRegionsBtn">Explore Regions</button>
+                <button class="btn btn-sm btn-outline" id="cropSearchBtn">Crop Search</button>
+                <button class="btn btn-sm btn-outline" id="resetMapBtn">Reset Map</button>
+            </div>
+        </div>
+
+        <!-- ===== MAP + PANEL ===== -->
+        <div class="map-panel-grid">
+            <div class="map-container">
+                <div id="ethiopiaMap"></div>
+            </div>
+
+            <aside class="info-panel" id="infoPanel">
+                <div class="panel-empty" id="panelEmpty">
+                    <div class="icon-big">&#127758;</div>
+                    <p><strong>Select a region</strong><br />
+                    Search for a crop, or choose a map layer below.</p>
+                    <div style="margin-top:1rem; font-size:0.85rem; color:#889e92;">
+                        &#9654; Click any region on the map<br />
+                        &#9654; Use the layer buttons to explore
+                    </div>
+                </div>
+                <div id="panelContent" style="display:none;"></div>
+            </aside>
+        </div>
+
+        <!-- ===== LAYER SWITCHER (below map) ===== -->
+        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem 0.75rem; margin-top:1rem; padding:0.75rem 1rem; background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow);">
+            <span style="font-weight:600; font-size:0.85rem; color:var(--forest); letter-spacing:0.3px;">MAP LAYERS</span>
+            <button class="btn btn-sm active-layer" data-layer="default" id="layerDefault">Default</button>
+            <button class="btn btn-sm" data-layer="weather" id="layerWeather">Weather</button>
+            <button class="btn btn-sm" data-layer="soil" id="layerSoil">Soil Type</button>
+            <button class="btn btn-sm" data-layer="dominant" id="layerDominant">Dominant Production</button>
+            <span style="flex:1;"></span>
+            <span id="layerMeta" style="font-size:0.75rem; color:#6f8a7c;"></span>
+        </div>
+
+        <!-- ===== hidden container for search suggestions ===== -->
+        <div id="suggestionsContainer" style="position:relative;"></div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  DATA — from the provided catalog
+        // ================================================================
+
+        const REGIONS_DATA = [{
+            id: 'ET-AF',
+            name: 'Afar Region',
+            capital: 'Semera',
+            elevation: '150 – 1,000 m',
+            climate: 'Hyper-Arid / Semi-Arid',
+            coords: '11.7559° N, 40.9587° E',
+            primaryCrop: 'Sorghum (Irrigated)',
+            cultivatedArea: '22,000 ha',
+            production: '48,000 t',
+            yield: '2.18 t/ha',
+            season: 'Irrigation / Meher',
+            soil: 'Fluvisols / Calcisols',
+            soilChars: 'Saline, alluvial along Awash River; coarse texture',
+            soilSuitability: 'Irrigated Cotton, Sugarcane, Sorghum',
+            temp: '29°C – 42°C',
+            rainfall: '200 – 400 mm',
+            humidity: '25% – 40%',
+            droughtRisk: 'High Extreme Heat / Drought',
+            marketHubs: 'Semera Market Hub',
+            targetMarkets: 'Local / Rift Valley corridor',
+            tradeVolume: 'Quintals'
+        }, {
+            id: 'ET-AM',
+            name: 'Amhara Region',
+            capital: 'Bahir Dar',
+            elevation: '1,200 – 4,533 m',
+            climate: 'Highland / Temperate (Dega/Weyna Dega)',
+            coords: '11.3494° N, 37.9785° E',
+            primaryCrop: 'Teff',
+            cultivatedArea: '1,150,000 ha',
+            production: '2,100,000 t',
+            yield: '1.83 t/ha',
+            season: 'Meher Season',
+            soil: 'Vertisols / Luvisols',
+            soilChars: 'Heavy dark clay ("black soils"), waterlogging risk',
+            soilSuitability: 'High suitability for Teff, Wheat, Chickpea',
+            temp: '14°C – 23°C',
+            rainfall: '1,300 – 1,700 mm',
+            humidity: '70% – 80%',
+            droughtRisk: 'Low / Moderate Risk',
+            marketHubs: 'Bahir Dar / Gondar / Humera',
+            targetMarkets: 'Addis Ababa / Export Market',
+            tradeVolume: 'Quintals / Metric Tonnes'
+        }, {
+            id: 'ET-BE',
+            name: 'Benishangul-Gumuz Region',
+            capital: 'Asosa',
+            elevation: '600 – 1,500 m',
+            climate: 'Tropical / Humid Savanna',
+            coords: '10.0652° N, 34.5322° E',
+            primaryCrop: 'Sesame',
+            cultivatedArea: '180,000 ha',
+            production: '195,000 t',
+            yield: '1.08 t/ha',
+            season: 'Meher Season',
+            soil: 'Nitisols / Cambisols',
+            soilChars: 'Deep red, moderately acidic, high clay content',
+            soilSuitability: 'Excellent for Sesame, Sorghum, Soybean',
+            temp: '20°C – 31°C',
+            rainfall: '1,200 – 1,600 mm',
+            humidity: '65% – 80%',
+            droughtRisk: 'Low Risk',
+            marketHubs: 'Asosa Market / Metekel Hub',
+            targetMarkets: 'Central Processing / Export',
+            tradeVolume: 'Metric Tonnes'
+        }, {
+            id: 'ET-CE',
+            name: 'Central Ethiopia Regional State',
+            capital: 'Hosaena / Wolkite',
+            elevation: '1,600 – 2,900 m',
+            climate: 'Weyna Dega (Midland Highland)',
+            coords: '7.6667° N, 38.0000° E',
+            primaryCrop: 'Enset / Wheat',
+            cultivatedArea: '280,000 ha',
+            production: '920,000 t',
+            yield: '3.28 t/ha',
+            season: 'Meher Season',
+            soil: 'Vertisols / Nitisols',
+            soilChars: 'High organic matter, clay-rich, variable drainage',
+            soilSuitability: 'Wheat, Enset, Pulses, Teff',
+            temp: '13°C – 22°C',
+            rainfall: '1,200 – 1,600 mm',
+            humidity: '65% – 80%',
+            droughtRisk: 'Moderate Risk',
+            marketHubs: 'Hosaena / Wolkite Markets',
+            targetMarkets: 'Addis Ababa / Local Processing',
+            tradeVolume: 'Quintals'
+        }, {
+            id: 'ET-GA',
+            name: 'Gambela Region',
+            capital: 'Gambela',
+            elevation: '300 – 800 m',
+            climate: 'Hot Humid Lowland',
+            coords: '7.9220° N, 34.5888° E',
+            primaryCrop: 'Maize',
+            cultivatedArea: '45,000 ha',
+            production: '110,000 t',
+            yield: '2.44 t/ha',
+            season: 'Meher Season',
+            soil: 'Fluvisols / Gleysols',
+            soilChars: 'Deep, fertile alluvial sediments along Baro-Akobo',
+            soilSuitability: 'Rice, Maize, Commercial Cash Crops',
+            temp: '24°C – 38°C',
+            rainfall: '1,000 – 1,300 mm',
+            humidity: '60% – 75%',
+            droughtRisk: 'Moderate Heat / Flood Risk',
+            marketHubs: 'Gambela Town Market',
+            targetMarkets: 'Local / South Sudan Border',
+            tradeVolume: 'Quintals'
+        }, {
+            id: 'ET-HA',
+            name: 'Harari Region',
+            capital: 'Harar',
+            elevation: '1,800 – 2,200 m',
+            climate: 'Semi-Arid Highland',
+            coords: '9.3149° N, 42.1224° E',
+            primaryCrop: 'Sorghum / Khat',
+            cultivatedArea: '18,000 ha',
+            production: '28,000 t',
+            yield: '1.55 t/ha',
+            season: 'Annual Harvest',
+            soil: 'Regosols / Cambisols',
+            soilChars: 'Shallow, well-drained, sandy-clay loam',
+            soilSuitability: 'Sorghum, Groundnut, Khat',
+            temp: '16°C – 28°C',
+            rainfall: '700 – 900 mm',
+            humidity: '45% – 60%',
+            droughtRisk: 'Moderate / High Risk',
+            marketHubs: 'Harar / Erer Markets',
+            targetMarkets: 'Dire Dawa / Somali Region / Export',
+            tradeVolume: 'Bundles / Quintals'
+        }, {
+            id: 'ET-OR',
+            name: 'Oromia Region',
+            capital: 'Addis Ababa',
+            elevation: '1,500 – 3,000 m',
+            climate: 'Sub-humid to Humid',
+            coords: '7.5460° N, 40.6347° E',
+            primaryCrop: 'Maize',
+            cultivatedArea: '1,050,000 ha',
+            production: '4,200,000 t',
+            yield: '4.00 t/ha',
+            season: 'Meher Season',
+            soil: 'Nitisols / Vertisols',
+            soilChars: 'Deep red soils, high organic fertility in highlands',
+            soilSuitability: 'Ideal for Maize, Wheat, Coffee, Teff',
+            temp: '15°C – 28°C',
+            rainfall: '1,200 – 1,900 mm',
+            humidity: '60% – 80%',
+            droughtRisk: 'Moderate / Low Risk',
+            marketHubs: 'Adama / Jimma / Shashamane',
+            targetMarkets: 'ECX / Addis Ababa / Export',
+            tradeVolume: 'Tonnes / ECX Bags'
+        }, {
+            id: 'ET-SI',
+            name: 'Sidama Region',
+            capital: 'Hawassa',
+            elevation: '1,500 – 2,500 m',
+            climate: 'Sub-humid Midland (Weyna Dega)',
+            coords: '6.8160° N, 38.4824° E',
+            primaryCrop: 'Coffee',
+            cultivatedArea: '110,000 ha',
+            production: '85,000 t',
+            yield: '0.77 t/ha',
+            season: 'Annual Harvest',
+            soil: 'Nitisols / Luvisols',
+            soilChars: 'Fertile, well-structured, reddish-brown clay',
+            soilSuitability: 'High potential for Coffee, Enset, Fruits',
+            temp: '15°C – 27°C',
+            rainfall: '1,000 – 1,400 mm',
+            humidity: '60% – 75%',
+            droughtRisk: 'Low / Moderate Risk',
+            marketHubs: 'Hawassa / Yirgalem (IAIP)',
+            targetMarkets: 'Addis Ababa ECX / Export',
+            tradeVolume: 'Bags (60kg) / Tonnes'
+        }, {
+            id: 'ET-SO',
+            name: 'Somali Region',
+            capital: 'Jijiga',
+            elevation: '500 – 1,500 m',
+            climate: 'Arid / Pastoral Lowland',
+            coords: '6.6612° N, 43.7908° E',
+            primaryCrop: 'Sorghum',
+            cultivatedArea: '85,000 ha',
+            production: '135,000 t',
+            yield: '1.58 t/ha',
+            season: 'Gu / Deyr Seasons',
+            soil: 'Yermosols / Gypsisols',
+            soilChars: 'Sandy, dry, saline, low organic content',
+            soilSuitability: 'Pastoral grazing; limited irrigated Sorghum',
+            temp: '22°C – 34°C',
+            rainfall: '400 – 600 mm',
+            humidity: '35% – 50%',
+            droughtRisk: 'High Drought Vulnerability',
+            marketHubs: 'Jijiga / Tog Wajale',
+            targetMarkets: 'Somaliland / Gulf Export',
+            tradeVolume: 'Heads / Quintals'
+        }, {
+            id: 'ET-SE',
+            name: 'South Ethiopia Regional State',
+            capital: 'Wolaita Sodo',
+            elevation: '1,200 – 2,800 m',
+            climate: 'Agroforestry / Highland',
+            coords: '6.8550° N, 37.7808° E',
+            primaryCrop: 'Maize',
+            cultivatedArea: '310,000 ha',
+            production: '890,000 t',
+            yield: '2.87 t/ha',
+            season: 'Belg / Meher Season',
+            soil: 'Nitisols / Acrisols',
+            soilChars: 'Fertile, acidic, high organic carbon content',
+            soilSuitability: 'Agroforestry, Coffee, Root crops, Maize',
+            temp: '16°C – 26°C',
+            rainfall: '1,100 – 1,500 mm',
+            humidity: '60% – 75%',
+            droughtRisk: 'Moderate Risk',
+            marketHubs: 'Sodo / Dilla Markets',
+            targetMarkets: 'Central Rift Valley Hubs',
+            tradeVolume: 'Quintals'
+        }, {
+            id: 'ET-SW',
+            name: 'South West Ethiopia Peoples\' Region',
+            capital: 'Bonga',
+            elevation: '1,000 – 2,700 m',
+            climate: 'Dense Rainforest / Tropical Humid',
+            coords: '7.2719° N, 36.2428° E',
+            primaryCrop: 'Coffee',
+            cultivatedArea: '220,000 ha',
+            production: '185,000 t',
+            yield: '0.84 t/ha',
+            season: 'Annual Harvest',
+            soil: 'Nitisols',
+            soilChars: 'Deep, humic-rich red soils under forest cover',
+            soilSuitability: 'Ideal for Rainforest Coffee, Tea, Spices',
+            temp: '15°C – 24°C',
+            rainfall: '1,800 – 2,200 mm',
+            humidity: '80% – 92%',
+            droughtRisk: 'Low Risk / High Rainfall',
+            marketHubs: 'Bonga / Mizan Teferi',
+            targetMarkets: 'Addis Ababa ECX / Export',
+            tradeVolume: 'Metric Tonnes'
+        }, {
+            id: 'ET-TI',
+            name: 'Tigray Region',
+            capital: 'Mekelle',
+            elevation: '1,500 – 3,900 m',
+            climate: 'Semi-arid to Sub-humid',
+            coords: '14.0323° N, 38.3166° E',
+            primaryCrop: 'Sorghum',
+            cultivatedArea: '380,000 ha',
+            production: '910,000 t',
+            yield: '2.39 t/ha',
+            season: 'Meher Season',
+            soil: 'Leptosols / Cambisols',
+            soilChars: 'Shallow, stony, prone to soil erosion',
+            soilSuitability: 'Requires terracing; Sorghum, Teff',
+            temp: '16°C – 27°C',
+            rainfall: '500 – 750 mm',
+            humidity: '45% – 60%',
+            droughtRisk: 'Moderate / High Drought Risk',
+            marketHubs: 'Mekelle / Shire Markets',
+            targetMarkets: 'Central Highlands',
+            tradeVolume: 'Quintals'
+        }, {
+            id: 'ET-AA',
+            name: 'Addis Ababa (Chartered City)',
+            capital: 'Addis Ababa',
+            elevation: '2,200 – 2,500 m',
+            climate: 'Cool Highland',
+            coords: '9.0300° N, 38.7400° E',
+            primaryCrop: 'Urban Horticulture',
+            cultivatedArea: '1,200 ha',
+            production: '18,000 t',
+            yield: '15.00 t/ha',
+            season: 'Year-round',
+            soil: 'Vertisols',
+            soilChars: 'High clay, swelling properties',
+            soilSuitability: 'Urban gardening, Peri-urban dairy/feed',
+            temp: '12°C – 21°C',
+            rainfall: '1,100 – 1,300 mm',
+            humidity: '70% – 85%',
+            droughtRisk: 'Low Risk',
+            marketHubs: 'Merkato / Jan Meda Markets',
+            targetMarkets: 'Local Metropolitan Demand',
+            tradeVolume: 'Metric Tonnes'
+        }, {
+            id: 'ET-DD',
+            name: 'Dire Dawa (Chartered City)',
+            capital: 'Dire Dawa',
+            elevation: '1,200 m',
+            climate: 'Arid / Semi-Arid Lowland',
+            coords: '9.6009° N, 41.8501° E',
+            primaryCrop: 'Sorghum / Vegetables',
+            cultivatedArea: '8,500 ha',
+            production: '16,000 t',
+            yield: '1.88 t/ha',
+            season: 'Seasonal',
+            soil: 'Regosols / Leptosols',
+            soilChars: 'Coarse, gravelly, low moisture retention',
+            soilSuitability: 'Drought-tolerant Sorghum, Vegetables',
+            temp: '22°C – 35°C',
+            rainfall: '500 – 700 mm',
+            humidity: '35% – 50%',
+            droughtRisk: 'High Aridity Risk',
+            marketHubs: 'Sabian Market',
+            targetMarkets: 'Eastern Corridor / Export',
+            tradeVolume: 'Quintals'
+        }];
+
+        // Crop list for search
+        const CROP_LIST = [
+            'Teff', 'Maize', 'Sorghum', 'Wheat', 'Coffee', 'Sesame',
+            'Barley', 'Enset', 'Khat', 'Horticulture', 'Pulses', 'Vegetables'
+        ];
+
+        // Map from region ID to data
+        const regionMap = {};
+        REGIONS_DATA.forEach(d => { regionMap[d.id] = d; });
+
+        // Dominant crop per region (from primaryCrop)
+        const dominantCropMap = {};
+        REGIONS_DATA.forEach(d => {
+            let crop = d.primaryCrop.split(' / ')[0].split(' (')[0];
+            dominantCropMap[d.id] = crop;
+        });
+
+        // ================================================================
+        //  LEAFTLET MAP
+        // ================================================================
+
+        const map = L.map('ethiopiaMap', {
+            center: [8.5, 39.0],
+            zoom: 6,
+            minZoom: 5,
+            maxZoom: 9,
+            zoomControl: false
+        });
+
+        L.control.zoom({ position: 'topright' }).addTo(map);
+
+        // Base tile (light, clean)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap, &copy; CartoDB',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
+
+        // ================================================================
+        //  ETHIOPIA BOUNDARIES — simplified GeoJSON (hand-drawn for demo)
+        //  In production, replace with actual shapefile/GeoJSON.
+        //  These are approximate outlines for all 14 divisions.
+        // ================================================================
+
+        // We'll build a feature collection with approximate polygons.
+        // For a real implementation, load from an external GeoJSON file.
+        // These are simplified boundaries for demonstration — they are
+        // visually recognizable as Ethiopian regions.
+
+        function buildEthiopiaGeoJSON() {
+            // Approximate region polygons (simplified).
+            // Each is a rough outline of the actual region.
+            const features = [];
+
+            // Helper: create a feature with a polygon.
+            function makeFeature(id, name, coords) {
+                return {
+                    type: 'Feature',
+                    id: id,
+                    properties: { name: name, regionId: id },
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [coords]
+                    }
+                };
+            }
+
+            // ===== Afar (ET-AF) — northeast =====
+            features.push(makeFeature('ET-AF', 'Afar', [
+                [40.5, 14.5],
+                [42.5, 14.0],
+                [43.0, 12.5],
+                [42.5, 11.0],
+                [41.0, 10.5],
+                [40.0, 11.0],
+                [39.5, 12.0],
+                [40.0, 13.5],
+                [40.5, 14.5]
+            ]));
+
+            // ===== Tigray (ET-TI) — north =====
+            features.push(makeFeature('ET-TI', 'Tigray', [
+                [38.0, 14.8],
+                [39.5, 14.8],
+                [40.5, 14.5],
+                [40.0, 13.5],
+                [39.5, 12.0],
+                [38.5, 12.0],
+                [37.5, 12.5],
+                [37.0, 13.5],
+                [38.0, 14.8]
+            ]));
+
+            // ===== Amhara (ET-AM) — north-central =====
+            features.push(makeFeature('ET-AM', 'Amhara', [
+                [36.5, 13.5],
+                [37.5, 14.0],
+                [38.5, 14.0],
+                [39.5, 12.0],
+                [39.0, 11.0],
+                [38.5, 10.5],
+                [37.5, 10.5],
+                [36.5, 11.0],
+                [36.0, 12.0],
+                [36.5, 13.5]
+            ]));
+
+            // ===== Benishangul-Gumuz (ET-BE) — west =====
+            features.push(makeFeature('ET-BE', 'Benishangul-Gumuz', [
+                [34.0, 11.5],
+                [35.0, 11.8],
+                [36.0, 11.5],
+                [36.5, 11.0],
+                [35.5, 10.0],
+                [34.5, 9.5],
+                [34.0, 10.0],
+                [33.5, 10.8],
+                [34.0, 11.5]
+            ]));
+
+            // ===== Gambela (ET-GA) — far west =====
+            features.push(makeFeature('ET-GA', 'Gambela', [
+                [33.5, 8.5],
+                [34.5, 8.8],
+                [35.0, 8.5],
+                [34.5, 7.5],
+                [33.8, 7.0],
+                [33.0, 7.5],
+                [33.5, 8.5]
+            ]));
+
+            // ===== South West Ethiopia (ET-SW) =====
+            features.push(makeFeature('ET-SW', 'South West Ethiopia', [
+                [35.0, 8.5],
+                [36.0, 8.8],
+                [37.0, 8.5],
+                [36.8, 7.5],
+                [36.0, 7.0],
+                [35.0, 7.2],
+                [34.5, 7.5],
+                [35.0, 8.5]
+            ]));
+
+            // ===== Central Ethiopia (ET-CE) =====
+            features.push(makeFeature('ET-CE', 'Central Ethiopia', [
+                [37.0, 9.0],
+                [38.0, 9.2],
+                [39.0, 8.8],
+                [38.8, 8.0],
+                [38.0, 7.5],
+                [37.0, 7.8],
+                [36.8, 8.5],
+                [37.0, 9.0]
+            ]));
+
+            // ===== Oromia (ET-OR) — large central/south =====
+            features.push(makeFeature('ET-OR', 'Oromia', [
+                [37.5, 10.5],
+                [39.0, 10.8],
+                [41.0, 10.0],
+                [42.0, 9.0],
+                [41.5, 8.0],
+                [40.5, 7.0],
+                [39.5, 6.5],
+                [38.5, 6.0],
+                [37.5, 6.5],
+                [36.5, 7.0],
+                [36.0, 8.0],
+                [36.5, 9.0],
+                [37.5, 10.5]
+            ]));
+
+            // ===== Sidama (ET-SI) =====
+            features.push(makeFeature('ET-SI', 'Sidama', [
+                [38.0, 7.5],
+                [38.8, 7.5],
+                [39.0, 7.0],
+                [38.8, 6.5],
+                [38.0, 6.3],
+                [37.5, 6.5],
+                [37.5, 7.0],
+                [38.0, 7.5]
+            ]));
+
+            // ===== South Ethiopia (ET-SE) =====
+            features.push(makeFeature('ET-SE', 'South Ethiopia', [
+                [37.0, 7.0],
+                [37.8, 7.2],
+                [38.0, 6.8],
+                [37.8, 6.0],
+                [37.0, 5.8],
+                [36.5, 6.0],
+                [36.5, 6.5],
+                [37.0, 7.0]
+            ]));
+
+            // ===== Somali (ET-SO) — east =====
+            features.push(makeFeature('ET-SO', 'Somali', [
+                [42.0, 10.0],
+                [43.5, 10.5],
+                [44.5, 9.5],
+                [44.0, 8.0],
+                [43.0, 7.5],
+                [42.5, 8.0],
+                [42.0, 9.0],
+                [42.0, 10.0]
+            ]));
+
+            // ===== Harari (ET-HA) — small enclave =====
+            features.push(makeFeature('ET-HA', 'Harari', [
+                [42.0, 9.5],
+                [42.3, 9.5],
+                [42.4, 9.3],
+                [42.2, 9.1],
+                [42.0, 9.2],
+                [42.0, 9.5]
+            ]));
+
+            // ===== Addis Ababa (ET-AA) =====
+            features.push(makeFeature('ET-AA', 'Addis Ababa', [
+                [38.6, 9.1],
+                [38.8, 9.1],
+                [38.9, 9.0],
+                [38.8, 8.9],
+                [38.6, 8.9],
+                [38.6, 9.1]
+            ]));
+
+            // ===== Dire Dawa (ET-DD) =====
+            features.push(makeFeature('ET-DD', 'Dire Dawa', [
+                [41.7, 9.7],
+                [42.0, 9.7],
+                [42.1, 9.5],
+                [42.0, 9.4],
+                [41.7, 9.4],
+                [41.7, 9.7]
+            ]));
+
+            return {
+                type: 'FeatureCollection',
+                features: features
+            };
+        }
+
+        const ethiopiaGeoJSON = buildEthiopiaGeoJSON();
+
+        // ================================================================
+        //  LAYER MANAGEMENT
+        // ================================================================
+
+        let currentLayer = 'default';
+        let selectedRegionId = null;
+        let currentCrop = null;
+
+        // Main GeoJSON layer
+        let geoLayer = null;
+        let highlightLayer = null;
+
+        // Weather/soil/dominant overlays
+        let overlayLayer = null;
+
+        // Store region data for lookups
+        const regionDataById = {};
+        REGIONS_DATA.forEach(d => { regionDataById[d.id] = d; });
+
+        // Style for default
+        function defaultStyle(feature) {
+            return {
+                fillColor: '#c6d9c0',
+                weight: 2,
+                opacity: 0.9,
+                color: '#2E7D32',
+                fillOpacity: 0.55,
+                dashArray: null
+            };
+        }
+
+        function highlightStyle(feature) {
+            return {
+                fillColor: '#66BB6A',
+                weight: 3,
+                opacity: 1,
+                color: '#164A2A',
+                fillOpacity: 0.75,
+                dashArray: null
+            };
+        }
+
+        function getRegionStyle(feature, layerName) {
+            const id = feature.id || feature.properties.regionId;
+            if (selectedRegionId === id) {
+                return highlightStyle(feature);
+            }
+            return defaultStyle(feature);
+        }
+
+        // ================================================================
+        //  RENDER MAP
+        // ================================================================
+
+        function renderMap(layerType) {
+            // Remove existing layers
+            if (geoLayer) {
+                map.removeLayer(geoLayer);
+                geoLayer = null;
+            }
+            if (overlayLayer) {
+                map.removeLayer(overlayLayer);
+                overlayLayer = null;
+            }
+            if (highlightLayer) {
+                map.removeLayer(highlightLayer);
+                highlightLayer = null;
+            }
+
+            // Reset layer meta
+            document.getElementById('layerMeta').textContent = '';
+
+            if (layerType === 'default' || layerType === 'dominant' || layerType === 'soil' || layerType === 'weather') {
+                // Base layer with regions
+                geoLayer = L.geoJSON(ethiopiaGeoJSON, {
+                    style: function(feature) {
+                        return getRegionStyle(feature, layerType);
+                    },
+                    onEachFeature: function(feature, layer) {
+                        const id = feature.id || feature.properties.regionId;
+                        const data = regionDataById[id];
+                        if (data) {
+                            layer.bindPopup(`
+                                <strong>${data.name}</strong><br />
+                                Capital: ${data.capital}<br />
+                                Primary Crop: ${data.primaryCrop}<br />
+                                Production: ${data.production}<br />
+                                Click for details
+                            `);
+                            layer.on('click', function() {
+                                selectRegion(id);
+                            });
+                            layer.on('mouseover', function() {
+                                layer.setStyle({ fillOpacity: 0.8, weight: 3, color: '#164A2A' });
+                                layer.bringToFront();
+                            });
+                            layer.on('mouseout', function() {
+                                if (selectedRegionId !== id) {
+                                    layer.setStyle(getRegionStyle(feature, layerType));
+                                } else {
+                                    layer.setStyle(highlightStyle(feature));
+                                }
+                            });
+                        }
+                    }
+                }).addTo(map);
+
+                // Apply layer-specific overlays
+                if (layerType === 'dominant') {
+                    applyDominantLayer();
+                } else if (layerType === 'soil') {
+                    applySoilLayer();
+                } else if (layerType === 'weather') {
+                    applyWeatherLayer();
+                }
+
+                // If a region was selected, re-highlight
+                if (selectedRegionId) {
+                    highlightRegion(selectedRegionId);
+                }
+
+                // Update legend
+                updateLegend(layerType);
+            }
+
+            // Update info panel if needed
+            if (selectedRegionId && !currentCrop) {
+                showRegionInfo(selectedRegionId);
+            } else if (currentCrop) {
+                showCropInfo(currentCrop);
+            } else {
+                showEmptyPanel();
+            }
+        }
+
+        // ================================================================
+        //  DOMINANT PRODUCTION LAYER
+        // ================================================================
+
+        function applyDominantLayer() {
+            const cropColors = {
+                'Teff': '#D9A441',
+                'Maize': '#F5C842',
+                'Sorghum': '#C49A6C',
+                'Wheat': '#E8C87A',
+                'Coffee': '#6F4E37',
+                'Sesame': '#F0E0B0',
+                'Enset': '#8CB87A',
+                'Khat': '#7BA05B',
+                'Horticulture': '#66BB6A',
+                'Urban Horticulture': '#66BB6A',
+                'Vegetables': '#7CB87A'
+            };
+
+            const defaultCropColor = '#A8B5A0';
+
+            // Add markers/symbols for dominant crops — we'll use small circle markers
+            // with custom colors and a subtle icon representation.
+            // For a production implementation, use actual SVG icons.
+            // Here we use colored circles with a label.
+
+            const overlayFeatures = [];
+
+            ethiopiaGeoJSON.features.forEach(f => {
+                const id = f.id || f.properties.regionId;
+                const data = regionDataById[id];
+                if (!data) return;
+                const crop = dominantCropMap[id] || 'Unknown';
+                const color = cropColors[crop] || defaultCropColor;
+                // Get centroid of the polygon (approximate)
+                const coords = f.geometry.coordinates[0];
+                let latSum = 0,
+                    lngSum = 0,
+                    count = 0;
+                coords.forEach(c => {
+                    lngSum += c[0];
+                    latSum += c[1];
+                    count++;
+                });
+                const centerLat = latSum / count;
+                const centerLng = lngSum / count;
+
+                overlayFeatures.push({ lat: centerLat, lng: centerLng, crop: crop, color: color, regionId: id });
+            });
+
+            // Create a group for the symbols
+            const symbolGroup = L.layerGroup();
+
+            overlayFeatures.forEach(f => {
+                // Circle with color
+                const circle = L.circleMarker([f.lat, f.lng], {
+                    radius: 18,
+                    fillColor: f.color,
+                    color: '#26332A',
+                    weight: 1.5,
+                    opacity: 0.9,
+                    fillOpacity: 0.85
+                }).addTo(symbolGroup);
+
+                // Add a small text label (crop initial)
+                const label = L.marker([f.lat, f.lng], {
+                    icon: L.divIcon({
+                        className: 'dominant-label',
+                        html: `<div style="font-size:10px; font-weight:700; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,0.5); text-align:center; line-height:1.2; pointer-events:none; width:30px;">${f.crop.substring(0,3)}</div>`,
+                        iconSize: [30, 20],
+                        iconAnchor: [15, 10]
+                    }),
+                    interactive: false
+                }).addTo(symbolGroup);
+
+                // Bind a popup
+                const data = regionDataById[f.regionId];
+                if (data) {
+                    const popupContent = `
+                        <strong>${data.name}</strong><br />
+                        <span style="color:${f.color}; font-weight:600;">●</span> Dominant: ${f.crop}<br />
+                        Production: ${data.production}<br />
+                        Area: ${data.cultivatedArea}
+                    `;
+                    circle.bindPopup(popupContent);
+                }
+            });
+
+            overlayLayer = symbolGroup;
+            overlayLayer.addTo(map);
+
+            // Also color the region polygons by dominant crop
+            geoLayer.eachLayer(function(layer) {
+                const id = layer.feature.id || layer.feature.properties.regionId;
+                const crop = dominantCropMap[id] || 'Unknown';
+                const color = cropColors[crop] || defaultCropColor;
+                layer.setStyle({
+                    fillColor: color,
+                    fillOpacity: 0.35,
+                    weight: 1.5,
+                    color: '#26332A',
+                    opacity: 0.7
+                });
+                if (selectedRegionId === id) {
+                    layer.setStyle({
+                        fillOpacity: 0.6,
+                        weight: 3,
+                        color: '#164A2A'
+                    });
+                }
+            });
+
+            document.getElementById('layerMeta').textContent = 'Dominant production • data: ESS 2025';
+        }
+
+        // ================================================================
+        //  SOIL LAYER
+        // ================================================================
+
+        function applySoilLayer() {
+            const soilColors = {
+                'Fluvisols': '#A8C4A0',
+                'Calcisols': '#D4C8A0',
+                'Vertisols': '#8B7D6B',
+                'Luvisols': '#C4B0A0',
+                'Nitisols': '#B85232',
+                'Cambisols': '#C8B898',
+                'Regosols': '#D4C8B0',
+                'Yermosols': '#E8DCC8',
+                'Gypsisols': '#E0D4C0',
+                'Leptosols': '#B8A898',
+                'Acrisols': '#C4A080',
+                'Gleysols': '#80A8B0'
+            };
+
+            const defaultSoilColor = '#C0C8B8';
+
+            // Color each region polygon by soil type
+            geoLayer.eachLayer(function(layer) {
+                const id = layer.feature.id || layer.feature.properties.regionId;
+                const data = regionDataById[id];
+                if (!data) return;
+                const soilKey = data.soil.split(' / ')[0];
+                const color = soilColors[soilKey] || defaultSoilColor;
+                layer.setStyle({
+                    fillColor: color,
+                    fillOpacity: 0.7,
+                    weight: 1.5,
+                    color: '#26332A',
+                    opacity: 0.6
+                });
+                if (selectedRegionId === id) {
+                    layer.setStyle({
+                        fillOpacity: 0.85,
+                        weight: 3,
+                        color: '#164A2A'
+                    });
+                }
+            });
+
+            document.getElementById('layerMeta').textContent = 'Soil types • data: EthioNSIS Database';
+        }
+
+        // ================================================================
+        //  WEATHER LAYER
+        // ================================================================
+
+        function applyWeatherLayer() {
+            // Color by temperature (simplified)
+            const tempColors = {
+                'low': '#4A90D9',
+                'med': '#66BB6A',
+                'high': '#D9A441',
+                'veryHigh': '#D9534F'
+            };
+
+            geoLayer.eachLayer(function(layer) {
+                const id = layer.feature.id || layer.feature.properties.regionId;
+                const data = regionDataById[id];
+                if (!data) return;
+                // Parse temp range
+                let color = tempColors.med;
+                if (data.temp) {
+                    const temps = data.temp.match(/\d+/g);
+                    if (temps) {
+                        const avg = (parseInt(temps[0]) + parseInt(temps[1])) / 2;
+                        if (avg < 18) color = tempColors.low;
+                        else if (avg < 25) color = tempColors.med;
+                        else if (avg < 30) color = tempColors.high;
+                        else color = tempColors.veryHigh;
+                    }
+                }
+                layer.setStyle({
+                    fillColor: color,
+                    fillOpacity: 0.65,
+                    weight: 1.5,
+                    color: '#26332A',
+                    opacity: 0.6
+                });
+                if (selectedRegionId === id) {
+                    layer.setStyle({
+                        fillOpacity: 0.85,
+                        weight: 3,
+                        color: '#164A2A'
+                    });
+                }
+            });
+
+            document.getElementById('layerMeta').textContent = 'Temperature • data: EMI 2025';
+        }
+
+        // ================================================================
+        //  LEGEND
+        // ================================================================
+
+        function updateLegend(layerType) {
+            const panel = document.getElementById('infoPanel');
+            // We'll embed legend inside the info panel when appropriate
+            let legendHtml = '';
+
+            if (layerType === 'dominant') {
+                const crops = {};
+                REGIONS_DATA.forEach(d => {
+                    const c = dominantCropMap[d.id] || 'Unknown';
+                    crops[c] = (crops[c] || 0) + 1;
+                });
+                legendHtml = `<div class="legend-box"><h4>Dominant Production</h4>`;
+                Object.keys(crops).sort().forEach(c => {
+                    const color = ({
+                        'Teff': '#D9A441',
+                        'Maize': '#F5C842',
+                        'Sorghum': '#C49A6C',
+                        'Wheat': '#E8C87A',
+                        'Coffee': '#6F4E37',
+                        'Sesame': '#F0E0B0',
+                        'Enset': '#8CB87A',
+                        'Khat': '#7BA05B',
+                        'Horticulture': '#66BB6A',
+                        'Urban Horticulture': '#66BB6A',
+                        'Vegetables': '#7CB87A'
+                    })[c] || '#A8B5A0';
+                    legendHtml += `<div class="legend-item"><span class="legend-color" style="background:${color};"></span> ${c}</div>`;
+                });
+                legendHtml += `<div style="font-size:0.7rem;color:#6f8a7c;margin-top:0.4rem;">Data: ESS 2025</div></div>`;
+            } else if (layerType === 'soil') {
+                const soilTypes = {};
+                REGIONS_DATA.forEach(d => {
+                    const s = d.soil.split(' / ')[0];
+                    soilTypes[s] = (soilTypes[s] || 0) + 1;
+                });
+                const soilColors = {
+                    'Fluvisols': '#A8C4A0',
+                    'Calcisols': '#D4C8A0',
+                    'Vertisols': '#8B7D6B',
+                    'Luvisols': '#C4B0A0',
+                    'Nitisols': '#B85232',
+                    'Cambisols': '#C8B898',
+                    'Regosols': '#D4C8B0',
+                    'Yermosols': '#E8DCC8',
+                    'Gypsisols': '#E0D4C0',
+                    'Leptosols': '#B8A898',
+                    'Acrisols': '#C4A080',
+                    'Gleysols': '#80A8B0'
+                };
+                legendHtml = `<div class="legend-box"><h4>Soil Types</h4>`;
+                Object.keys(soilTypes).sort().forEach(s => {
+                    const color = soilColors[s] || '#C0C8B8';
+                    legendHtml +=
+                        `<div class="legend-item"><span class="legend-color" style="background:${color};"></span> ${s}</div>`;
+                });
+                legendHtml += `<div style="font-size:0.7rem;color:#6f8a7c;margin-top:0.4rem;">Data: EthioNSIS</div></div>`;
+            } else if (layerType === 'weather') {
+                legendHtml = `
+                    <div class="legend-box"><h4>Temperature</h4>
+                        <div class="legend-item"><span class="legend-color" style="background:#4A90D9;"></span> Cool (&lt;18°C)</div>
+                        <div class="legend-item"><span class="legend-color" style="background:#66BB6A;"></span> Moderate (18-25°C)</div>
+                        <div class="legend-item"><span class="legend-color" style="background:#D9A441;"></span> Warm (25-30°C)</div>
+                        <div class="legend-item"><span class="legend-color" style="background:#D9534F;"></span> Hot (&gt;30°C)</div>
+                        <div style="font-size:0.7rem;color:#6f8a7c;margin-top:0.4rem;">Data: EMI 2025</div>
+                    </div>
+                `;
+            } else {
+                legendHtml = `
+                    <div class="legend-box"><h4>Ethiopia Regions</h4>
+                        <div style="font-size:0.85rem;color:#4a5a4e;">Click any region to explore agricultural data.</div>
+                        <div style="font-size:0.7rem;color:#6f8a7c;margin-top:0.4rem;">Boundaries: ESS • Data: MoA/ESS/EMI/ECX</div>
+                    </div>
+                `;
+            }
+
+            // Insert legend into panel if panel is empty or append
+            const panelContent = document.getElementById('panelContent');
+            if (panelContent.style.display === 'none') {
+                // Show empty panel with legend
+                const empty = document.getElementById('panelEmpty');
+                empty.innerHTML = `
+                    <div style="font-size:1.4rem;margin-bottom:0.5rem;">&#128220;</div>
+                    <p><strong>Select a region or search for a crop</strong></p>
+                    <div style="font-size:0.85rem;color:#6f8a7c;">Current layer: ${layerType.charAt(0).toUpperCase() + layerType.slice(1)}</div>
+                    ${legendHtml}
+                `;
+                empty.style.display = 'block';
+                panelContent.style.display = 'none';
+            } else {
+                // Append legend to existing content
+                const existing = panelContent.innerHTML;
+                // Check if legend already exists
+                if (!existing.includes('legend-box')) {
+                    panelContent.innerHTML = existing + legendHtml;
+                }
+            }
+        }
+
+        // ================================================================
+        //  REGION SELECTION
+        // ================================================================
+
+        function selectRegion(regionId) {
+            selectedRegionId = regionId;
+            currentCrop = null;
+            showRegionInfo(regionId);
+            highlightRegion(regionId);
+            // Update map style if needed
+            if (geoLayer) {
+                geoLayer.eachLayer(function(layer) {
+                    const id = layer.feature.id || layer.feature.properties.regionId;
+                    if (id === regionId) {
+                        layer.setStyle(highlightStyle(layer.feature));
+                    } else {
+                        layer.setStyle(defaultStyle(layer.feature));
+                    }
+                });
+            }
+            // Fit bounds
+            if (geoLayer) {
+                let targetLayer = null;
+                geoLayer.eachLayer(function(layer) {
+                    const id = layer.feature.id || layer.feature.properties.regionId;
+                    if (id === regionId) targetLayer = layer;
+                });
+                if (targetLayer) {
+                    map.fitBounds(targetLayer.getBounds(), { padding: [40, 40], maxZoom: 7 });
+                }
+            }
+            // Update search input
+            const data = regionDataById[regionId];
+            if (data) {
+                document.getElementById('searchInput').value = data.name;
+            }
+        }
+
+        function highlightRegion(regionId) {
+            // Already handled in selectRegion
+        }
+
+        // ================================================================
+        //  INFO PANEL
+        // ================================================================
+
+        function showRegionInfo(regionId) {
+            const data = regionDataById[regionId];
+            if (!data) return;
+
+            const panelEmpty = document.getElementById('panelEmpty');
+            panelEmpty.style.display = 'none';
+            const panelContent = document.getElementById('panelContent');
+            panelContent.style.display = 'block';
+
+            let html = `
+                <h2>${data.name}</h2>
+                <div style="font-size:0.85rem;color:#4a5a4e;margin-bottom:0.5rem;">Capital: ${data.capital}</div>
+                <div class="data-row"><span class="label">Elevation</span><span class="value">${data.elevation}</span></div>
+                <div class="data-row"><span class="label">Climate</span><span class="value">${data.climate}</span></div>
+                <div class="data-row"><span class="label">Coordinates</span><span class="value">${data.coords}</span></div>
+                <h3>Soil</h3>
+                <div class="data-row"><span class="label">Type</span><span class="value">${data.soil}</span></div>
+                <div class="data-row"><span class="label">Characteristics</span><span class="value">${data.soilChars}</span></div>
+                <div class="data-row"><span class="label">Suitability</span><span class="value">${data.soilSuitability}</span></div>
+                <h3>Agriculture</h3>
+                <div class="data-row"><span class="label">Primary Crop</span><span class="value">${data.primaryCrop}</span></div>
+                <div class="data-row"><span class="label">Cultivated Area</span><span class="value">${data.cultivatedArea}</span></div>
+                <div class="data-row"><span class="label">Production</span><span class="value">${data.production}</span></div>
+                <div class="data-row"><span class="label">Yield</span><span class="value">${data.yield}</span></div>
+                <div class="data-row"><span class="label">Season</span><span class="value">${data.season}</span></div>
+                <h3>Weather</h3>
+                <div class="data-row"><span class="label">Temperature</span><span class="value">${data.temp}</span></div>
+                <div class="data-row"><span class="label">Rainfall</span><span class="value">${data.rainfall}</span></div>
+                <div class="data-row"><span class="label">Humidity</span><span class="value">${data.humidity}</span></div>
+                <div class="data-row"><span class="label">Drought Risk</span><span class="value">${data.droughtRisk}</span></div>
+                <h3>Market</h3>
+                <div class="data-row"><span class="label">Trading Hubs</span><span class="value">${data.marketHubs}</span></div>
+                <div class="data-row"><span class="label">Target Markets</span><span class="value">${data.targetMarkets}</span></div>
+                <div class="data-row"><span class="label">Trade Volume</span><span class="value">${data.tradeVolume}</span></div>
+            `;
+
+            // Dominant production
+            const dominant = dominantCropMap[regionId] || 'Data unavailable';
+            html += `
+                <h3>Dominant Production</h3>
+                <div class="data-row"><span class="label">Primary Product</span><span class="value" style="font-weight:700;color:var(--forest);">${dominant}</span></div>
+            `;
+
+            html += `
+                <div class="source-note">
+                    <strong>Data Sources:</strong> ESS, EthioNSIS, EMI, MoA, ECX<br />
+                    Period: 2025 (various)
+                </div>
+            `;
+
+            panelContent.innerHTML = html;
+        }
+
+        function showCropInfo(cropName) {
+            const panelEmpty = document.getElementById('panelEmpty');
+            panelEmpty.style.display = 'none';
+            const panelContent = document.getElementById('panelContent');
+            panelContent.style.display = 'block';
+
+            // Find regions where this crop is primary
+            const regions = REGIONS_DATA.filter(d =>
+                d.primaryCrop.toLowerCase().includes(cropName.toLowerCase())
+            );
+
+            let html = `
+                <h2>${cropName}</h2>
+                <div style="font-size:0.9rem;color:#4a5a4e;margin-bottom:0.75rem;">
+                    Found in ${regions.length} region${regions.length > 1 ? 's' : ''}
+                </div>
+            `;
+
+            if (regions.length === 0) {
+                html += `<div class="data-row"><span class="value unavailable">No documented production areas found.</span></div>`;
+            } else {
+                regions.forEach(d => {
+                    html += `
+                        <div style="background:var(--cream);padding:0.5rem 0.75rem;border-radius:6px;margin-bottom:0.5rem;border-left:3px solid var(--harvest-gold);">
+                            <strong style="color:var(--forest);">${d.name}</strong>
+                            <div class="data-row" style="border:none;padding:0.1rem 0;"><span class="label">Production</span><span class="value">${d.production}</span></div>
+                            <div class="data-row" style="border:none;padding:0.1rem 0;"><span class="label">Area</span><span class="value">${d.cultivatedArea}</span></div>
+                            <div class="data-row" style="border:none;padding:0.1rem 0;"><span class="label">Yield</span><span class="value">${d.yield}</span></div>
+                            <div class="data-row" style="border:none;padding:0.1rem 0;"><span class="label">Season</span><span class="value">${d.season}</span></div>
+                            <div style="font-size:0.8rem;color:#6f8a7c;margin-top:0.2rem;">
+                                Markets: ${d.marketHubs} → ${d.targetMarkets}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            html += `
+                <div class="source-note">
+                    <strong>Data Sources:</strong> ESS Agricultural Sample Survey, MoA<br />
+                    Period: 2025
+                </div>
+            `;
+
+            panelContent.innerHTML = html;
+        }
+
+        function showEmptyPanel() {
+            const panelEmpty = document.getElementById('panelEmpty');
+            panelEmpty.style.display = 'block';
+            document.getElementById('panelContent').style.display = 'none';
+            panelEmpty.innerHTML = `
+                <div style="font-size:1.4rem;margin-bottom:0.5rem;">&#127758;</div>
+                <p><strong>Select a region</strong><br />
+                Search for a crop, or choose a map layer below.</p>
+                <div style="margin-top:1rem; font-size:0.85rem; color:#889e92;">
+                    &#9654; Click any region on the map<br />
+                    &#9654; Use the layer buttons to explore
+                </div>
+            `;
+        }
+
+        // ================================================================
+        //  SEARCH
+        // ================================================================
+
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            if (query.length < 1) {
+                clearSuggestions();
+                return;
+            }
+
+            // Search regions
+            const regionMatches = REGIONS_DATA.filter(d =>
+                d.name.toLowerCase().includes(query) ||
+                d.primaryCrop.toLowerCase().includes(query) ||
+                d.capital.toLowerCase().includes(query)
+            );
+
+            // Search crops
+            const cropMatches = CROP_LIST.filter(c =>
+                c.toLowerCase().includes(query)
+            );
+
+            // Combine and deduplicate
+            const results = [];
+            const seen = new Set();
+
+            regionMatches.forEach(d => {
+                if (!seen.has(d.id)) {
+                    seen.add(d.id);
+                    results.push({ type: 'region', label: d.name, id: d.id, data: d });
+                }
+            });
+
+            cropMatches.forEach(c => {
+                if (!seen.has(c)) {
+                    seen.add(c);
+                    results.push({ type: 'crop', label: c, id: c });
+                }
+            });
+
+            if (results.length === 0) {
+                clearSuggestions();
+                return;
+            }
+
+            showSuggestions(results);
+        });
+
+        function showSuggestions(results) {
+            let html = `<div style="position:absolute;background:white;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.15);max-height:220px;overflow-y:auto;width:100%;z-index:999;padding:0.25rem 0;">`;
+            results.forEach(r => {
+                const icon = r.type === 'region' ? '📍' : '🌱';
+                html += `
+                    <div style="padding:0.5rem 0.8rem;cursor:pointer;border-bottom:1px solid #f0f3ef;display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;"
+                         onmouseover="this.style.background='#f0f5ef'"
+                         onmouseout="this.style.background='white'"
+                         onclick="selectSearchResult('${r.type}', '${r.id}')">
+                        <span>${icon}</span>
+                        <span>${r.label}</span>
+                        <span style="font-size:0.7rem;color:#6f8a7c;margin-left:auto;">${r.type}</span>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            // Position relative to search input
+            const rect = searchInput.getBoundingClientRect();
+            const container = document.getElementById('suggestionsContainer');
+            container.style.position = 'relative';
+            container.innerHTML = html;
+            const suggestionsDiv = container.querySelector('div');
+            if (suggestionsDiv) {
+                suggestionsDiv.style.position = 'absolute';
+                suggestionsDiv.style.top = '0px';
+                suggestionsDiv.style.left = '0px';
+                suggestionsDiv.style.width = '100%';
+                suggestionsDiv.style.maxWidth = '400px';
+            }
+        }
+
+        function clearSuggestions() {
+            document.getElementById('suggestionsContainer').innerHTML = '';
+        }
+
+        window.selectSearchResult = function(type, id) {
+            clearSuggestions();
+            document.getElementById('searchInput').blur();
+
+            if (type === 'region') {
+                selectRegion(id);
+            } else if (type === 'crop') {
+                currentCrop = id;
+                selectedRegionId = null;
+                showCropInfo(id);
+                // Highlight regions where this crop is dominant/produced
+                const regions = REGIONS_DATA.filter(d =>
+                    d.primaryCrop.toLowerCase().includes(id.toLowerCase())
+                );
+                if (geoLayer) {
+                    geoLayer.eachLayer(function(layer) {
+                        const rid = layer.feature.id || layer.feature.properties.regionId;
+                        const isMatch = regions.some(d => d.id === rid);
+                        if (isMatch) {
+                            layer.setStyle({
+                                fillColor: '#D9A441',
+                                fillOpacity: 0.7,
+                                weight: 3,
+                                color: '#164A2A'
+                            });
+                            layer.bringToFront();
+                        } else {
+                            layer.setStyle(defaultStyle(layer.feature));
+                        }
+                    });
+                }
+                // Fit to all matching regions
+                if (geoLayer) {
+                    const bounds = L.latLngBounds();
+                    let hasBounds = false;
+                    geoLayer.eachLayer(function(layer) {
+                        const rid = layer.feature.id || layer.feature.properties.regionId;
+                        if (regions.some(d => d.id === rid)) {
+                            bounds.extend(layer.getBounds());
+                            hasBounds = true;
+                        }
+                    });
+                    if (hasBounds) {
+                        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 6 });
+                    }
+                }
+                // Update search input
+                document.getElementById('searchInput').value = id;
+            }
+        };
+
+        // ================================================================
+        //  LAYER SWITCHING
+        // ================================================================
+
+        document.querySelectorAll('[data-layer]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const layer = this.dataset.layer;
+                currentLayer = layer;
+                // Update active button
+                document.querySelectorAll('[data-layer]').forEach(b => b.classList.remove('active-layer'));
+                this.classList.add('active-layer');
+
+                // If crop search is active, clear it
+                if (layer !== 'default' && currentCrop) {
+                    currentCrop = null;
+                }
+
+                renderMap(layer);
+
+                // If switching to default, reset selection highlight
+                if (layer === 'default' && selectedRegionId) {
+                    selectRegion(selectedRegionId);
+                } else if (layer === 'default') {
+                    showEmptyPanel();
+                }
+            });
+        });
+
+        // ================================================================
+        //  EXPLORE REGIONS BUTTON
+        // ================================================================
+
+        document.getElementById('exploreRegionsBtn').addEventListener('click', function() {
+            // Reset to default layer and fit to Ethiopia
+            document.querySelector('[data-layer="default"]').click();
+            map.fitBounds([
+                [3.0, 33.0],
+                [15.0, 48.0]
+            ]);
+            document.getElementById('searchInput').value = '';
+            currentCrop = null;
+            selectedRegionId = null;
+            showEmptyPanel();
+            // Reset region styles
+            if (geoLayer) {
+                geoLayer.eachLayer(function(layer) {
+                    layer.setStyle(defaultStyle(layer.feature));
+                });
+            }
+        });
+
+        // ================================================================
+        //  CROP SEARCH BUTTON
+        // ================================================================
+
+        document.getElementById('cropSearchBtn').addEventListener('click', function() {
+            document.getElementById('searchInput').focus();
+            document.getElementById('searchInput').placeholder = 'Type a crop name...';
+            setTimeout(() => {
+                document.getElementById('searchInput').placeholder = 'Search crops, regions, or locations...';
+            }, 3000);
+        });
+
+        // ================================================================
+        //  RESET MAP
+        // ================================================================
+
+        document.getElementById('resetMapBtn').addEventListener('click', function() {
+            // Reset everything
+            document.querySelector('[data-layer="default"]').click();
+            map.fitBounds([
+                [3.0, 33.0],
+                [15.0, 48.0]
+            ]);
+            document.getElementById('searchInput').value = '';
+            currentCrop = null;
+            selectedRegionId = null;
+            showEmptyPanel();
+            if (geoLayer) {
+                geoLayer.eachLayer(function(layer) {
+                    layer.setStyle(defaultStyle(layer.feature));
+                });
+            }
+            // Clear any overlay
+            if (overlayLayer) {
+                map.removeLayer(overlayLayer);
+                overlayLayer = null;
+            }
+            renderMap('default');
+            document.getElementById('layerMeta').textContent = '';
+        });
+
+        // ================================================================
+        //  KEYBOARD: Enter to search
+        // ================================================================
+
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query.length > 0) {
+                    // Try to find a region or crop match
+                    const regionMatch = REGIONS_DATA.find(d =>
+                        d.name.toLowerCase() === query.toLowerCase() ||
+                        d.primaryCrop.toLowerCase().includes(query.toLowerCase())
+                    );
+                    if (regionMatch) {
+                        selectSearchResult('region', regionMatch.id);
+                        return;
+                    }
+                    const cropMatch = CROP_LIST.find(c =>
+                        c.toLowerCase() === query.toLowerCase()
+                    );
+                    if (cropMatch) {
+                        selectSearchResult('crop', cropMatch);
+                        return;
+                    }
+                    // Partial match fallback
+                    const partialRegion = REGIONS_DATA.find(d =>
+                        d.name.toLowerCase().includes(query.toLowerCase()) ||
+                        d.primaryCrop.toLowerCase().includes(query.toLowerCase())
+                    );
+                    if (partialRegion) {
+                        selectSearchResult('region', partialRegion.id);
+                    }
+                }
+                clearSuggestions();
+            }
+        });
+
+        // Click outside to close suggestions
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-wrap') && !e.target.closest('#suggestionsContainer')) {
+                clearSuggestions();
+            }
+        });
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+
+        // Show empty panel on load
+        showEmptyPanel();
+
+        // Render default map
+        renderMap('default');
+
+        // Fit to Ethiopia
+        map.fitBounds([
+            [3.0, 33.0],
+            [15.0, 48.0]
+        ]);
+
+        // Log for developer
+        console.log('AgriNova Ethiopian Crop Map initialized.');
+        console.log(`Loaded ${REGIONS_DATA.length} regions.`);
+        console.log('Data sources: ESS, EthioNSIS, EMI, MoA, ECX');
+
+        // ================================================================
+        //  RESPONSIVE: ensure map resizes
+        // ================================================================
+
+        window.addEventListener('resize', function() {
+            map.invalidateSize();
+        });
+    </script>
+
+</body>
+</html>

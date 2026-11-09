@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0B3D2E">
+  <title>AgriNova — Educational Agriculture Content</title>
+  <link rel="stylesheet" href="educational-content.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="agrinova-header"><div class="header-container">
+  <div class="header-left"><a class="logo" href="#top" aria-label="AgriNova home">AgriNova<span class="logo-leaf">.</span></a></div>
+  <nav class="header-nav" aria-label="Main navigation"><ul>
+    <li><a href="#">Home</a></li><li><a href="#">Crop Information</a></li><li><a href="#">Crop News</a></li><li><a href="#">Innovation</a></li><li><a href="#">Fertilizer</a></li><li><a href="#" class="active">Learn</a></li><li><a href="#">Weather</a></li><li><a href="#">Market</a></li><li><a href="#">Dashboard</a></li>
+  </ul></nav>
+  <div class="header-right"><label class="language-label" for="languageSelect">Language</label><select id="languageSelect" class="language-select" aria-label="Choose language"><option value="en">English</option><option value="am">አማርኛ</option><option value="ti">ትግርኛ</option><option value="om">Afaan Oromo</option><option value="so">Af-Soomaali</option></select></div>
+</div></header>
+<main class="educational-page" id="top">
+  <section class="page-intro"><div class="intro-content"><h1 class="page-title">Educational Agriculture Content</h1><p class="page-description">Explore agriculture through clear learning modules, practical notes and knowledge checks.</p><p id="visitorNotice" class="visitor-notice">Open learning for everyone — no account required.</p></div>
+    <div class="search-wrapper"><svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="search" id="searchInput" class="search-bar" placeholder="Search topics and modules..." aria-label="Search learning content"></div>
+  </section>
+  <section class="filter-section" aria-label="Agriculture categories"><div class="filter-scroll" id="filterContainer">
+    <button class="filter-btn active" data-filter="all">All topics</button><button class="filter-btn" data-filter="crop-production">Crop Production</button><button class="filter-btn" data-filter="soil">Soil</button><button class="filter-btn" data-filter="irrigation">Irrigation</button><button class="filter-btn" data-filter="fertilizers">Fertilizers</button><button class="filter-btn" data-filter="pest-disease">Pest &amp; Disease</button><button class="filter-btn" data-filter="climate">Climate</button><button class="filter-btn" data-filter="sustainable">Sustainable Agriculture</button><button class="filter-btn" data-filter="farm-management">Farm Management</button><button class="filter-btn" data-filter="ag-tech">Agricultural Technology</button><button class="filter-btn" data-filter="post-harvest">Post-Harvest</button><button class="filter-btn" data-filter="ethiopian-ag">Ethiopian Agriculture</button>
+  </div></section>
+  <section class="difficulty-filter-section"><span class="difficulty-label">Learning level:</span><div class="difficulty-options"><button class="difficulty-btn active" data-difficulty="all">All</button><button class="difficulty-btn" data-difficulty="beginner">Beginner</button><button class="difficulty-btn" data-difficulty="intermediate">Intermediate</button><button class="difficulty-btn" data-difficulty="advanced">Advanced</button></div></section>
+  <section class="featured-section" id="featuredSection"><div class="featured-card" id="featuredCard"></div></section>
+  <section class="learning-resources-section"><div class="section-header"><h2 class="section-title">Learning modules</h2><span class="results-count" id="resultsCount">Showing 0 modules</span></div><div class="resources-grid" id="resourcesGrid"></div><div class="empty-state" id="emptyState" style="display:none"><p>No modules match your search.</p></div></section>
+  <div class="load-more-container" id="loadMoreContainer" style="display:none"><button class="load-more-btn" id="loadMoreBtn">Load more</button></div>
+</main>
+<section class="lesson-view" id="lessonView" style="display:none" aria-modal="true" role="dialog" aria-label="Learning module"><div class="lesson-overlay" id="lessonOverlay"></div><div class="lesson-panel" id="lessonPanel"><button class="lesson-close-btn" id="lessonCloseBtn" aria-label="Close">&times;</button><div class="lesson-content" id="lessonContent"></div></div></section>
+<script src="educational-content.js"></script>
+</body></html>
